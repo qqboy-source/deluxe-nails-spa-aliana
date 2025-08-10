@@ -54,6 +54,15 @@
       .custom-scrollbar::-webkit-scrollbar-thumb:hover {
         background-color: rgba(217, 172, 100, 0.8);
       }
+      
+      /* Utility to hide scrollbar but keep it functional */
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none; /* for Chrome, Safari, and Opera */
+      }
+      .hide-scrollbar {
+        -ms-overflow-style: none;  /* for IE and Edge */
+        scrollbar-width: none;  /* for Firefox */
+      }
 
       /*
         Corrected animation for seamless scrolling.
