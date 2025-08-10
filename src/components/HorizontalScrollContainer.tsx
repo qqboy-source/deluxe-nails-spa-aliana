@@ -3,17 +3,15 @@ import React, { useRef, useEffect, Children } from 'react';
 // A component to wrap each section that will be displayed horizontally
 export const HorizontalScrollSection: React.FC<{ children: React.ReactNode, id: string }> = ({ children, id }) => {
     return (
-        <section id={id} className="w-screen h-screen flex-shrink-0 flex justify-center items-center p-4 sm:p-6 md:p-8">
-            {/* 
-              Outer div is a flex container that fills the section and handles scrolling.
-              This allows the inner content wrapper to be centered.
-            */}
-            <div className="w-full h-full max-w-7xl mx-auto flex rounded-xl">
-                {/* 
-                  Inner div uses margin-auto to center itself when content is shorter than the viewport.
-                  Padding-top ensures the content title always clears the sticky header.
+        // This section defines one full-screen "slide" in the horizontal sequence.
+        <section id={id} className="w-screen h-screen flex-shrink-0 flex justify-center items-center p-4 sm:p-6 lg:p-8">
+            {/* This container has a max-width and fills the available height of the section. */}
+            <div className="w-full h-full max-w-7xl mx-auto flex flex-col rounded-xl">
+                {/*
+                  This inner wrapper pushes content below the sticky header and enables vertical scrolling
+                  for any content that is too tall to fit on the screen.
                 */}
-                <div className="w-full m-auto px-2 md:px-4 pt-24 pb-12">
+                <div className="w-full flex-grow overflow-y-auto custom-scrollbar pt-24 pb-12 px-2 md:px-4">
                      {children}
                 </div>
             </div>
