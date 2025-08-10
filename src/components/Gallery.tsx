@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 // Using more reliable placeholders with theme colors and increased to 12 images
 const images = [
@@ -45,6 +46,12 @@ const GalleryImage: React.FC<{ src: string, onImageClick: (src: string) => void 
 
 export const Gallery: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [modalContainer, setModalContainer] = useState<Element | null>(null);
+
+  useEffect(() => {
+    // Find the portal container after the component mounts
+    setModalContainer(document.getElementById('modal-root'));
+  }, []);
 
   useEffect(() => {
     const originalStyle = window.getComputedStyle(document.body).overflow;
@@ -105,7 +112,7 @@ export const Gallery: React.FC = () => {
         ))}
       </div>
 
-      {selectedImage && (
+      {selectedImage && modalContainer && createPortal(
         <div
           className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex justify-center items-center animate-fade-in p-4"
           onClick={closeModal}
@@ -128,7 +135,8 @@ export const Gallery: React.FC = () => {
                     className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
                 />
             </div>
-        </div>
+        </div>,
+        modalContainer
       )}
     </>
   );
