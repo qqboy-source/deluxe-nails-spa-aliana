@@ -64,6 +64,11 @@
         scrollbar-width: none;  /* for Firefox */
       }
 
+      /* Utility to disable pointer events while the page is actively scrolling */
+      .is-scrolling .can-scroll-on-stop {
+        pointer-events: none;
+      }
+
       /*
         Corrected animation for seamless scrolling.
         With duplicated content, we only need to translate by 50% of the
