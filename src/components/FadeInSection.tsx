@@ -2,22 +2,32 @@ import React, { useState, useRef, useEffect } from 'react';
 
 interface FadeInSectionProps {
     children: React.ReactNode;
+    variant?: 'vertical' | 'horizontal';
 }
 
-export const FadeInSection: React.FC<FadeInSectionProps> = ({ children }) => {
+export const FadeInSection = ({ children, variant = 'vertical' }: FadeInSectionProps): React.ReactElement => {
     const [isVisible, setVisible] = useState(false);
     const domRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
+        const observerOptions: IntersectionObserverInit = {
+            threshold: 0.1, // Start animation when 10% is visible
+            rootMargin: variant === 'horizontal'
+                // For horizontal items, shrink the viewport horizontally.
+                // This means the item must be closer to the center to trigger.
+                ? '0px -33% 0px -33%'
+                // For vertical items, shrink from the bottom so it triggers as it scrolls up.
+                : '0px 0px -10% 0px'
+        };
+
         const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
-                // Toggle visibility based on whether the element is intersecting with the viewport
                 if (entry.isIntersecting) {
                   setVisible(true);
                   observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.15 }); // Trigger when 15% of the element is visible
+        }, observerOptions);
 
         const currentRef = domRef.current;
         if (currentRef) {
@@ -29,7 +39,7 @@ export const FadeInSection: React.FC<FadeInSectionProps> = ({ children }) => {
                 observer.unobserve(currentRef);
             }
         };
-    }, []);
+    }, [variant]);
 
     return (
         <div
