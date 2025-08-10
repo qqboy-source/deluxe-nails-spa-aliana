@@ -11,7 +11,7 @@ export const HorizontalScrollSection: React.FC<{ children: React.ReactNode, id: 
                   This inner wrapper pushes content below the sticky header and enables vertical scrolling
                   for any content that is too tall to fit on the screen.
                 */}
-                <div className="w-full flex-grow overflow-y-auto custom-scrollbar pt-24 pb-12 px-2 md:px-4">
+                <div className="w-full flex-grow overflow-y-auto hide-scrollbar pt-24 pb-12 px-2 md:px-4">
                      {children}
                 </div>
             </div>
