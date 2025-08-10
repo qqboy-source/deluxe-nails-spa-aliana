@@ -8,10 +8,11 @@ export const HorizontalScrollSection: React.FC<{ children: React.ReactNode, id: 
             {/* This container has a max-width and fills the available height of the section. */}
             <div className="w-full h-full max-w-7xl mx-auto flex flex-col rounded-xl">
                 {/*
-                  This inner wrapper pushes content below the sticky header and enables vertical scrolling
-                  for any content that is too tall to fit on the screen.
+                  This inner wrapper pushes content below the sticky header and enables vertical scrolling.
+                  The 'can-scroll-on-stop' class prevents the user's scroll from being hijacked
+                  by this element during the horizontal slide animation.
                 */}
-                <div className="w-full flex-grow overflow-y-auto hide-scrollbar pt-24 pb-12 px-2 md:px-4">
+                <div className="w-full flex-grow overflow-y-auto hide-scrollbar pt-24 pb-12 px-2 md:px-4 can-scroll-on-stop">
                      {children}
                 </div>
             </div>
