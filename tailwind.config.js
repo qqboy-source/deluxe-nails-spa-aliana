@@ -24,8 +24,8 @@ export default {
         'fade-in-up': 'fadeInUp 1.5s ease-out 0.5s forwards',
         'fade-in': 'fadeIn 0.3s ease-out forwards',
         'scale-in': 'scaleIn 0.3s ease-out forwards',
-        'scroll-up': 'scroll-up 40s linear infinite',
-        'scroll-down': 'scroll-down 40s linear infinite',
+        'scroll-up': 'scroll-up 25s linear infinite',
+        'scroll-down': 'scroll-down 25s linear infinite',
       },
       keyframes: {
         fadeInUp: {
