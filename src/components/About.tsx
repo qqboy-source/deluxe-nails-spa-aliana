@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 export const About: React.FC = () => {
@@ -5,7 +6,7 @@ export const About: React.FC = () => {
         <>
             <div className="lg:text-center">
                 <h2 className="text-base text-gold-700 font-semibold tracking-wide uppercase">About Us</h2>
-                <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-gray-900 sm:text-4xl"  style={{textShadow: '1px 1px 2px rgba(0,0,0,0.1)'}}>
+                <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-gray-900 sm:text-4xl text-shadow-subtle">
                     Your Sanctuary of Beauty & Relaxation
                 </p>
                 <p className="mt-4 max-w-2xl text-xl text-gray-700 lg:mx-auto font-sans">
@@ -39,7 +40,7 @@ export const About: React.FC = () => {
                         </li>
                     </ul>
                 </div>
-                <div className="rounded-lg overflow-hidden">
+                <div className="rounded-lg overflow-hidden shadow-xl">
                     <img className="w-full h-full object-cover rounded-lg" src="https://picsum.photos/600/400?random=2" alt="Interior of the nail spa" />
                 </div>
             </div>
