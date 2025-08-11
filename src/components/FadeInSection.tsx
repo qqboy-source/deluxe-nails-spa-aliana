@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 
 interface FadeInSectionProps {
@@ -5,19 +6,16 @@ interface FadeInSectionProps {
     variant?: 'vertical' | 'horizontal';
 }
 
-export const FadeInSection = ({ children, variant = 'vertical' }: FadeInSectionProps): React.ReactElement => {
+export const FadeInSection: React.FC<FadeInSectionProps> = ({ children, variant = 'vertical' }) => {
     const [isVisible, setVisible] = useState(false);
     const domRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         const observerOptions: IntersectionObserverInit = {
-            threshold: 0.1, // Start animation when 10% is visible
+            threshold: 0.1,
             rootMargin: variant === 'horizontal'
-                // For horizontal items, shrink the viewport horizontally.
-                // This means the item must be closer to the center to trigger.
-                ? '0px -33% 0px -33%'
-                // For vertical items, shrink from the bottom so it triggers as it scrolls up.
-                : '0px 0px -10% 0px'
+                ? '0px -25% 0px -25%' // Trigger when closer to the center for horizontal items
+                : '0px 0px -10% 0px'   // Trigger as it scrolls up from the bottom for vertical items
         };
 
         const observer = new IntersectionObserver(entries => {
@@ -42,10 +40,7 @@ export const FadeInSection = ({ children, variant = 'vertical' }: FadeInSectionP
     }, [variant]);
 
     return (
-        <div
-            ref={domRef}
-            className={`fade-in-on-scroll ${isVisible ? 'is-visible' : ''}`}
-        >
+        <div ref={domRef} className={`fade-in-on-scroll ${isVisible ? 'is-visible' : ''}`}>
             {children}
         </div>
     );
