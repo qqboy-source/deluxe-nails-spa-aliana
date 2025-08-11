@@ -1,9 +1,29 @@
 
-import React from 'react';
+import React, { useRef, useLayoutEffect } from 'react';
 
 export const Hero: React.FC = () => {
+    const heroRef = useRef<HTMLElement>(null);
+
+    // This effect addresses the 100vh issue on mobile browsers where the
+    // address bar's appearance/disappearance changes the viewport height.
+    // By setting the height dynamically, we ensure the layout is stable.
+    useLayoutEffect(() => {
+        const setHeroHeight = () => {
+            if (heroRef.current) {
+                // 80px is the height of the sticky header.
+                const headerHeight = 80; 
+                heroRef.current.style.height = `${window.innerHeight - headerHeight}px`;
+            }
+        };
+
+        setHeroHeight();
+        window.addEventListener('resize', setHeroHeight);
+        return () => window.removeEventListener('resize', setHeroHeight);
+    }, []);
+
+
     return (
-        <section id="home" className="relative h-[calc(100vh-80px)] min-h-[500px] flex items-center justify-center text-center text-white">
+        <section ref={heroRef} id="home" className="relative min-h-[500px] flex items-center justify-center text-center text-white">
             <div className="absolute top-0 left-0 w-full h-full bg-cover bg-center" style={{ backgroundImage: "url('https://picsum.photos/1600/1200?random=1')" }}></div>
             <div className="absolute top-0 left-0 w-full h-full bg-gold-900/40"></div>
             <div className="relative z-10 p-8 max-w-3xl animate-fade-in-up bg-black/25 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl">
