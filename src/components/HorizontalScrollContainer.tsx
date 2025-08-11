@@ -9,7 +9,7 @@ interface HorizontalScrollSectionProps {
 
 export const HorizontalScrollSection: React.FC<HorizontalScrollSectionProps> = ({ children, id, isActive }) => {
     return (
-        <section id={id} className="w-screen h-screen flex-shrink-0 flex justify-center items-center p-4 sm:p-6 lg:p-8">
+        <section id={id} className="horizontal-scroll-section-item w-screen h-screen flex-shrink-0 flex justify-center items-center p-4 sm:p-6 lg:p-8">
             <div className="w-full h-full max-w-7xl mx-auto flex flex-col rounded-xl">
                 <div className={`w-full flex-grow pt-24 pb-12 px-2 md:px-4 hide-scrollbar overflow-y-auto ${!isActive ? 'pointer-events-none' : ''}`}>
                      {children}
@@ -38,7 +38,14 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
         let animationFrameId: number | null = null;
 
         const calculateDimensions = () => {
-            const requiredHeight = (numSections * window.innerWidth) - window.innerWidth + window.innerHeight;
+            // The scrollable height is determined by how many sections need to be "scrolled past" horizontally.
+            // Each section requires a scroll distance equal to its width to be fully revealed.
+            // A simpler, more robust way is to use the section's actual width.
+            const firstSection = stickyContent.querySelector<HTMLElement>('.horizontal-scroll-section-item');
+            if (!firstSection) return;
+            
+            const sectionWidth = firstSection.offsetWidth;
+            const requiredHeight = (numSections * sectionWidth) - sectionWidth + window.innerHeight;
             scrollContainer.style.height = `${requiredHeight}px`;
         };
 
@@ -49,9 +56,14 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
 
             animationFrameId = requestAnimationFrame(() => {
                 if (!scrollContainer || !stickyContent) return;
+                
+                const firstSection = stickyContent.querySelector<HTMLElement>('.horizontal-scroll-section-item');
+                if (!firstSection) return;
+
+                const sectionWidth = firstSection.offsetWidth;
                 const scrollTop = window.scrollY;
                 const scrollContainerTop = scrollContainer.offsetTop;
-                const maxTranslateX = (numSections * window.innerWidth) - window.innerWidth;
+                const maxTranslateX = (numSections * sectionWidth) - sectionWidth;
                 
                 let distance = 0;
                 if (scrollTop >= scrollContainerTop && scrollTop <= scrollContainerTop + maxTranslateX) {
@@ -62,7 +74,7 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
                 
                 stickyContent.style.transform = `translateX(-${distance}px)`;
                 
-                const currentActiveIndex = Math.min(numSections - 1, Math.round(distance / window.innerWidth));
+                const currentActiveIndex = Math.min(numSections - 1, Math.round(distance / sectionWidth));
                 if (currentActiveIndex !== activeIndex) {
                     setActiveIndex(currentActiveIndex);
                 }
