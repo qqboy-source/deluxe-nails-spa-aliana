@@ -11,11 +11,6 @@ import { HorizontalScrollContainer, HorizontalScrollSection } from './components
 import { FadeInSection } from './components/FadeInSection';
 
 function App(): React.ReactNode {
-  const horizontalSections = [
-    { id: 'about', component: <About /> },
-    { id: 'services', component: <Services /> },
-    { id: 'gallery', component: <Gallery /> },
-  ];
 
   return (
     <div className="font-sans text-gray-800">
@@ -23,14 +18,22 @@ function App(): React.ReactNode {
       <main>
         <Hero />
         
-        <HorizontalScrollContainer sections={horizontalSections}>
-          {horizontalSections.map(section => (
-            <HorizontalScrollSection key={section.id} id={section.id}>
-              <FadeInSection variant="horizontal">
-                {section.component}
-              </FadeInSection>
+        <HorizontalScrollContainer>
+            <HorizontalScrollSection id="about">
+                <FadeInSection variant="horizontal">
+                    <About />
+                </FadeInSection>
             </HorizontalScrollSection>
-          ))}
+            <HorizontalScrollSection id="services">
+                <FadeInSection variant="horizontal">
+                    <Services />
+                </FadeInSection>
+            </HorizontalScrollSection>
+            <HorizontalScrollSection id="gallery">
+                <FadeInSection variant="horizontal">
+                    <Gallery />
+                </FadeInSection>
+            </HorizontalScrollSection>
         </HorizontalScrollContainer>
 
         <FadeInSection>
