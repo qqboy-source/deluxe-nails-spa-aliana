@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 export const Hero: React.FC = () => {
@@ -6,10 +7,10 @@ export const Hero: React.FC = () => {
             <div className="absolute top-0 left-0 w-full h-full bg-cover bg-center" style={{ backgroundImage: "url('https://picsum.photos/1600/1200?random=1')" }}></div>
             <div className="absolute top-0 left-0 w-full h-full bg-gold-900/40"></div>
             <div className="relative z-10 p-8 max-w-3xl animate-fade-in-up bg-black/25 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl">
-                <h1 className="text-5xl md:text-7xl font-serif font-bold text-white tracking-wider leading-tight" style={{textShadow: '2px 2px 8px rgba(0,0,0,0.5)'}}>
+                <h1 className="text-5xl md:text-7xl font-serif font-bold text-white tracking-wider leading-tight text-shadow-strong">
                     Elegance at Your Fingertips
                 </h1>
-                <p className="mt-4 text-lg md:text-xl font-sans font-light text-gold-100 max-w-xl mx-auto" style={{textShadow: '1px 1px 4px rgba(0,0,0,0.5)'}}>
+                <p className="mt-4 text-lg md:text-xl font-sans font-light text-gold-100 max-w-xl mx-auto text-shadow-strong">
                     Experience tranquility and bespoke nail artistry at Deluxe Nails & Spa Aliana.
                 </p>
                 <div className="mt-8">
