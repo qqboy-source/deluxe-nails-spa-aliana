@@ -91,7 +91,7 @@ export const Gallery: React.FC = () => {
         {columns.map((columnImages, colIndex) => (
             <div key={colIndex} className="w-1/3 h-full overflow-hidden group" role="presentation">
                 <div
-                  className={`w-full flex flex-col group-hover:pause ${
+                  className={`w-full flex flex-col group-hover:pause will-change-transform ${
                     colIndex === 1 ? 'animate-scroll-down' : 'animate-scroll-up'
                   } ${selectedImage ? 'pause' : ''}`}
                 >
