@@ -21,15 +21,14 @@ export const HorizontalScrollSection: React.FC<HorizontalScrollSectionProps> = (
 
 interface HorizontalScrollContainerProps {
     children: ReactNode;
-    sections: { id: string; component: JSX.Element }[];
 }
 
-export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps> = ({ children, sections }) => {
+export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps> = ({ children }) => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const stickyContentRef = useRef<HTMLDivElement>(null);
     const [activeIndex, setActiveIndex] = useState(0);
 
-    const numSections = sections.length;
+    const numSections = Children.count(children);
 
     useEffect(() => {
         const scrollContainer = scrollContainerRef.current;
