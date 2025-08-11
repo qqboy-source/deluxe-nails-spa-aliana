@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 interface IconProps {
@@ -17,7 +18,6 @@ export const TikTokIcon: React.FC<IconProps> = ({ className }) => (
         <path d="M12.52.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.5.05.52.1 1.03.16 1.54-.9.08-1.79-.19-2.62-.75-.83-.56-1.5-1.3-1.94-2.22a9.12 9.12 0 0 1-.53-3.61c-.32.02-.64.04-.97.05v6.7c0 1.25.09 2.5.24 3.74.52 4.06-2.13 7.6-6.23 8.32-4.1.72-8.03-1.63-8.8-5.69-.76-4.07 1.49-7.79 5.56-8.54.12-.02.24-.04.36-.05v6.69c-1.81.37-3.14 1.99-2.95 3.92.19 1.92 1.82 3.42 3.73 3.42 1.96 0 3.59-1.57 3.59-3.53V.02z"></path>
     </svg>
 );
-
 
 export const LocationPinIcon: React.FC<IconProps> = ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
