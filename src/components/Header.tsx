@@ -14,51 +14,58 @@ export const Header: React.FC = () => {
 
     const handleNavClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
         event.preventDefault();
+
+        // The core scrolling logic is extracted into its own function to be called later.
+        const performScroll = () => {
+            const targetId = href.substring(1);
+
+            if (targetId === 'home') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+            
+            const targetElement = document.getElementById(targetId);
+            if (!targetElement) return;
+
+            const horizontalContainer = document.querySelector<HTMLElement>('[data-testid="horizontal-scroll-container"]');
+            
+            if (horizontalContainer && horizontalContainer.contains(targetElement)) {
+                const sections = Array.from(horizontalContainer.querySelectorAll<HTMLElement>('.horizontal-scroll-section-item'));
+                const sectionIndex = sections.findIndex(section => section.id === targetId);
+
+                if (sectionIndex !== -1) {
+                    const containerTop = horizontalContainer.getBoundingClientRect().top + window.scrollY;
+                    const sectionWidth = horizontalContainer.clientWidth;
+                    const targetScrollY = containerTop + (sectionIndex * sectionWidth);
+                    
+                    window.scrollTo({
+                        top: targetScrollY,
+                        behavior: 'smooth',
+                    });
+                    return;
+                }
+            }
+            
+            const header = document.querySelector('header');
+            const headerHeight = header ? header.offsetHeight : 80;
+            const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
+            
+            window.scrollTo({
+                top: elementTop - headerHeight,
+                behavior: 'smooth',
+            });
+        };
+
+        // If the mobile menu is open, close it first.
         if (isOpen) {
             setIsOpen(false);
+            // Then, wait for the DOM to update before calculating scroll positions.
+            // This timeout ensures calculations are based on the layout *after* the menu is gone.
+            setTimeout(performScroll, 50);
+        } else {
+            // If the menu is not open (i.e., on desktop), scroll immediately.
+            performScroll();
         }
-
-        const targetId = href.substring(1);
-
-        if (targetId === 'home') {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            return;
-        }
-        
-        const targetElement = document.getElementById(targetId);
-        if (!targetElement) return;
-
-        const horizontalContainer = document.querySelector<HTMLElement>('[data-testid="horizontal-scroll-container"]');
-        
-        // Check if the target is a child of the horizontal scroll container
-        if (horizontalContainer && horizontalContainer.contains(targetElement)) {
-            const sections = Array.from(horizontalContainer.querySelectorAll<HTMLElement>('.horizontal-scroll-section-item'));
-            const sectionIndex = sections.findIndex(section => section.id === targetId);
-
-            if (sectionIndex !== -1) {
-                // Perform calculations "Just-In-Time" for accuracy across all devices and orientations.
-                const containerTop = horizontalContainer.getBoundingClientRect().top + window.scrollY;
-                // All horizontal sections are the width of the viewport, so using the container's clientWidth is reliable.
-                const sectionWidth = horizontalContainer.clientWidth;
-                const targetScrollY = containerTop + (sectionIndex * sectionWidth);
-                
-                window.scrollTo({
-                    top: targetScrollY,
-                    behavior: 'smooth',
-                });
-                return; // Exit after handling horizontal scroll
-            }
-        }
-        
-        // Fallback for regular vertical sections (like 'Contact')
-        const header = document.querySelector('header');
-        const headerHeight = header ? header.offsetHeight : 80; // Use a fallback header height
-        const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
-        
-        window.scrollTo({
-            top: elementTop - headerHeight,
-            behavior: 'smooth',
-        });
     };
 
     return (
