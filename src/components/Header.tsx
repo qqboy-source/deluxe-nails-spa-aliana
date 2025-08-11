@@ -1,10 +1,8 @@
 
 import React, { useState } from 'react';
-import { useHorizontalScroll } from '../contexts/HorizontalScrollContext';
 
 export const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const { scrollToSection, horizontalSectionIds } = useHorizontalScroll();
     
     const navLinks = [
         { name: 'Home', href: '#home' },
@@ -27,22 +25,40 @@ export const Header: React.FC = () => {
             return;
         }
         
-        if (horizontalSectionIds.includes(targetId)) {
-            scrollToSection(targetId);
-        } else {
-            // It's a vertical section (e.g., Contact).
-            const targetElement = document.getElementById(targetId);
-            const header = document.querySelector('header');
-            const headerHeight = header ? header.offsetHeight : 80; // Default to 80px if header not found
+        const targetElement = document.getElementById(targetId);
+        if (!targetElement) return;
 
-            if (targetElement) {
-                const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
+        const horizontalContainer = document.querySelector<HTMLElement>('[data-testid="horizontal-scroll-container"]');
+        
+        // Check if the target is a child of the horizontal scroll container
+        if (horizontalContainer && horizontalContainer.contains(targetElement)) {
+            const sections = Array.from(horizontalContainer.querySelectorAll<HTMLElement>('.horizontal-scroll-section-item'));
+            const sectionIndex = sections.findIndex(section => section.id === targetId);
+
+            if (sectionIndex !== -1) {
+                // Perform calculations "Just-In-Time" for accuracy across all devices and orientations.
+                const containerTop = horizontalContainer.getBoundingClientRect().top + window.scrollY;
+                // All horizontal sections are the width of the viewport, so using the container's clientWidth is reliable.
+                const sectionWidth = horizontalContainer.clientWidth;
+                const targetScrollY = containerTop + (sectionIndex * sectionWidth);
+                
                 window.scrollTo({
-                    top: elementTop - headerHeight, // Adjust for sticky header
+                    top: targetScrollY,
                     behavior: 'smooth',
                 });
+                return; // Exit after handling horizontal scroll
             }
         }
+        
+        // Fallback for regular vertical sections (like 'Contact')
+        const header = document.querySelector('header');
+        const headerHeight = header ? header.offsetHeight : 80; // Use a fallback header height
+        const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
+        
+        window.scrollTo({
+            top: elementTop - headerHeight,
+            behavior: 'smooth',
+        });
     };
 
     return (
