@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useHorizontalScroll } from '../contexts/HorizontalScrollContext';
 
 export const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const { scrollToSection, horizontalSectionIds } = useHorizontalScroll();
     
     const navLinks = [
         { name: 'Home', href: '#home' },
@@ -24,23 +26,8 @@ export const Header: React.FC = () => {
             return;
         }
         
-        const horizontalContainer = document.querySelector<HTMLElement>('[data-testid="horizontal-scroll-container"]');
-        if (!horizontalContainer) return;
-
-        const horizontalSections = Array.from(horizontalContainer.querySelectorAll<HTMLElement>('.horizontal-scroll-section-item'));
-        const sectionIndex = horizontalSections.findIndex(section => section.id === targetId);
-
-        if (sectionIndex !== -1) {
-            // It's a horizontal section.
-            const containerTop = horizontalContainer.getBoundingClientRect().top + window.scrollY;
-            // Use getBoundingClientRect().width for the most precise measurement, matching the container.
-            const sectionWidth = horizontalSections[0]?.getBoundingClientRect().width || window.innerWidth;
-            const targetScrollY = containerTop + (sectionIndex * sectionWidth);
-            
-            window.scrollTo({
-                top: targetScrollY,
-                behavior: 'smooth',
-            });
+        if (horizontalSectionIds.includes(targetId)) {
+            scrollToSection(targetId);
         } else {
             // It's a vertical section (e.g., Contact).
             const targetElement = document.getElementById(targetId);
