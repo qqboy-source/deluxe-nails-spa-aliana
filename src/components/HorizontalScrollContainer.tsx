@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, Children, useState, cloneElement, isValidElement, ReactNode } from 'react';
 
 interface HorizontalScrollSectionProps {
@@ -36,17 +35,23 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
         if (!scrollContainer || !stickyContent || numSections === 0) return;
 
         let animationFrameId: number | null = null;
+        let containerTop = 0;
+        let sectionWidth = 0;
+        let containerHeight = 0;
+        let maxTranslateX = 0;
 
         const calculateDimensions = () => {
-            // The scrollable height is determined by how many sections need to be "scrolled past" horizontally.
-            // Each section requires a scroll distance equal to its width to be fully revealed.
-            // A simpler, more robust way is to use the section's actual width.
+            if (!stickyContent || !scrollContainer) return;
             const firstSection = stickyContent.querySelector<HTMLElement>('.horizontal-scroll-section-item');
             if (!firstSection) return;
             
-            const sectionWidth = firstSection.offsetWidth;
-            const requiredHeight = (numSections * sectionWidth) - sectionWidth + window.innerHeight;
-            scrollContainer.style.height = `${requiredHeight}px`;
+            // Use getBoundingClientRect for consistent and reliable measurements.
+            containerTop = scrollContainer.getBoundingClientRect().top + window.scrollY;
+            sectionWidth = firstSection.getBoundingClientRect().width;
+            containerHeight = (numSections - 1) * sectionWidth + window.innerHeight;
+            maxTranslateX = (numSections - 1) * sectionWidth;
+            
+            scrollContainer.style.height = `${containerHeight}px`;
         };
 
         const handleScroll = () => {
@@ -55,29 +60,21 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
             }
 
             animationFrameId = requestAnimationFrame(() => {
-                if (!scrollContainer || !stickyContent) return;
+                if (!stickyContent) return;
                 
-                const firstSection = stickyContent.querySelector<HTMLElement>('.horizontal-scroll-section-item');
-                if (!firstSection) return;
-
-                const sectionWidth = firstSection.offsetWidth;
                 const scrollTop = window.scrollY;
-                const scrollContainerTop = scrollContainer.offsetTop;
-                const maxTranslateX = (numSections * sectionWidth) - sectionWidth;
                 
                 let distance = 0;
-                if (scrollTop >= scrollContainerTop && scrollTop <= scrollContainerTop + maxTranslateX) {
-                    distance = scrollTop - scrollContainerTop;
-                } else if (scrollTop > scrollContainerTop + maxTranslateX) {
+                if (scrollTop >= containerTop && scrollTop <= containerTop + maxTranslateX) {
+                    distance = scrollTop - containerTop;
+                } else if (scrollTop > containerTop + maxTranslateX) {
                     distance = maxTranslateX;
                 }
                 
                 stickyContent.style.transform = `translateX(-${distance}px)`;
                 
-                const currentActiveIndex = Math.min(numSections - 1, Math.round(distance / sectionWidth));
-                if (currentActiveIndex !== activeIndex) {
-                    setActiveIndex(currentActiveIndex);
-                }
+                const newActiveIndex = sectionWidth > 0 ? Math.min(numSections - 1, Math.round(distance / sectionWidth)) : 0;
+                setActiveIndex(newActiveIndex);
             });
         };
         
@@ -94,7 +91,7 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
                 cancelAnimationFrame(animationFrameId);
             }
         };
-    }, [numSections, activeIndex]);
+    }, [numSections]); // Effect now only re-runs if the number of sections changes.
 
     return (
         <div ref={scrollContainerRef} data-testid="horizontal-scroll-container">
