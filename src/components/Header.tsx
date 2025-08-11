@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 
 export const Header: React.FC = () => {
@@ -15,7 +16,6 @@ export const Header: React.FC = () => {
         event.preventDefault();
         const targetId = href.substring(1);
 
-        // Define which sections are part of the horizontal scroll
         const horizontalSections = ['about', 'services', 'gallery'];
         const sectionIndex = horizontalSections.indexOf(targetId);
 
@@ -23,7 +23,6 @@ export const Header: React.FC = () => {
             // This is a horizontal section
             const container = document.querySelector<HTMLElement>('[data-testid="horizontal-scroll-container"]');
             if (container) {
-                // Calculate the target scrollY: container's top + (index * screen width)
                 const targetScrollY = container.offsetTop + (sectionIndex * window.innerWidth);
                 window.scrollTo({
                     top: targetScrollY,
@@ -34,14 +33,10 @@ export const Header: React.FC = () => {
             // This is a normal vertical section
             const targetElement = document.getElementById(targetId);
             if (targetElement) {
-                targetElement.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
         
-        // Close the mobile menu if it's open
         if (isOpen) {
             setIsOpen(false);
         }
@@ -52,11 +47,11 @@ export const Header: React.FC = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-20">
                     <div className="flex-shrink-0">
-                        <a href="#home" onClick={(e) => handleNavClick(e, '#home')} className="text-3xl font-serif font-bold text-gold-800">
+                        <a href="#home" onClick={(e) => handleNavClick(e, '#home')} className="text-2xl md:text-3xl font-serif font-bold text-gold-800">
                             Deluxe Nails & Spa Aliana
                         </a>
                     </div>
-                    <div className="hidden md:block">
+                    <nav className="hidden md:flex items-center">
                         <div className="ml-10 flex items-baseline space-x-4">
                             {navLinks.map(link => (
                                 <a 
@@ -72,9 +67,9 @@ export const Header: React.FC = () => {
                                 Book Your Escape
                             </a>
                         </div>
-                    </div>
+                    </nav>
                     <div className="md:hidden">
-                        <button onClick={() => setIsOpen(!isOpen)} className="text-gold-800 hover:text-gold-600 focus:outline-none">
+                        <button onClick={() => setIsOpen(!isOpen)} className="text-gold-800 hover:text-gold-600 focus:outline-none" aria-label="Toggle menu">
                             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 {isOpen ? (
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
