@@ -99,7 +99,7 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
     return (
         <div ref={scrollContainerRef} data-testid="horizontal-scroll-container">
             <div className="sticky top-0 h-screen overflow-hidden">
-                <div ref={stickyContentRef} className="flex flex-nowrap h-full">
+                <div ref={stickyContentRef} className="flex flex-nowrap h-full will-change-transform">
                     {Children.map(children, (child, index) => {
                         if (isValidElement(child)) {
                             return cloneElement(child as React.ReactElement<HorizontalScrollSectionProps>, { isActive: index === activeIndex });
