@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, Children, useState, cloneElement, isValidElement, ReactNode } from 'react';
+import { useHorizontalScroll } from '../contexts/HorizontalScrollContext';
 
 interface HorizontalScrollSectionProps {
     children: React.ReactNode;
@@ -7,6 +8,12 @@ interface HorizontalScrollSectionProps {
 }
 
 export const HorizontalScrollSection: React.FC<HorizontalScrollSectionProps> = ({ children, id, isActive }) => {
+    const { registerHorizontalSection } = useHorizontalScroll();
+    
+    useEffect(() => {
+        registerHorizontalSection(id);
+    }, [id, registerHorizontalSection]);
+
     return (
         <section id={id} className="horizontal-scroll-section-item w-screen h-screen flex-shrink-0 flex justify-center items-center p-4 sm:p-6 lg:p-8">
             <div className="w-full h-full max-w-7xl mx-auto flex flex-col rounded-xl">
@@ -26,6 +33,7 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const stickyContentRef = useRef<HTMLDivElement>(null);
     const [activeIndex, setActiveIndex] = useState(0);
+    const { setScrollToSection, horizontalSectionIds } = useHorizontalScroll();
 
     const numSections = Children.count(children);
 
@@ -35,23 +43,25 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
         if (!scrollContainer || !stickyContent || numSections === 0) return;
 
         let animationFrameId: number | null = null;
-        let containerTop = 0;
-        let sectionWidth = 0;
-        let containerHeight = 0;
-        let maxTranslateX = 0;
+        
+        const dimensions = {
+            containerTop: 0,
+            sectionWidth: 0,
+            containerHeight: 0,
+            maxTranslateX: 0,
+        };
 
         const calculateDimensions = () => {
             if (!stickyContent || !scrollContainer) return;
             const firstSection = stickyContent.querySelector<HTMLElement>('.horizontal-scroll-section-item');
             if (!firstSection) return;
             
-            // Use getBoundingClientRect for consistent and reliable measurements.
-            containerTop = scrollContainer.getBoundingClientRect().top + window.scrollY;
-            sectionWidth = firstSection.getBoundingClientRect().width;
-            containerHeight = (numSections - 1) * sectionWidth + window.innerHeight;
-            maxTranslateX = (numSections - 1) * sectionWidth;
+            dimensions.containerTop = scrollContainer.getBoundingClientRect().top + window.scrollY;
+            dimensions.sectionWidth = firstSection.getBoundingClientRect().width;
+            dimensions.containerHeight = (numSections - 1) * dimensions.sectionWidth + window.innerHeight;
+            dimensions.maxTranslateX = (numSections - 1) * dimensions.sectionWidth;
             
-            scrollContainer.style.height = `${containerHeight}px`;
+            scrollContainer.style.height = `${dimensions.containerHeight}px`;
         };
 
         const handleScroll = () => {
@@ -65,21 +75,35 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
                 const scrollTop = window.scrollY;
                 
                 let distance = 0;
-                if (scrollTop >= containerTop && scrollTop <= containerTop + maxTranslateX) {
-                    distance = scrollTop - containerTop;
-                } else if (scrollTop > containerTop + maxTranslateX) {
-                    distance = maxTranslateX;
+                if (scrollTop >= dimensions.containerTop && scrollTop <= dimensions.containerTop + dimensions.maxTranslateX) {
+                    distance = scrollTop - dimensions.containerTop;
+                } else if (scrollTop > dimensions.containerTop + dimensions.maxTranslateX) {
+                    distance = dimensions.maxTranslateX;
                 }
                 
                 stickyContent.style.transform = `translateX(-${distance}px)`;
                 
-                const newActiveIndex = sectionWidth > 0 ? Math.min(numSections - 1, Math.round(distance / sectionWidth)) : 0;
+                const newActiveIndex = dimensions.sectionWidth > 0 ? Math.min(numSections - 1, Math.round(distance / dimensions.sectionWidth)) : 0;
                 setActiveIndex(newActiveIndex);
             });
         };
         
         calculateDimensions();
-        handleScroll(); // Initial position check
+        handleScroll(); 
+
+        const scroller = (id: string) => {
+            const sectionIndex = horizontalSectionIds.indexOf(id);
+            if (sectionIndex !== -1 && scrollContainerRef.current) {
+                calculateDimensions(); 
+                const targetScrollY = dimensions.containerTop + (sectionIndex * dimensions.sectionWidth);
+                window.scrollTo({
+                    top: targetScrollY,
+                    behavior: 'smooth',
+                });
+            }
+        };
+
+        setScrollToSection(scroller);
 
         window.addEventListener('resize', calculateDimensions);
         window.addEventListener('scroll', handleScroll, { passive: true });
@@ -91,7 +115,7 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
                 cancelAnimationFrame(animationFrameId);
             }
         };
-    }, [numSections]); // Effect now only re-runs if the number of sections changes.
+    }, [numSections, setScrollToSection, horizontalSectionIds]);
 
     return (
         <div ref={scrollContainerRef} data-testid="horizontal-scroll-container">
