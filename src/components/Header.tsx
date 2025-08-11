@@ -44,7 +44,7 @@ export const Header: React.FC = () => {
     };
 
     return (
-        <header className="bg-white/30 backdrop-blur-lg sticky top-0 z-50 w-full border-b border-white/20 shadow-sm">
+        <header className="bg-white/80 backdrop-blur-sm sticky top-0 z-50 w-full border-b border-white/20 shadow-sm">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-20">
                     <div className="flex-shrink-0">
@@ -83,7 +83,7 @@ export const Header: React.FC = () => {
                 </div>
             </div>
             {isOpen && (
-                <div className="md:hidden bg-white/30 backdrop-blur-lg pb-4">
+                <div className="md:hidden bg-white/80 backdrop-blur-sm pb-4">
                     <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                         {navLinks.map(link => (
                             <a 
