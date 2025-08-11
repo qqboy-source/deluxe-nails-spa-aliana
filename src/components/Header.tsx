@@ -14,32 +14,46 @@ export const Header: React.FC = () => {
 
     const handleNavClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
         event.preventDefault();
+        if (isOpen) {
+            setIsOpen(false);
+        }
+
         const targetId = href.substring(1);
 
-        // More robust way to find and scroll to horizontal sections
+        if (targetId === 'home') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+        
         const horizontalContainer = document.querySelector<HTMLElement>('[data-testid="horizontal-scroll-container"]');
-        const horizontalSections = horizontalContainer ? Array.from(horizontalContainer.querySelectorAll<HTMLElement>('.horizontal-scroll-section-item')) : [];
+        if (!horizontalContainer) return;
+
+        const horizontalSections = Array.from(horizontalContainer.querySelectorAll<HTMLElement>('.horizontal-scroll-section-item'));
         const sectionIndex = horizontalSections.findIndex(section => section.id === targetId);
 
-        if (sectionIndex !== -1 && horizontalContainer) {
-            // This is a horizontal section.
-            // Use the actual width of a section for calculation to avoid layout jumps.
-            const sectionWidth = horizontalSections[sectionIndex].offsetWidth;
-            const targetScrollY = horizontalContainer.offsetTop + (sectionIndex * sectionWidth);
+        if (sectionIndex !== -1) {
+            // It's a horizontal section.
+            const containerTop = horizontalContainer.getBoundingClientRect().top + window.scrollY;
+            const sectionWidth = horizontalSections[0]?.offsetWidth || window.innerWidth;
+            const targetScrollY = containerTop + (sectionIndex * sectionWidth);
+            
             window.scrollTo({
                 top: targetScrollY,
                 behavior: 'smooth',
             });
         } else {
-            // This is a normal vertical section
+            // It's a vertical section (e.g., Contact).
             const targetElement = document.getElementById(targetId);
+            const header = document.querySelector('header');
+            const headerHeight = header ? header.offsetHeight : 80; // Default to 80px if header not found
+
             if (targetElement) {
-                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
+                window.scrollTo({
+                    top: elementTop - headerHeight, // Adjust for sticky header
+                    behavior: 'smooth',
+                });
             }
-        }
-        
-        if (isOpen) {
-            setIsOpen(false);
         }
     };
 
