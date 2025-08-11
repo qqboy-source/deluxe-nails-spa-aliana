@@ -1,6 +1,5 @@
 
 import React, { useRef, useEffect, Children, useState, cloneElement, isValidElement, ReactNode } from 'react';
-import { useHorizontalScroll } from '../contexts/HorizontalScrollContext';
 
 interface HorizontalScrollSectionProps {
     children: React.ReactNode;
@@ -9,12 +8,6 @@ interface HorizontalScrollSectionProps {
 }
 
 export const HorizontalScrollSection: React.FC<HorizontalScrollSectionProps> = ({ children, id, isActive }) => {
-    const { registerHorizontalSection } = useHorizontalScroll();
-    
-    useEffect(() => {
-        registerHorizontalSection(id);
-    }, [id, registerHorizontalSection]);
-
     return (
         <section id={id} className="horizontal-scroll-section-item w-screen h-screen flex-shrink-0 flex justify-center items-center p-4 sm:p-6 lg:p-8">
             <div className="w-full h-full max-w-7xl mx-auto flex flex-col rounded-xl">
@@ -34,100 +27,69 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const stickyContentRef = useRef<HTMLDivElement>(null);
     const [activeIndex, setActiveIndex] = useState(0);
-    const { setScrollToSection } = useHorizontalScroll();
-
     const numSections = Children.count(children);
 
     useEffect(() => {
-        // This effect handles the visual parallax scrolling effect.
         const scrollContainer = scrollContainerRef.current;
         const stickyContent = stickyContentRef.current;
         if (!scrollContainer || !stickyContent || numSections === 0) return;
 
         let animationFrameId: number | null = null;
         
-        const dimensionsRef = useRef({
+        // Object to hold dimensions to avoid stale closures in event listeners
+        const dimensions = {
             containerTop: 0,
             sectionWidth: 0,
             maxTranslateX: 0,
-        });
+        };
 
-        const calculateScrollDimensions = () => {
-            if (!stickyContent || !scrollContainer) return;
-            const firstSection = stickyContent.querySelector<HTMLElement>('.horizontal-scroll-section-item');
-            if (!firstSection) return;
-
-            const dims = dimensionsRef.current;
-            dims.containerTop = scrollContainer.getBoundingClientRect().top + window.scrollY;
-            dims.sectionWidth = firstSection.getBoundingClientRect().width;
-            dims.maxTranslateX = (numSections - 1) * dims.sectionWidth;
+        const calculateAndSetDimensions = () => {
+            if (!scrollContainer || !stickyContent) return;
             
-            const containerHeight = dims.maxTranslateX + window.innerHeight;
+            dimensions.containerTop = scrollContainer.getBoundingClientRect().top + window.scrollY;
+            dimensions.sectionWidth = scrollContainer.clientWidth; // Use clientWidth for the viewport width
+            dimensions.maxTranslateX = (numSections - 1) * dimensions.sectionWidth;
+            
+            const containerHeight = dimensions.maxTranslateX + window.innerHeight;
             scrollContainer.style.height = `${containerHeight}px`;
+            
+            handleScroll(); // Recalculate scroll position after resize
         };
 
         const handleScroll = () => {
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+
             animationFrameId = requestAnimationFrame(() => {
                 if (!stickyContent) return;
                 
-                const dims = dimensionsRef.current;
+                const { containerTop, maxTranslateX, sectionWidth } = dimensions;
                 const scrollTop = window.scrollY;
-                let distance = Math.max(0, scrollTop - dims.containerTop);
-                distance = Math.min(distance, dims.maxTranslateX);
+                
+                let distance = Math.max(0, scrollTop - containerTop);
+                distance = Math.min(distance, maxTranslateX);
                 
                 stickyContent.style.transform = `translateX(-${distance}px)`;
                 
-                const newActiveIndex = dims.sectionWidth > 0 ? Math.min(numSections - 1, Math.round(distance / dims.sectionWidth)) : 0;
+                const newActiveIndex = sectionWidth > 0 ? Math.min(numSections - 1, Math.round(distance / sectionWidth)) : 0;
                 setActiveIndex(newActiveIndex);
             });
         };
         
-        const resizeObserver = new ResizeObserver(() => {
-            calculateScrollDimensions();
-            handleScroll();
-        });
-        resizeObserver.observe(scrollContainer);
+        calculateAndSetDimensions();
 
+        window.addEventListener('resize', calculateAndSetDimensions);
         window.addEventListener('scroll', handleScroll, { passive: true });
         
-        // Initial calculation
-        calculateScrollDimensions();
-        handleScroll();
-
         return () => {
-            resizeObserver.disconnect();
+            window.removeEventListener('resize', calculateAndSetDimensions);
             window.removeEventListener('scroll', handleScroll);
             if (animationFrameId) {
                 cancelAnimationFrame(animationFrameId);
             }
         };
     }, [numSections]);
-
-    useEffect(() => {
-        // This effect sets up the navigation click handler function for the context.
-        const scroller = (id: string) => {
-            const container = scrollContainerRef.current;
-            const stickyContent = stickyContentRef.current;
-            if (!container || !stickyContent) return;
-            
-            const sections = Array.from(stickyContent.querySelectorAll<HTMLElement>('.horizontal-scroll-section-item'));
-            const sectionIndex = sections.findIndex(s => s.id === id);
-
-            if (sectionIndex !== -1) {
-                // Perform calculations Just-In-Time for maximum accuracy on all devices
-                const containerTop = container.getBoundingClientRect().top + window.scrollY;
-                const sectionWidth = sections[sectionIndex].getBoundingClientRect().width;
-                const targetScrollY = containerTop + (sectionIndex * sectionWidth);
-                
-                window.scrollTo({
-                    top: targetScrollY,
-                    behavior: 'smooth',
-                });
-            }
-        };
-
-        setScrollToSection(scroller);
-    }, [setScrollToSection]);
 
     return (
         <div ref={scrollContainerRef} data-testid="horizontal-scroll-container">
