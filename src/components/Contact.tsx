@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { LocationPinIcon, PhoneIcon, ClockIcon } from './icons';
 
@@ -38,7 +39,7 @@ export const Contact: React.FC = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="lg:text-center">
                     <h2 className="text-base text-gold-700 font-semibold tracking-wide uppercase">Contact Us</h2>
-                    <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-gray-900 sm:text-4xl" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.1)'}}>
+                    <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-gray-900 sm:text-4xl text-shadow-subtle">
                         Visit Us or Get in Touch
                     </p>
                     <p className="mt-4 max-w-2xl text-xl text-gray-700 lg:mx-auto font-sans">
@@ -48,12 +49,12 @@ export const Contact: React.FC = () => {
 
                 <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
                     {contactInfo.map(({ Icon, title, content, link, linkText }) => (
-                        <div key={title} className="p-6 bg-black/25 backdrop-blur-md rounded-2xl shadow-xl border border-white/20 group">
-                            <div className="w-20 h-20 mx-auto flex items-center justify-center rounded-full bg-gold-900/40 border border-gold-500/50 transition-all duration-300 group-hover:bg-gold-800/60 group-hover:border-gold-400/80 group-hover:scale-105">
+                        <div key={title} className="p-6 bg-black/25 backdrop-blur-md rounded-2xl shadow-xl border border-white/20 group flex flex-col">
+                            <div className="w-20 h-20 mx-auto flex items-center justify-center rounded-full bg-gold-900/40 border border-gold-500/50 transition-all duration-300 group-hover:bg-gold-800/60 group-hover:border-gold-400/80 group-hover:scale-105 flex-shrink-0">
                                 <Icon className="w-10 h-10 text-gold-400 transition-colors duration-300 group-hover:text-gold-300" />
                             </div>
                             <h3 className="mt-4 text-xl font-serif font-semibold text-white">{title}</h3>
-                            <p className="mt-2 text-gray-200 font-sans">{content}</p>
+                            <div className="mt-2 text-gray-200 font-sans flex-grow flex items-center justify-center">{content}</div>
                             {link && linkText && (
                                 <a href={link} target="_blank" rel="noopener noreferrer" className="mt-3 inline-block text-gold-400 font-semibold hover:text-gold-300 transition-colors">
                                     {linkText}
