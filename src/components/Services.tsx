@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { ServiceCategory } from '../types';
@@ -20,24 +21,19 @@ const servicesData: ServiceCategory[] = [
         category: 'Enhancement Add-Ons',
         layout: 'grid',
         items: [
-            { name: 'Length', price: '$5+' },
-            { name: 'Shape (Stiletto/Almond/Coffin/Round, etc...)', price: '$5+' },
-            { name: 'Ombre Design', price: '$15' },
-            { name: 'Chrome Design', price: '$20' },
-            { name: 'Cateyes Design', price: '$10+' },
-            { name: 'Marble Design', price: '$5+' },
+            { name: 'Length', price: '$5+' }, { name: 'Shape (Stiletto/Almond/Coffin/Round, etc...)', price: '$5+' },
+            { name: 'Ombre Design', price: '$15' }, { name: 'Chrome Design', price: '$20' },
+            { name: 'Cateyes Design', price: '$10+' }, { name: 'Marble Design', price: '$5+' },
         ]
     },
     {
-        category: 'Dipping Powder',
-        items: [
+        category: 'Dipping Powder', items: [
             { name: 'Dipping Powder w/Cuticle Grooming & Massage', price: '$50' },
             { name: 'Dipping French w/Cuticle Grooming & Massage', price: '$55' },
         ],
     },
     {
-        category: 'Manicures',
-        note: 'Add Gel/Shellac Polish to any Manicure for $20',
+        category: 'Manicures', note: 'Add Gel/Shellac Polish to any Manicure for $20',
         items: [
             { name: 'Classic', price: '$22', description: 'Basic and express manicure which includes nail trimming, cuticle grooming on hands, hot towel, massage, and finish with your choice of polish.' },
             { name: 'Signature', price: '$32', description: 'Includes everything in the Classic Manicure with a mask wrapped around the arms to re-hyrdrate your skin with a choice of lavender paraffin wax OR hot stone massage.' },
@@ -46,8 +42,7 @@ const servicesData: ServiceCategory[] = [
         ]
     },
     {
-        category: 'Pedicures',
-        note: 'Add Gel/Shellac Polish to any Pedicure for $20',
+        category: 'Pedicures', note: 'Add Gel/Shellac Polish to any Pedicure for $20',
         items: [
             { name: 'Classic (8 Mins Massage)', price: '$33', description: 'Basic express pedicure with nail trimming, shape, callus treatment, cuticle grooming, exfoliation, hot towel, leg and foot massage, and choice of polish.' },
             { name: 'Signature (12 Mins Massage)', price: '$43', description: 'Includes Classic Pedicure plus a mask for the legs and your choice of lavender paraffin wax OR hot stone massage.' },
@@ -58,42 +53,29 @@ const servicesData: ServiceCategory[] = [
         ]
     },
     {
-        category: 'Kids 12 & Under',
-        note: 'Add Gel/Shellac Polish for $15',
-        layout: 'grid',
+        category: 'Kids 12 & Under', note: 'Add Gel/Shellac Polish for $15', layout: 'grid',
         items: [
-            { name: 'Classic Manicure', price: '$12' },
-            { name: 'Classic Pedicure', price: '$24' },
-            { name: 'Hand Polish Change', price: '$8' },
-            { name: 'Toe Polish Change', price: '$10' },
+            { name: 'Classic Manicure', price: '$12' }, { name: 'Classic Pedicure', price: '$24' },
+            { name: 'Hand Polish Change', price: '$8' }, { name: 'Toe Polish Change', price: '$10' },
         ]
     },
     {
-        category: 'Additional Services',
-        layout: 'grid',
+        category: 'Additional Services', layout: 'grid',
         items: [
-            { name: 'Nail Repair (Varies w/ design)', price: '$5+' },
-            { name: 'Nail Enhancement Removal Only', price: '$13' },
-            { name: 'Nail Enhancement Removal (w/ another service)', price: '$6' },
-            { name: 'Shellac Gel Polish Change', price: '$30' },
-            { name: 'Regular Hand Polish Change', price: '$12' },
-            { name: 'Regular Toe Polish Change', price: '$13' },
-            { name: 'Basic French / American French Tip', price: '$5+' },
-            { name: 'Add Lavender Parafin Wax or Hot Stones', price: '$9' },
-            { name: 'Add Shellac / Gel to Service', price: '$20' },
-            { name: 'Extra Massages', price: '$1 / Min' },
+            { name: 'Nail Repair (Varies w/ design)', price: '$5+' }, { name: 'Nail Enhancement Removal Only', price: '$13' },
+            { name: 'Nail Enhancement Removal (w/ another service)', price: '$6' }, { name: 'Shellac Gel Polish Change', price: '$30' },
+            { name: 'Regular Hand Polish Change', price: '$12' }, { name: 'Regular Toe Polish Change', price: '$13' },
+            { name: 'Basic French / American French Tip', price: '$5+' }, { name: 'Add Lavender Parafin Wax or Hot Stones', price: '$9' },
+            { name: 'Add Shellac / Gel to Service', price: '$20' }, { name: 'Extra Massages', price: '$1 / Min' },
         ]
     },
     {
-        category: 'Waxing',
-        layout: 'grid',
+        category: 'Waxing', layout: 'grid',
         items: [
-            { name: 'Eyebrows', price: '$12' }, { name: 'Wholeface', price: '$45' },
-            { name: 'Chin', price: '$10' }, { name: 'Half Arm', price: '$35' },
-            { name: 'Lip', price: '$10' }, { name: 'Half Leg', price: '$40' },
-            { name: 'Underarms', price: '$25' }, { name: 'Sideburns', price: '$18' },
-            { name: 'Full Arm', price: '$45' }, { name: 'Chest', price: '$45' },
-            { name: 'Full Leg', price: '$55' }, { name: 'Bikini', price: '$45' },
+            { name: 'Eyebrows', price: '$12' }, { name: 'Wholeface', price: '$45' }, { name: 'Chin', price: '$10' },
+            { name: 'Half Arm', price: '$35' }, { name: 'Lip', price: '$10' }, { name: 'Half Leg', price: '$40' },
+            { name: 'Underarms', price: '$25' }, { name: 'Sideburns', price: '$18' }, { name: 'Full Arm', price: '$45' },
+            { name: 'Chest', price: '$45' }, { name: 'Full Leg', price: '$55' }, { name: 'Bikini', price: '$45' },
             { name: 'Back', price: '$50' }, { name: 'Brazillian', price: '$55' },
         ]
     },
@@ -104,39 +86,34 @@ export const Services: React.FC = () => {
     const [modalContainer, setModalContainer] = useState<Element | null>(null);
 
     useEffect(() => {
-        // Find the portal container after the component mounts
         setModalContainer(document.getElementById('modal-root'));
     }, []);
 
     useEffect(() => {
-        const originalStyle = window.getComputedStyle(document.body).overflow;
+        const originalOverflow = document.body.style.overflow;
         if (isMenuVisible) {
             document.body.style.overflow = 'hidden';
         } else {
-            document.body.style.overflow = originalStyle;
+            document.body.style.overflow = originalOverflow;
         }
-        return () => {
-            document.body.style.overflow = originalStyle;
-        };
+        return () => { document.body.style.overflow = originalOverflow; };
     }, [isMenuVisible]);
 
     const menuModal = (
         <div 
             className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex justify-center items-center animate-fade-in" 
             onClick={() => setIsMenuVisible(false)}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="services-heading"
+            role="dialog" aria-modal="true" aria-labelledby="services-heading"
         >
             <div 
                 className="bg-gradient-to-br from-gray-900 to-black border border-gold-700/30 w-full max-w-4xl h-[90vh] rounded-lg shadow-2xl m-4 flex flex-col animate-scale-in" 
                 onClick={e => e.stopPropagation()}
             >
-                <div className="p-6 border-b border-gold-600/30 flex justify-between items-center flex-shrink-0">
+                <header className="p-6 border-b border-gold-600/30 flex justify-between items-center flex-shrink-0">
                     <h2 id="services-heading" className="text-2xl font-serif font-bold text-gold-200">Our Services</h2>
-                    <button onClick={() => setIsMenuVisible(false)} className="text-3xl font-light leading-none text-gray-400 hover:text-white" aria-label="Close services menu">&times;</button>
-                </div>
-                <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar">
+                    <button onClick={() => setIsMenuVisible(false)} className="text-4xl font-light leading-none text-gray-400 hover:text-white transition-colors" aria-label="Close services menu">&times;</button>
+                </header>
+                <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar flex-grow">
                     {servicesData.map((category) => (
                         <div key={category.category} className="mb-8">
                             <h3 className="text-xl font-serif font-bold text-gold-400 border-b-2 border-gold-500/50 pb-2 mb-4">{category.category}</h3>
@@ -155,6 +132,11 @@ export const Services: React.FC = () => {
                         </div>
                     ))}
                 </div>
+                <footer className="p-4 border-t border-gold-600/30 text-center flex-shrink-0">
+                     <a href="tel:2817620878" className="inline-block bg-gold-600 text-white font-bold py-2 px-6 rounded-lg text-base shadow-lg hover:bg-gold-500 transition-colors">
+                        Book Now
+                    </a>
+                </footer>
             </div>
         </div>
     );
@@ -163,25 +145,19 @@ export const Services: React.FC = () => {
         <>
             <div className="lg:text-center">
                 <h2 className="text-base text-gold-700 font-semibold tracking-wide uppercase">Our Menu</h2>
-                <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-gray-900 sm:text-4xl" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.1)'}}>
+                <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-gray-900 sm:text-4xl text-shadow-subtle">
                     Indulge in Our Services
                 </p>
                 <p className="mt-4 max-w-2xl text-xl text-gray-700 lg:mx-auto font-sans">
                     Explore our wide range of services designed to make you look and feel your best. Click below to view our full service menu.
                 </p>
-
                 <div className="mt-16">
-                    <button
-                        onClick={() => setIsMenuVisible(true)}
-                        className="text-gray-900 font-bold py-3 px-8 rounded-lg text-lg shadow-lg btn-charging"
-                        aria-haspopup="true"
-                        aria-expanded={isMenuVisible}
-                    >
+                    <button onClick={() => setIsMenuVisible(true)} className="text-gray-900 font-bold py-3 px-8 rounded-lg text-lg shadow-lg btn-charging"
+                        aria-haspopup="dialog" aria-expanded={isMenuVisible}>
                         View Full Menu
                     </button>
                 </div>
             </div>
-
             {isMenuVisible && modalContainer && createPortal(menuModal, modalContainer)}
         </>
     );
