@@ -16,19 +16,20 @@ export const Header: React.FC = () => {
         event.preventDefault();
         const targetId = href.substring(1);
 
-        const horizontalSections = ['about', 'services', 'gallery'];
-        const sectionIndex = horizontalSections.indexOf(targetId);
+        // More robust way to find and scroll to horizontal sections
+        const horizontalContainer = document.querySelector<HTMLElement>('[data-testid="horizontal-scroll-container"]');
+        const horizontalSections = horizontalContainer ? Array.from(horizontalContainer.querySelectorAll<HTMLElement>('.horizontal-scroll-section-item')) : [];
+        const sectionIndex = horizontalSections.findIndex(section => section.id === targetId);
 
-        if (sectionIndex !== -1) {
-            // This is a horizontal section
-            const container = document.querySelector<HTMLElement>('[data-testid="horizontal-scroll-container"]');
-            if (container) {
-                const targetScrollY = container.offsetTop + (sectionIndex * window.innerWidth);
-                window.scrollTo({
-                    top: targetScrollY,
-                    behavior: 'smooth',
-                });
-            }
+        if (sectionIndex !== -1 && horizontalContainer) {
+            // This is a horizontal section.
+            // Use the actual width of a section for calculation to avoid layout jumps.
+            const sectionWidth = horizontalSections[sectionIndex].offsetWidth;
+            const targetScrollY = horizontalContainer.offsetTop + (sectionIndex * sectionWidth);
+            window.scrollTo({
+                top: targetScrollY,
+                behavior: 'smooth',
+            });
         } else {
             // This is a normal vertical section
             const targetElement = document.getElementById(targetId);
