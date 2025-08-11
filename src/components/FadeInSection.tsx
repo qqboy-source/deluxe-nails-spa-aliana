@@ -20,10 +20,9 @@ export const FadeInSection: React.FC<FadeInSectionProps> = ({ children, variant 
 
         const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                  setVisible(true);
-                  observer.unobserve(entry.target);
-                }
+                // This line is the key change. It sets visibility based on whether
+                // the element is currently intersecting with the viewport.
+                setVisible(entry.isIntersecting);
             });
         }, observerOptions);
 
