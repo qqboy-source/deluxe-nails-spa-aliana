@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { InstagramIcon, TikTokIcon } from './icons';
 
@@ -5,8 +6,8 @@ export const Footer: React.FC = () => {
     return (
         <footer className="bg-black/20 backdrop-blur-lg text-white border-t border-white/20">
             <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                    <div className="md:text-center">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+                    <div>
                         <h3 className="text-2xl font-serif font-bold text-gold-300">Deluxe Nails & Spa Aliana</h3>
                         <p className="mt-2 text-white/90 font-sans text-sm">
                            10335 West Grand Pkwy S STE 120<br/>
@@ -22,9 +23,9 @@ export const Footer: React.FC = () => {
                            RSVP  |  WALK-IN WELCOME  |  GIFT CARDS AVAILABLE  |  EVENT HOSTING
                         </p>
                     </div>
-                    <div className="md:text-center">
+                    <div className="md:text-right">
                         <h3 className="text-xl font-serif font-semibold text-gold-300">Follow Us</h3>
-                        <div className="mt-4 flex justify-center space-x-6">
+                        <div className="mt-4 flex justify-center md:justify-end space-x-6">
                             <a href="https://www.instagram.com/deluxenails_alianatx/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold-300 transition-colors transform hover:scale-110">
                                 <span className="sr-only">Instagram</span>
                                 <InstagramIcon className="w-7 h-7" />
