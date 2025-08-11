@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+
+import React from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { About } from './components/About';
@@ -10,35 +11,11 @@ import { HorizontalScrollContainer, HorizontalScrollSection } from './components
 import { FadeInSection } from './components/FadeInSection';
 
 function App(): React.ReactNode {
-  // This effect adds a class to the body when the user is scrolling.
-  // It helps prevent a bug where scrolling over a horizontal section would
-  // scroll its content vertically instead of driving the horizontal animation.
-  useEffect(() => {
-    let scrollTimeout: ReturnType<typeof setTimeout>;
-
-    const handleScroll = () => {
-      // Add a class to the body when scroll starts
-      document.body.classList.add('is-scrolling');
-
-      // Clear the timeout if it's already set.
-      // This resets the timer every time a scroll event is fired.
-      clearTimeout(scrollTimeout);
-
-      // Set a timeout to remove the class after scrolling has stopped
-      scrollTimeout = setTimeout(() => {
-        document.body.classList.remove('is-scrolling');
-      }, 150); // A 150ms delay is a good balance
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    // Cleanup function to remove the listener and timeout on component unmount
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      clearTimeout(scrollTimeout);
-    };
-  }, []);
-
+  const horizontalSections = [
+    { id: 'about', component: <About /> },
+    { id: 'services', component: <Services /> },
+    { id: 'gallery', component: <Gallery /> },
+  ];
 
   return (
     <div className="font-sans text-gray-800">
@@ -46,25 +23,16 @@ function App(): React.ReactNode {
       <main>
         <Hero />
         
-        <HorizontalScrollContainer>
-            <HorizontalScrollSection id="about">
-                <FadeInSection variant="horizontal">
-                    <About />
-                </FadeInSection>
+        <HorizontalScrollContainer sections={horizontalSections}>
+          {horizontalSections.map(section => (
+            <HorizontalScrollSection key={section.id} id={section.id}>
+              <FadeInSection variant="horizontal">
+                {section.component}
+              </FadeInSection>
             </HorizontalScrollSection>
-            <HorizontalScrollSection id="services">
-                <FadeInSection variant="horizontal">
-                    <Services />
-                </FadeInSection>
-            </HorizontalScrollSection>
-            <HorizontalScrollSection id="gallery">
-                <FadeInSection variant="horizontal">
-                    <Gallery />
-                </FadeInSection>
-            </HorizontalScrollSection>
+          ))}
         </HorizontalScrollContainer>
 
-        {/* Vertical scrolling resumes here */}
         <FadeInSection>
           <Contact />
         </FadeInSection>
