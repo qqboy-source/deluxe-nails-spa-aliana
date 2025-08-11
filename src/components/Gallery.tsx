@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -32,11 +33,11 @@ const GalleryImage: React.FC<{ src: string, onImageClick: (src: string) => void 
         onKeyDown={(e) => e.key === 'Enter' && onImageClick(src)}
         role="button"
         tabIndex={0}
-        aria-label={`View larger image for ${src}`}
+        aria-label={`View larger image for ${src.split('text=')[1] || 'nail design'}`}
     >
         <img
             src={src}
-            alt={`Nail art example from ${src}`}
+            alt={`Nail art example: ${src.split('text=')[1] || 'a nail design'}`}
             className="w-full h-full object-cover"
             loading="lazy"
         />
@@ -49,50 +50,36 @@ export const Gallery: React.FC = () => {
   const [modalContainer, setModalContainer] = useState<Element | null>(null);
 
   useEffect(() => {
-    // Find the portal container after the component mounts
     setModalContainer(document.getElementById('modal-root'));
   }, []);
 
   useEffect(() => {
-    const originalStyle = window.getComputedStyle(document.body).overflow;
-    if (selectedImage) {
-        document.body.style.overflow = 'hidden';
-    } else {
-        document.body.style.overflow = originalStyle;
-    }
-    
+    const originalOverflow = document.body.style.overflow;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        closeModal();
-      }
+      if (e.key === 'Escape') closeModal();
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-
+    if (selectedImage) {
+        document.body.style.overflow = 'hidden';
+        window.addEventListener('keydown', handleKeyDown);
+    } else {
+        document.body.style.overflow = originalOverflow;
+    }
+    
     return () => {
-        document.body.style.overflow = originalStyle;
+        document.body.style.overflow = originalOverflow;
         window.removeEventListener('keydown', handleKeyDown);
     };
   }, [selectedImage]);
 
-  const openModal = (src: string) => {
-    setSelectedImage(src);
-  };
-
-  const closeModal = () => {
-    setSelectedImage(null);
-  };
-  
-  const getAnimationClass = (index: number) => {
-    const baseClass = index === 1 ? 'animate-scroll-down' : 'animate-scroll-up';
-    return selectedImage ? `${baseClass} pause` : baseClass;
-  };
+  const openModal = (src: string) => setSelectedImage(src);
+  const closeModal = () => setSelectedImage(null);
 
   return (
     <>
       <div className="lg:text-center">
         <h2 className="text-base text-gold-700 font-semibold tracking-wide uppercase">Our Work</h2>
-        <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-gray-900 sm:text-4xl" style={{textShadow: '1px 1px 2px rgba(0,0,0,0.1)'}}>
+        <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-gray-900 sm:text-4xl text-shadow-subtle">
           A Glimpse of Perfection
         </p>
         <p className="mt-4 max-w-2xl text-xl text-gray-700 lg:mx-auto font-sans">
@@ -103,7 +90,11 @@ export const Gallery: React.FC = () => {
       <div className="mt-12 w-full max-w-4xl mx-auto h-[60vh] max-h-[500px] flex gap-4" aria-label="Image gallery with animated columns">
         {columns.map((columnImages, colIndex) => (
             <div key={colIndex} className="w-1/3 h-full overflow-hidden group" role="presentation">
-                <div className={`w-full flex flex-col group-hover:[animation-play-state:paused] ${getAnimationClass(colIndex)}`}>
+                <div
+                  className={`w-full flex flex-col group-hover:pause ${
+                    colIndex === 1 ? 'animate-scroll-down' : 'animate-scroll-up'
+                  } ${selectedImage ? 'pause' : ''}`}
+                >
                     {/* Render images twice for seamless loop */}
                     {columnImages.map((src, imgIndex) => <GalleryImage key={`${src}-${imgIndex}`} src={src} onImageClick={openModal} />)}
                     {columnImages.map((src, imgIndex) => <GalleryImage key={`${src}-${imgIndex}-clone`} src={src} onImageClick={openModal} />)}
@@ -124,9 +115,7 @@ export const Gallery: React.FC = () => {
                 onClick={closeModal}
                 className="absolute top-4 right-4 text-white text-5xl font-light leading-none z-[210] hover:text-gold-300 transition-colors"
                 aria-label="Close image view"
-            >
-                &times;
-            </button>
+            >&times;</button>
             <div className="relative animate-scale-in z-[205]" onClick={e => e.stopPropagation()}>
                 <h2 id="gallery-modal-title" className="sr-only">Enlarged Image View</h2>
                 <img
