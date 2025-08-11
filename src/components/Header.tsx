@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 
 export const Header: React.FC = () => {
@@ -34,7 +33,8 @@ export const Header: React.FC = () => {
         if (sectionIndex !== -1) {
             // It's a horizontal section.
             const containerTop = horizontalContainer.getBoundingClientRect().top + window.scrollY;
-            const sectionWidth = horizontalSections[0]?.offsetWidth || window.innerWidth;
+            // Use getBoundingClientRect().width for the most precise measurement, matching the container.
+            const sectionWidth = horizontalSections[0]?.getBoundingClientRect().width || window.innerWidth;
             const targetScrollY = containerTop + (sectionIndex * sectionWidth);
             
             window.scrollTo({
