@@ -116,7 +116,7 @@ export const Gallery: React.FC = () => {
                 <div
                   className={`w-full flex flex-col group-hover:pause will-change-transform ${
                     colIndex === 1 ? 'animate-scroll-down' : 'animate-scroll-up'
-                  } ${selectedImageIndex !== null ? 'pause' : ''}`}
+                  } ${selectedImageSrc ? 'pause' : ''}`}
                 >
                     {/* Render images twice for seamless loop */}
                     {columnImages.map((src, imgIndex) => <GalleryImage key={`${src}-${imgIndex}`} src={src} onImageClick={openModal} />)}
@@ -126,7 +126,7 @@ export const Gallery: React.FC = () => {
         ))}
       </div>
 
-      {selectedImageIndex !== null && modalContainer && createPortal(
+      {selectedImageSrc && modalContainer && createPortal(
         <div
           className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex justify-center items-center animate-fade-in p-4"
           onClick={closeModal}
