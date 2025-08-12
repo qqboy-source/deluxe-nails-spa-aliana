@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { LeftArrowIcon, RightArrowIcon } from './icons';
 
 // Using more reliable placeholders with theme colors and increased to 12 images
 const images = [
@@ -46,20 +47,42 @@ const GalleryImage: React.FC<{ src: string, onImageClick: (src: string) => void 
 
 
 export const Gallery: React.FC = () => {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [modalContainer, setModalContainer] = useState<Element | null>(null);
 
   useEffect(() => {
     setModalContainer(document.getElementById('modal-root'));
   }, []);
 
+  const openModal = (src: string) => {
+    const index = images.indexOf(src);
+    if (index !== -1) {
+      setSelectedImageIndex(index);
+    }
+  };
+  const closeModal = () => setSelectedImageIndex(null);
+
+  const goToNext = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedImageIndex === null) return;
+    setSelectedImageIndex((prevIndex) => (prevIndex! + 1) % images.length);
+  };
+
+  const goToPrevious = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedImageIndex === null) return;
+    setSelectedImageIndex((prevIndex) => (prevIndex! - 1 + images.length) % images.length);
+  };
+
   useEffect(() => {
     const originalOverflow = document.body.style.overflow;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') closeModal();
+      if (e.key === 'ArrowRight') goToNext();
+      if (e.key === 'ArrowLeft') goToPrevious();
     };
 
-    if (selectedImage) {
+    if (selectedImageIndex !== null) {
         document.body.style.overflow = 'hidden';
         window.addEventListener('keydown', handleKeyDown);
     } else {
@@ -70,10 +93,10 @@ export const Gallery: React.FC = () => {
         document.body.style.overflow = originalOverflow;
         window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [selectedImage]);
+  }, [selectedImageIndex]);
 
-  const openModal = (src: string) => setSelectedImage(src);
-  const closeModal = () => setSelectedImage(null);
+  const selectedImageSrc = selectedImageIndex !== null ? images[selectedImageIndex] : null;
+  const selectedImageAlt = selectedImageSrc ? `Enlarged nail art example: ${selectedImageSrc.split('text=')[1] || 'a nail design'}` : '';
 
   return (
     <>
@@ -93,7 +116,7 @@ export const Gallery: React.FC = () => {
                 <div
                   className={`w-full flex flex-col group-hover:pause will-change-transform ${
                     colIndex === 1 ? 'animate-scroll-down' : 'animate-scroll-up'
-                  } ${selectedImage ? 'pause' : ''}`}
+                  } ${selectedImageIndex !== null ? 'pause' : ''}`}
                 >
                     {/* Render images twice for seamless loop */}
                     {columnImages.map((src, imgIndex) => <GalleryImage key={`${src}-${imgIndex}`} src={src} onImageClick={openModal} />)}
@@ -103,7 +126,7 @@ export const Gallery: React.FC = () => {
         ))}
       </div>
 
-      {selectedImage && modalContainer && createPortal(
+      {selectedImageIndex !== null && modalContainer && createPortal(
         <div
           className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex justify-center items-center animate-fade-in p-4"
           onClick={closeModal}
@@ -116,13 +139,32 @@ export const Gallery: React.FC = () => {
                 className="absolute top-4 right-4 text-white text-5xl font-light leading-none z-[210] hover:text-gold-300 transition-colors"
                 aria-label="Close image view"
             >&times;</button>
-            <div className="relative animate-scale-in z-[205]" onClick={e => e.stopPropagation()}>
-                <h2 id="gallery-modal-title" className="sr-only">Enlarged Image View</h2>
-                <img
-                    src={selectedImage}
-                    alt="Enlarged nail art example"
-                    className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
-                />
+
+             <div className="relative w-full h-full flex items-center justify-center" onClick={e => e.stopPropagation()}>
+                <button
+                    onClick={goToPrevious}
+                    className="absolute left-0 sm:left-4 top-1/2 -translate-y-1/2 z-[210] bg-black/40 text-white p-2 rounded-full hover:bg-black/60 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black/50 focus:ring-gold-400"
+                    aria-label="Previous image"
+                >
+                    <LeftArrowIcon className="w-6 h-6 sm:w-8 sm:h-8" />
+                </button>
+            
+                <div className="relative animate-scale-in z-[205]">
+                    <h2 id="gallery-modal-title" className="sr-only">{selectedImageAlt}</h2>
+                    <img
+                        src={selectedImageSrc}
+                        alt={selectedImageAlt}
+                        className="max-w-[80vw] sm:max-w-[70vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
+                    />
+                </div>
+                
+                <button
+                    onClick={goToNext}
+                    className="absolute right-0 sm:right-4 top-1/2 -translate-y-1/2 z-[210] bg-black/40 text-white p-2 rounded-full hover:bg-black/60 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black/50 focus:ring-gold-400"
+                    aria-label="Next image"
+                >
+                    <RightArrowIcon className="w-6 h-6 sm:w-8 sm:h-8" />
+                </button>
             </div>
         </div>,
         modalContainer
