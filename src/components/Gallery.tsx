@@ -4,21 +4,29 @@ import { createPortal } from 'react-dom';
 import { LeftArrowIcon, RightArrowIcon } from './icons';
 
 // INSTRUCTIONS FOR ADDING YOUR OWN GALLERY IMAGES:
-// 1. In the root directory of your project (the same level as the 'src' folder), create a new folder named `public`.
-// 2. Inside that new `public` folder, create another folder named `gallery`.
-// 3. Place your 12 gallery images inside the `public/gallery` folder.
-// 4. Important: Name your images exactly like this: `nail-1.jpg`, `nail-2.jpg`, ..., `nail-12.jpg`.
-//
-// The code below will automatically load those images into your gallery.
-const images = Array.from({ length: 12 }, (_, i) => `/gallery/nail-${i + 1}.jpg`);
-
-
-// Distribute 12 images into three columns of 4
-const columns = [
-    [images[0], images[1], images[2], images[3]],
-    [images[4], images[5], images[6], images[7]],
-    [images[8], images[9], images[10], images[11]],
+// 1. In the root directory of your project, create a folder named `public`, then a folder inside that called `gallery`.
+// 2. Place your images inside the `public/gallery` folder (e.g., `nail-1.jpg`, `nail-2.jpg`, etc.).
+// 3. IMPORTANT: List the exact file paths for your images in the `images` array below.
+//    You can add or remove images from this list, and the gallery will update automatically!
+const images = [
+  '/gallery/nail-1.jpg',
+  '/gallery/nail-2.jpg',
+  '/gallery/nail-3.jpg',
+  '/gallery/nail-4.jpg',
+  '/gallery/nail-5.jpg',
+  '/gallery/nail-6.jpg',
+  '/gallery/nail-7.jpg',
+  '/gallery/nail-8.jpg',
+  // Add more image paths here, like: '/gallery/nail-9.jpg',
 ];
+
+
+// This code automatically distributes the images into three columns.
+const numColumns = 3;
+const columns: string[][] = Array.from({ length: numColumns }, () => []);
+images.forEach((image, index) => {
+  columns[index % numColumns].push(image);
+});
 
 const GalleryImage: React.FC<{ src: string, onImageClick: (src: string) => void }> = ({ src, onImageClick }) => {
     const imageNumber = src.split('-')[1]?.split('.')[0] || 'design';
@@ -60,13 +68,13 @@ export const Gallery: React.FC = () => {
 
   const goToNext = (e?: React.MouseEvent) => {
     e?.stopPropagation();
-    if (selectedImageIndex === null) return;
+    if (selectedImageIndex === null || images.length === 0) return;
     setSelectedImageIndex((prevIndex) => (prevIndex! + 1) % images.length);
   };
 
   const goToPrevious = (e?: React.MouseEvent) => {
     e?.stopPropagation();
-    if (selectedImageIndex === null) return;
+    if (selectedImageIndex === null || images.length === 0) return;
     setSelectedImageIndex((prevIndex) => (prevIndex! - 1 + images.length) % images.length);
   };
 
