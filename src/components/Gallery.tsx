@@ -5,19 +5,19 @@ import { LeftArrowIcon, RightArrowIcon } from './icons';
 
 // INSTRUCTIONS FOR ADDING YOUR OWN GALLERY IMAGES:
 // 1. In the root directory of your project, create a folder named `public`, then a folder inside that called `gallery`.
-// 2. Place your images inside the `public/gallery` folder (e.g., `nail-1.jpg`, `nail-2.jpg`, etc.).
+// 2. Place your images inside the `public/gallery` folder (e.g., `nail-1.jpeg`, `nail-2.jpeg`, etc.).
 // 3. IMPORTANT: List the exact file paths for your images in the `images` array below.
 //    You can add or remove images from this list, and the gallery will update automatically!
 const images = [
-  '/gallery/nail-1.jpg',
-  '/gallery/nail-2.jpg',
-  '/gallery/nail-3.jpg',
-  '/gallery/nail-4.jpg',
-  '/gallery/nail-5.jpg',
-  '/gallery/nail-6.jpg',
-  '/gallery/nail-7.jpg',
-  '/gallery/nail-8.jpg',
-  // Add more image paths here, like: '/gallery/nail-9.jpg',
+  '/gallery/nail-1.jpeg',
+  '/gallery/nail-2.jpeg',
+  '/gallery/nail-3.jpeg',
+  '/gallery/nail-4.jpeg',
+  '/gallery/nail-5.jpeg',
+  '/gallery/nail-6.jpeg',
+  '/gallery/nail-7.jpeg',
+  '/gallery/nail-8.jpeg',
+  // Add more image paths here, like: '/gallery/nail-9.jpeg',
 ];
 
 
@@ -97,7 +97,7 @@ export const Gallery: React.FC = () => {
         document.body.style.overflow = originalOverflow;
         window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [selectedImageIndex]);
+  }, [selectedImageIndex, goToNext, goToPrevious]);
 
   const selectedImageSrc = selectedImageIndex !== null ? images[selectedImageIndex] : null;
   const selectedImageAlt = selectedImageIndex !== null ? `Enlarged nail art example ${selectedImageIndex + 1}` : '';
