@@ -3,21 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { LeftArrowIcon, RightArrowIcon } from './icons';
 
-// Using more reliable placeholders with theme colors and increased to 12 images
-const images = [
-  'https://placehold.co/400x500/c6934a/FBF3E6?text=Nails+1',
-  'https://placehold.co/400x500/d9ac64/FBF3E6?text=Nails+2',
-  'https://placehold.co/400x500/9F763B/FBF3E6?text=Nails+3',
-  'https://placehold.co/400x500/c6934a/FBF3E6?text=Nails+4',
-  'https://placehold.co/400x500/d9ac64/FBF3E6?text=Nails+5',
-  'https://placehold.co/400x500/9F763B/FBF3E6?text=Nails+6',
-  'https://placehold.co/400x500/c6934a/FBF3E6?text=Nails+7',
-  'https://placehold.co/400x500/d9ac64/FBF3E6?text=Nails+8',
-  'https://placehold.co/400x500/9F763B/FBF3E6?text=Nails+9',
-  'https://placehold.co/400x500/c6934a/FBF3E6?text=Nails+10',
-  'https://placehold.co/400x500/d9ac64/FBF3E6?text=Nails+11',
-  'https://placehold.co/400x500/9F763B/FBF3E6?text=Nails+12',
-];
+// INSTRUCTIONS FOR ADDING YOUR OWN GALLERY IMAGES:
+// 1. In the root directory of your project (the same level as the 'src' folder), create a new folder named `public`.
+// 2. Inside that new `public` folder, create another folder named `gallery`.
+// 3. Place your 12 gallery images inside the `public/gallery` folder.
+// 4. Important: Name your images exactly like this: `nail-1.jpg`, `nail-2.jpg`, ..., `nail-12.jpg`.
+//
+// The code below will automatically load those images into your gallery.
+const images = Array.from({ length: 12 }, (_, i) => `/gallery/nail-${i + 1}.jpg`);
 
 
 // Distribute 12 images into three columns of 4
@@ -27,23 +20,26 @@ const columns = [
     [images[8], images[9], images[10], images[11]],
 ];
 
-const GalleryImage: React.FC<{ src: string, onImageClick: (src: string) => void }> = ({ src, onImageClick }) => (
-    <div
-        className="w-full h-auto rounded-lg shadow-lg overflow-hidden mb-4 cursor-pointer border-2 border-transparent hover:border-gold-400 transition-all duration-300"
-        onClick={() => onImageClick(src)}
-        onKeyDown={(e) => e.key === 'Enter' && onImageClick(src)}
-        role="button"
-        tabIndex={0}
-        aria-label={`View larger image for ${src.split('text=')[1] || 'nail design'}`}
-    >
-        <img
-            src={src}
-            alt={`Nail art example: ${src.split('text=')[1] || 'a nail design'}`}
-            className="w-full h-full object-cover"
-            loading="lazy"
-        />
-    </div>
-);
+const GalleryImage: React.FC<{ src: string, onImageClick: (src: string) => void }> = ({ src, onImageClick }) => {
+    const imageNumber = src.split('-')[1]?.split('.')[0] || 'design';
+    return (
+        <div
+            className="w-full h-auto rounded-lg shadow-lg overflow-hidden mb-4 cursor-pointer border-2 border-transparent hover:border-gold-400 transition-all duration-300"
+            onClick={() => onImageClick(src)}
+            onKeyDown={(e) => e.key === 'Enter' && onImageClick(src)}
+            role="button"
+            tabIndex={0}
+            aria-label={`View larger image for nail design ${imageNumber}`}
+        >
+            <img
+                src={src}
+                alt={`Nail art example ${imageNumber}`}
+                className="w-full h-full object-cover"
+                loading="lazy"
+            />
+        </div>
+    );
+};
 
 
 export const Gallery: React.FC = () => {
@@ -96,7 +92,7 @@ export const Gallery: React.FC = () => {
   }, [selectedImageIndex]);
 
   const selectedImageSrc = selectedImageIndex !== null ? images[selectedImageIndex] : null;
-  const selectedImageAlt = selectedImageSrc ? `Enlarged nail art example: ${selectedImageSrc.split('text=')[1] || 'a nail design'}` : '';
+  const selectedImageAlt = selectedImageIndex !== null ? `Enlarged nail art example ${selectedImageIndex + 1}` : '';
 
   return (
     <>
