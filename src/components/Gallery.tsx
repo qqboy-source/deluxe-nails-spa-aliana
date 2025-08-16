@@ -9,15 +9,15 @@ import { LeftArrowIcon, RightArrowIcon } from './icons';
 // 3. IMPORTANT: List the exact file paths for your images in the `images` array below.
 //    You can add or remove images from this list, and the gallery will update automatically!
 const images = [
-  '/gallery/nail-1.jpeg',
-  '/gallery/nail-2.jpeg',
-  '/gallery/nail-3.jpeg',
-  '/gallery/nail-4.jpeg',
-  '/gallery/nail-5.jpeg',
-  '/gallery/nail-6.jpeg',
-  '/gallery/nail-7.jpeg',
-  '/gallery/nail-8.jpeg',
-  // Add more image paths here, like: '/gallery/nail-9.jpeg',
+  'gallery/nail-1.jpeg',
+  'gallery/nail-2.jpeg',
+  'gallery/nail-3.jpeg',
+  'gallery/nail-4.jpeg',
+  'gallery/nail-5.jpeg',
+  'gallery/nail-6.jpeg',
+  'gallery/nail-7.jpeg',
+  'gallery/nail-8.jpeg',
+  // Add more image paths here, like: 'gallery/nail-9.jpeg',
 ];
 
 
@@ -97,7 +97,8 @@ export const Gallery: React.FC = () => {
         document.body.style.overflow = originalOverflow;
         window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [selectedImageIndex, goToNext, goToPrevious]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedImageIndex]);
 
   const selectedImageSrc = selectedImageIndex !== null ? images[selectedImageIndex] : null;
   const selectedImageAlt = selectedImageIndex !== null ? `Enlarged nail art example ${selectedImageIndex + 1}` : '';
