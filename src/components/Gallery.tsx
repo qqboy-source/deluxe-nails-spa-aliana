@@ -4,10 +4,9 @@ import { createPortal } from 'react-dom';
 import { LeftArrowIcon, RightArrowIcon } from './icons';
 
 // INSTRUCTIONS FOR ADDING YOUR OWN GALLERY IMAGES:
-// 1. In the root directory of your project, you should have a `public` folder, and inside that, a `gallery` folder.
-// 2. Place your images inside the `public/gallery` folder (e.g., `nail-1.jpeg`, `nail-2.jpeg`, etc.).
-// 3. IMPORTANT: List the exact file paths for your images in the `images` array below.
-//    You can add or remove images from this list, and the gallery will update automatically!
+// 1. Place your images inside the `public/gallery` folder.
+// 2. IMPORTANT: List the exact file paths for your images in the `images` array below.
+//    This list now matches the 8 images you've uploaded.
 const images = [
   '/gallery/nail-1.jpeg',
   '/gallery/nail-2.jpeg',
@@ -17,10 +16,9 @@ const images = [
   '/gallery/nail-6.jpeg',
   '/gallery/nail-7.jpeg',
   '/gallery/nail-8.jpeg',
-  '/gallery/nail-9.jpeg',
-  '/gallery/nail-10.jpeg',
-  '/gallery/nail-11.jpeg',
-  '/gallery/nail-12.jpeg',
+  // When you upload more images (e.g., nail-9.jpeg),
+  // simply add their paths here to add them to the gallery:
+  // '/gallery/nail-9.jpeg',
 ];
 
 
@@ -43,7 +41,7 @@ const GalleryImage: React.FC<{ src: string, onImageClick: (src: string) => void 
 
     return (
         <div
-            className="w-full h-auto rounded-lg shadow-lg overflow-hidden mb-4 cursor-pointer border-2 border-transparent hover:border-gold-400 transition-all duration-300"
+            className="w-full h-auto rounded-lg shadow-lg overflow-hidden mb-4 cursor-pointer border-2 border-transparent hover:border-gold-400 transition-all duration-300 bg-gold-100"
             onClick={() => onImageClick(src)}
             onKeyDown={(e) => e.key === 'Enter' && onImageClick(src)}
             role="button"
