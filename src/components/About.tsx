@@ -41,7 +41,8 @@ export const About: React.FC = () => {
                     </ul>
                 </div>
                 <div className="rounded-lg overflow-hidden shadow-xl">
-                    <img className="w-full h-full object-cover rounded-lg" src="https://picsum.photos/600/400?random=2" alt="Interior of the nail spa" />
+                    {/* INSTRUCTION: Please upload a photo of your spa's interior named 'spa-interior.jpg' to the public/images folder on GitHub. */}
+                    <img className="w-full h-full object-cover rounded-lg" src="/images/spa-interior.jpg" alt="Interior of the Deluxe Nails & Spa Aliana" />
                 </div>
             </div>
         </>
