@@ -17,7 +17,10 @@ const images = [
   '/gallery/nail-6.jpeg',
   '/gallery/nail-7.jpeg',
   '/gallery/nail-8.jpeg',
-  // Add more image paths here, like: '/gallery/nail-9.jpeg',
+  '/gallery/nail-9.jpeg',
+  '/gallery/nail-10.jpeg',
+  '/gallery/nail-11.jpeg',
+  '/gallery/nail-12.jpeg',
 ];
 
 
@@ -29,7 +32,15 @@ images.forEach((image, index) => {
 });
 
 const GalleryImage: React.FC<{ src: string, onImageClick: (src: string) => void }> = ({ src, onImageClick }) => {
+    const [imageSrc, setImageSrc] = useState(src);
     const imageNumber = src.split('-')[1]?.split('.')[0] || 'design';
+
+    const handleError = () => {
+        // If the local image fails, fall back to a placeholder.
+        // This makes the gallery robust against single broken images or typos in the path.
+        setImageSrc(`https://placehold.co/400x500/c6934a/FBF3E6?text=Image+Not+Found`);
+    };
+
     return (
         <div
             className="w-full h-auto rounded-lg shadow-lg overflow-hidden mb-4 cursor-pointer border-2 border-transparent hover:border-gold-400 transition-all duration-300"
@@ -40,10 +51,11 @@ const GalleryImage: React.FC<{ src: string, onImageClick: (src: string) => void 
             aria-label={`View larger image for nail design ${imageNumber}`}
         >
             <img
-                src={src}
+                src={imageSrc}
                 alt={`Nail art example ${imageNumber}`}
                 className="w-full h-full object-cover"
                 loading="lazy"
+                onError={handleError}
             />
         </div>
     );
