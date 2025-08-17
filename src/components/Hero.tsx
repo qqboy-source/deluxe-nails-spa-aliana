@@ -1,4 +1,3 @@
-
 import React, { useRef, useLayoutEffect, useState } from 'react';
 
 // A robust background image component with a fallback
@@ -6,7 +5,7 @@ const HeroBackgroundImage: React.FC = () => {
     const [hasError, setHasError] = useState(false);
 
     // INSTRUCTION: Please upload your main background image named 'hero-background.jpg' to the public/images folder on GitHub.
-    const imageUrl = '/images/hero-background.jpg';
+    const imageUrl = 'images/hero-background.jpg';
 
     if (hasError) {
         // Fallback to a solid color if the image fails to load.
