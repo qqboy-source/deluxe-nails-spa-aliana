@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 export const About: React.FC = () => {
@@ -50,7 +49,7 @@ export const About: React.FC = () => {
                     {/* INSTRUCTION: Please upload a photo of your spa's interior named 'spa-interior.jpg' to the public/images folder on GitHub. */}
                     <img 
                         className="w-full h-full object-cover rounded-lg" 
-                        src="/images/spa-interior.jpg" 
+                        src="images/spa-interior.jpg" 
                         alt="Interior of the Deluxe Nails & Spa Aliana" 
                         onError={handleImageError}
                         loading="lazy"
