@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { LeftArrowIcon, RightArrowIcon } from './icons';
@@ -8,17 +7,17 @@ import { LeftArrowIcon, RightArrowIcon } from './icons';
 // 2. IMPORTANT: List the exact file paths for your images in the `images` array below.
 //    This list now matches the 8 images you've uploaded.
 const images = [
-  '/gallery/nail-1.jpeg',
-  '/gallery/nail-2.jpeg',
-  '/gallery/nail-3.jpeg',
-  '/gallery/nail-4.jpeg',
-  '/gallery/nail-5.jpeg',
-  '/gallery/nail-6.jpeg',
-  '/gallery/nail-7.jpeg',
-  '/gallery/nail-8.jpeg',
+  'gallery/nail-1.jpeg',
+  'gallery/nail-2.jpeg',
+  'gallery/nail-3.jpeg',
+  'gallery/nail-4.jpeg',
+  'gallery/nail-5.jpeg',
+  'gallery/nail-6.jpeg',
+  'gallery/nail-7.jpeg',
+  'gallery/nail-8.jpeg',
   // When you upload more images (e.g., nail-9.jpeg),
   // simply add their paths here to add them to the gallery:
-  // '/gallery/nail-9.jpeg',
+  // 'gallery/nail-9.jpeg',
 ];
 
 
