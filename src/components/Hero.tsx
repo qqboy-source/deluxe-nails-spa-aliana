@@ -5,7 +5,8 @@ const HeroBackgroundImage: React.FC = () => {
     const [hasError, setHasError] = useState(false);
 
     // INSTRUCTION: Please upload your main background image named 'hero-background.jpg' to the public/images folder on GitHub.
-    const imageUrl = 'images/hero-background.jpg';
+    // The "?v=2" is a "cache-busting" string. If you change the image again, update it to "?v=3"
+    const imageUrl = 'images/hero-background.jpg?v=2';
 
     if (hasError) {
         // Fallback to a solid color if the image fails to load.
