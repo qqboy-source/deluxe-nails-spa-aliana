@@ -2,6 +2,12 @@
 import React from 'react';
 
 export const About: React.FC = () => {
+    const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+        e.currentTarget.onerror = null; // Prevent looping
+        e.currentTarget.src = 'https://placehold.co/600x400/9F763B/FBF3E6?text=Our+Beautiful+Spa';
+        e.currentTarget.alt = "A placeholder image showing the text 'Our Beautiful Spa'";
+    };
+
     return (
         <>
             <div className="lg:text-center">
@@ -40,9 +46,15 @@ export const About: React.FC = () => {
                         </li>
                     </ul>
                 </div>
-                <div className="rounded-lg overflow-hidden shadow-xl">
+                <div className="rounded-lg overflow-hidden shadow-xl bg-gold-100">
                     {/* INSTRUCTION: Please upload a photo of your spa's interior named 'spa-interior.jpg' to the public/images folder on GitHub. */}
-                    <img className="w-full h-full object-cover rounded-lg" src="/images/spa-interior.jpg" alt="Interior of the Deluxe Nails & Spa Aliana" />
+                    <img 
+                        className="w-full h-full object-cover rounded-lg" 
+                        src="/images/spa-interior.jpg" 
+                        alt="Interior of the Deluxe Nails & Spa Aliana" 
+                        onError={handleImageError}
+                        loading="lazy"
+                    />
                 </div>
             </div>
         </>
