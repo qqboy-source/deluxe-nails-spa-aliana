@@ -1,5 +1,27 @@
 
-import React, { useRef, useLayoutEffect } from 'react';
+import React, { useRef, useLayoutEffect, useState } from 'react';
+
+// A robust background image component with a fallback
+const HeroBackgroundImage: React.FC = () => {
+    const [hasError, setHasError] = useState(false);
+
+    // INSTRUCTION: Please upload your main background image named 'hero-background.jpg' to the public/images folder on GitHub.
+    const imageUrl = '/images/hero-background.jpg';
+
+    if (hasError) {
+        // Fallback to a solid color if the image fails to load.
+        return <div className="absolute top-0 left-0 w-full h-full bg-gold-900/80"></div>;
+    }
+
+    return (
+        <img
+            src={imageUrl}
+            alt="Luxurious spa-themed background"
+            className="absolute top-0 left-0 w-full h-full object-cover"
+            onError={() => setHasError(true)}
+        />
+    );
+};
 
 export const Hero: React.FC = () => {
     const heroRef = useRef<HTMLElement>(null);
@@ -23,8 +45,8 @@ export const Hero: React.FC = () => {
 
 
     return (
-        <section ref={heroRef} id="home" className="relative min-h-[500px] flex items-center justify-center text-center text-white">
-            <div className="absolute top-0 left-0 w-full h-full bg-cover bg-center" style={{ backgroundImage: "url('/images/hero-background.jpg')" }}></div>
+        <section ref={heroRef} id="home" className="relative min-h-[500px] flex items-center justify-center text-center text-white overflow-hidden">
+            <HeroBackgroundImage />
             <div className="absolute top-0 left-0 w-full h-full bg-gold-900/40"></div>
             <div className="relative z-10 p-8 max-w-3xl animate-fade-in-up bg-black/25 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl">
                 <h1 className="text-5xl md:text-7xl font-serif font-bold text-white tracking-wider leading-tight text-shadow-strong">
