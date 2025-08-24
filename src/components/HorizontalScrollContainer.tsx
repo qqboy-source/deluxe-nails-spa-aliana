@@ -7,90 +7,15 @@ interface HorizontalScrollSectionProps {
 }
 
 export const HorizontalScrollSection: React.FC<HorizontalScrollSectionProps> = ({ children, id, isActive }) => {
-    const contentRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        const contentElement = contentRef.current;
-        if (!contentElement) return;
-
-        const handleWheel = (e: WheelEvent) => {
-            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-                return;
-            }
-            
-            const { scrollTop, scrollHeight, clientHeight } = contentElement;
-            const tolerance = 2;
-
-            if (scrollHeight <= clientHeight + tolerance) {
-                return;
-            }
-
-            const isAtTop = scrollTop <= tolerance;
-            const isAtBottom = scrollHeight - scrollTop <= clientHeight + tolerance;
-            const isScrollingUp = e.deltaY < 0;
-            const isScrollingDown = e.deltaY > 0;
-
-            if ((isAtTop && isScrollingUp) || (isAtBottom && isScrollingDown)) {
-                return;
-            }
-            
-            e.preventDefault();
-            contentElement.scrollTop += e.deltaY;
-        };
-        
-        let lastTouchY = 0;
-        const handleTouchStart = (e: TouchEvent) => {
-            if (e.touches.length > 0) {
-              lastTouchY = e.touches[0].clientY;
-            }
-        };
-
-        const handleTouchMove = (e: TouchEvent) => {
-            if (e.touches.length === 0) return;
-            
-            const { scrollTop, scrollHeight, clientHeight } = contentElement;
-            const tolerance = 2;
-
-            if (scrollHeight <= clientHeight + tolerance) {
-                return;
-            }
-
-            const isAtTop = scrollTop <= tolerance;
-            const isAtBottom = scrollHeight - scrollTop <= clientHeight + tolerance;
-
-            const currentY = e.touches[0].clientY;
-            const isScrollingUp = currentY > lastTouchY;
-            const isScrollingDown = currentY < lastTouchY;
-
-            if ((isAtTop && isScrollingUp) || (isAtBottom && isScrollingDown)) {
-                lastTouchY = currentY;
-                return;
-            }
-            
-            e.preventDefault();
-            const deltaY = lastTouchY - currentY;
-            contentElement.scrollTop += deltaY;
-            lastTouchY = currentY;
-        };
-
-        contentElement.addEventListener('wheel', handleWheel, { passive: false });
-        contentElement.addEventListener('touchstart', handleTouchStart, { passive: true });
-        contentElement.addEventListener('touchmove', handleTouchMove, { passive: false });
-
-        return () => {
-            contentElement.removeEventListener('wheel', handleWheel);
-            contentElement.removeEventListener('touchstart', handleTouchStart);
-            contentElement.removeEventListener('touchmove', handleTouchMove);
-        };
-    }, []);
-
-
+    // This component is now much simpler.
+    // The complex JS for scroll handling has been replaced with a single CSS utility class: `overscroll-y-contain`.
+    // This provides a native scrolling experience on all devices while preventing "scroll chaining,"
+    // which is what was causing the page to scroll horizontally when reaching the top/bottom of the content.
     return (
         <section id={id} className="horizontal-scroll-section-item w-screen h-screen flex-shrink-0 flex justify-center items-center p-4 sm:p-6 lg:p-8">
             <div className="w-full h-full max-w-7xl mx-auto flex flex-col rounded-xl">
                 <div 
-                    ref={contentRef}
-                    className={`w-full flex-grow pt-24 pb-12 px-2 md:px-4 hide-scrollbar overflow-y-auto ${!isActive ? 'pointer-events-none' : ''}`}
+                    className={`w-full flex-grow pt-24 pb-12 px-2 md:px-4 hide-scrollbar overflow-y-auto overscroll-y-contain ${!isActive ? 'pointer-events-none' : ''}`}
                 >
                      {children}
                 </div>
@@ -147,7 +72,8 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
             let distance = Math.max(0, scrollTop - containerTop);
             distance = Math.min(distance, maxTranslateX);
             
-            stickyContent.style.transform = `translateX(-${distance}px)`;
+            // Rounding the distance prevents sub-pixel rendering jitter/shaking on some browsers.
+            stickyContent.style.transform = `translateX(-${Math.round(distance)}px)`;
             
             const newActiveIndex = sectionWidth > 0 ? Math.min(numSections - 1, Math.round(distance / sectionWidth)) : 0;
             setActiveIndex(newActiveIndex);
