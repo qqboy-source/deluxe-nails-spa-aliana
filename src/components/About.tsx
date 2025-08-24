@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { MediaCarousel, MediaItem } from './MediaCarousel';
 
@@ -24,21 +25,20 @@ const mediaItems: MediaItem[] = [
     },
 ];
 
-export const About: React.FC = () => {
+// This is the new component for the second page (Core Values & Media)
+export const OurStory: React.FC = () => {
     return (
         <>
             <div className="lg:text-center">
-                <h2 className="text-base text-gold-700 font-semibold tracking-wide uppercase">About Us</h2>
+                <h2 className="text-base text-gold-700 font-semibold tracking-wide uppercase">Our Commitment</h2>
                 <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-gray-900 sm:text-4xl text-shadow-subtle">
-                    Your Sanctuary of Beauty & Relaxation
+                    Our Values & Vision
                 </p>
                 <p className="mt-4 max-w-2xl text-xl text-gray-700 lg:mx-auto font-sans">
-                    At Deluxe Nails & Spa Aliana, we believe that self-care is a priority, not a luxury. Our mission is to provide an unparalleled spa experience, where you can unwind, rejuvenate, and leave feeling more beautiful and confident than ever.
+                    We are dedicated to excellence, integrity, and the well-being of our clients. Discover the principles that guide our craft and our commitment to you.
                 </p>
             </div>
-
             <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-10">
-                {/* On mobile, this text block will appear second (order-2). On desktop, it appears first (md:order-1). */}
                 <div className="bg-black/25 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-white/20 shadow-xl h-full order-2 md:order-1">
                     <h3 className="text-2xl font-serif font-bold text-white">Our Core Values</h3>
                     <ul className="mt-6 space-y-5 font-sans text-gray-200">
@@ -64,11 +64,28 @@ export const About: React.FC = () => {
                         </li>
                     </ul>
                 </div>
-                {/* On mobile, this media carousel will appear first (order-1). On desktop, it appears second (md:order-2). */}
                 <div className="rounded-lg overflow-hidden shadow-xl bg-gold-100 min-h-[400px] order-1 md:order-2">
                     <MediaCarousel items={mediaItems} />
                 </div>
             </div>
         </>
+    );
+};
+
+
+// This is the simplified original component for the first page
+export const About: React.FC = () => {
+    return (
+        <div className="flex items-center justify-center h-full">
+            <div className="lg:text-center max-w-3xl">
+                <h2 className="text-base text-gold-700 font-semibold tracking-wide uppercase">About Us</h2>
+                <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl text-shadow-subtle">
+                    Your Sanctuary of Beauty & Relaxation
+                </p>
+                <p className="mt-4 max-w-2xl text-xl md:text-2xl text-gray-700 lg:mx-auto font-sans">
+                    At Deluxe Nails & Spa Aliana, we believe that self-care is a priority, not a luxury. Our mission is to provide an unparalleled spa experience, where you can unwind, rejuvenate, and leave feeling more beautiful and confident than ever.
+                </p>
+            </div>
+        </div>
     );
 };
