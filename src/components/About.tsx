@@ -38,7 +38,8 @@ export const About: React.FC = () => {
             </div>
 
             <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-10">
-                <div className="bg-black/25 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-white/20 shadow-xl h-full">
+                {/* On mobile, this text block will appear second (order-2). On desktop, it appears first (md:order-1). */}
+                <div className="bg-black/25 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-white/20 shadow-xl h-full order-2 md:order-1">
                     <h3 className="text-2xl font-serif font-bold text-white">Our Core Values</h3>
                     <ul className="mt-6 space-y-5 font-sans text-gray-200">
                         <li className="flex items-start">
@@ -63,7 +64,8 @@ export const About: React.FC = () => {
                         </li>
                     </ul>
                 </div>
-                <div className="rounded-lg overflow-hidden shadow-xl bg-gold-100 min-h-[400px]">
+                {/* On mobile, this media carousel will appear first (order-1). On desktop, it appears second (md:order-2). */}
+                <div className="rounded-lg overflow-hidden shadow-xl bg-gold-100 min-h-[400px] order-1 md:order-2">
                     <MediaCarousel items={mediaItems} />
                 </div>
             </div>
