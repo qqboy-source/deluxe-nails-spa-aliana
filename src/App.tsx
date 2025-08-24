@@ -2,7 +2,7 @@
 import React from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
-import { About } from './components/About';
+import { About, OurStory } from './components/About';
 import { Services } from './components/Services';
 import { Gallery } from './components/Gallery';
 import { Contact } from './components/Contact';
@@ -24,6 +24,13 @@ function App(): React.ReactNode {
                     <About />
                 </FadeInSection>
             </HorizontalScrollSection>
+            
+            <HorizontalScrollSection id="our-values">
+                <FadeInSection variant="horizontal">
+                    <OurStory />
+                </FadeInSection>
+            </HorizontalScrollSection>
+
             <HorizontalScrollSection id="services">
                 <FadeInSection variant="horizontal">
                     <Services />
