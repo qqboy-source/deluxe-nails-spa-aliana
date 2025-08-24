@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, Children, useState, cloneElement, isValidElement, ReactNode } from 'react';
 
 interface HorizontalScrollSectionProps {
@@ -11,7 +10,7 @@ export const HorizontalScrollSection: React.FC<HorizontalScrollSectionProps> = (
     return (
         <section id={id} className="horizontal-scroll-section-item w-screen h-screen flex-shrink-0 flex justify-center items-center p-4 sm:p-6 lg:p-8">
             <div className="w-full h-full max-w-7xl mx-auto flex flex-col rounded-xl">
-                <div className={`w-full flex-grow pt-24 pb-12 px-2 md:px-4 hide-scrollbar overflow-y-auto ${!isActive ? 'pointer-events-none' : ''}`}>
+                <div className={`w-full flex-grow pt-24 pb-12 px-2 md:px-4 hide-scrollbar overflow-y-auto overscroll-y-contain ${!isActive ? 'pointer-events-none' : ''}`}>
                      {children}
                 </div>
             </div>
@@ -53,7 +52,7 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
             const containerHeight = dimensions.maxTranslateX + window.innerHeight;
             scrollContainer.style.height = `${containerHeight}px`;
             
-            handleScroll(); // Recalculate scroll position after resize
+            handleScroll(); // Recalculate scroll position immediately after resize
         };
 
         const handleScroll = () => {
