@@ -38,8 +38,8 @@ export const OurStory: React.FC = () => {
                     We are dedicated to excellence, integrity, and the well-being of our clients. Discover the principles that guide our craft and our commitment to you.
                 </p>
             </div>
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-10">
-                <div className="bg-black/25 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-white/20 shadow-xl h-full order-2 md:order-1">
+            <div className="mt-12 grid grid-cols-1 lg:grid-cols-5 gap-10 items-center">
+                <div className="bg-black/25 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-white/20 shadow-xl h-full order-2 lg:order-1 lg:col-span-3">
                     <h3 className="text-2xl font-serif font-bold text-white">Our Core Values</h3>
                     <ul className="mt-6 space-y-5 font-sans text-gray-200">
                         <li className="flex items-start">
@@ -64,7 +64,7 @@ export const OurStory: React.FC = () => {
                         </li>
                     </ul>
                 </div>
-                <div className="rounded-lg overflow-hidden shadow-xl bg-gold-100 min-h-[400px] order-1 md:order-2">
+                <div className="rounded-lg overflow-hidden shadow-xl bg-gold-100 order-1 lg:order-2 lg:col-span-2">
                     <MediaCarousel items={mediaItems} />
                 </div>
             </div>
