@@ -18,13 +18,20 @@ export const HorizontalScrollSection: React.FC<HorizontalScrollSectionProps> = (
         if (!contentElement) return;
 
         const handleWheel = (e: WheelEvent) => {
+            const { scrollTop, scrollHeight, clientHeight } = contentElement;
+
+            // FIX: If content is not scrollable, do nothing and let the event bubble up.
+            // A small tolerance is added for floating point inaccuracies.
+            if (scrollHeight <= clientHeight + 2) {
+                return;
+            }
+
             // Let horizontal scrolls (like on a trackpad) pass through.
             if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
                 return;
             }
-
-            const { scrollTop, scrollHeight, clientHeight } = contentElement;
-            const tolerance = 1; // 1px tolerance for floating point inaccuracies.
+            
+            const tolerance = 1; 
             const isAtTop = scrollTop <= tolerance;
             const isAtBottom = scrollHeight - scrollTop <= clientHeight + tolerance;
 
@@ -43,6 +50,12 @@ export const HorizontalScrollSection: React.FC<HorizontalScrollSectionProps> = (
 
         const handleTouchMove = (e: TouchEvent) => {
             const { scrollTop, scrollHeight, clientHeight } = contentElement;
+
+            // FIX: If content is not scrollable, do nothing and let the event bubble up.
+            if (scrollHeight <= clientHeight + 2) {
+                return;
+            }
+
             const tolerance = 1;
             const isAtTop = scrollTop <= tolerance;
             const isAtBottom = scrollHeight - scrollTop <= clientHeight + tolerance;
