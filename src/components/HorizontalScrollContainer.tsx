@@ -9,79 +9,90 @@ interface HorizontalScrollSectionProps {
 export const HorizontalScrollSection: React.FC<HorizontalScrollSectionProps> = ({ children, id, isActive }) => {
     const contentRef = useRef<HTMLDivElement>(null);
 
-    // This effect manually prevents scroll chaining. This is a robust solution to the problem
-    // where scrolling vertically inside a section "leaks" out and triggers the horizontal
-    // scroll of the main page, especially on mobile and trackpads where the CSS-only
-    // `overscroll-behavior` can be unreliable in complex layouts involving transforms.
+    // This effect implements a robust, manual scroll-handling mechanism to prevent
+    // scroll chaining issues and provide an intuitive transition between vertical
+    // content scrolling and horizontal page scrolling.
     useEffect(() => {
         const contentElement = contentRef.current;
         if (!contentElement) return;
 
         const handleWheel = (e: WheelEvent) => {
-            const { scrollTop, scrollHeight, clientHeight } = contentElement;
-
-            // FIX: If content is not scrollable, do nothing and let the event bubble up.
-            // A small tolerance is added for floating point inaccuracies.
-            if (scrollHeight <= clientHeight + 2) {
-                return;
-            }
-
-            // Let horizontal scrolls (like on a trackpad) pass through.
+            // Let horizontal scrolls (like on a trackpad) pass through without interference.
             if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
                 return;
             }
             
-            const tolerance = 1; 
+            const { scrollTop, scrollHeight, clientHeight } = contentElement;
+            const tolerance = 2; // Tolerance for floating point inaccuracies.
+
+            // If content is not scrollable, do nothing and let the event bubble up.
+            if (scrollHeight <= clientHeight + tolerance) {
+                return;
+            }
+
             const isAtTop = scrollTop <= tolerance;
             const isAtBottom = scrollHeight - scrollTop <= clientHeight + tolerance;
 
             const isScrollingUp = e.deltaY < 0;
             const isScrollingDown = e.deltaY > 0;
 
+            // If at a boundary and trying to scroll past it, let the event bubble up to the parent.
             if ((isAtTop && isScrollingUp) || (isAtBottom && isScrollingDown)) {
-                e.preventDefault();
+                return;
             }
+            
+            // If scrolling within the content, prevent the parent from scrolling and manually scroll the content.
+            e.preventDefault();
+            contentElement.scrollTop += e.deltaY;
         };
         
         let lastTouchY = 0;
         const handleTouchStart = (e: TouchEvent) => {
-            lastTouchY = e.touches[0].clientY;
+            if (e.touches.length > 0) {
+              lastTouchY = e.touches[0].clientY;
+            }
         };
 
         const handleTouchMove = (e: TouchEvent) => {
+            if (e.touches.length === 0) return;
+            
             const { scrollTop, scrollHeight, clientHeight } = contentElement;
+            const tolerance = 2;
 
-            // FIX: If content is not scrollable, do nothing and let the event bubble up.
-            if (scrollHeight <= clientHeight + 2) {
+            if (scrollHeight <= clientHeight + tolerance) {
                 return;
             }
 
-            const tolerance = 1;
             const isAtTop = scrollTop <= tolerance;
             const isAtBottom = scrollHeight - scrollTop <= clientHeight + tolerance;
-            
+
             const currentY = e.touches[0].clientY;
             const isScrollingUp = currentY > lastTouchY;
             const isScrollingDown = currentY < lastTouchY;
 
             if ((isAtTop && isScrollingUp) || (isAtBottom && isScrollingDown)) {
-                // At a boundary and trying to scroll past it, so prevent the page scroll.
-                e.preventDefault();
+                // At a boundary, let the default touch scroll take over for the parent.
+                lastTouchY = currentY;
+                return;
             }
+            
+            // Scrolling within the content, so prevent default and handle manually.
+            e.preventDefault();
+            const deltaY = lastTouchY - currentY;
+            contentElement.scrollTop += deltaY;
             lastTouchY = currentY;
         };
 
-        // Add event listeners. `passive: false` is required for `preventDefault` to work.
         contentElement.addEventListener('wheel', handleWheel, { passive: false });
-        contentElement.addEventListener('touchstart', handleTouchStart, { passive: true }); // Can be passive, just reading value.
-        contentElement.addEventListener('touchmove', handleTouchMove, { passive: false }); // Must not be passive to prevent scroll.
+        contentElement.addEventListener('touchstart', handleTouchStart, { passive: true });
+        contentElement.addEventListener('touchmove', handleTouchMove, { passive: false });
 
         return () => {
             contentElement.removeEventListener('wheel', handleWheel);
             contentElement.removeEventListener('touchstart', handleTouchStart);
             contentElement.removeEventListener('touchmove', handleTouchMove);
         };
-    }, []); // Run only once on mount.
+    }, []);
 
 
     return (
@@ -89,7 +100,7 @@ export const HorizontalScrollSection: React.FC<HorizontalScrollSectionProps> = (
             <div className="w-full h-full max-w-7xl mx-auto flex flex-col rounded-xl">
                 <div 
                     ref={contentRef}
-                    className={`w-full flex-grow pt-24 pb-12 px-2 md:px-4 hide-scrollbar overflow-y-auto overscroll-y-contain ${!isActive ? 'pointer-events-none' : ''}`}
+                    className={`w-full flex-grow pt-24 pb-12 px-2 md:px-4 hide-scrollbar overflow-y-auto ${!isActive ? 'pointer-events-none' : ''}`}
                 >
                      {children}
                 </div>
@@ -115,7 +126,6 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
 
         let animationFrameId: number | null = null;
         
-        // Object to hold dimensions to avoid stale closures in event listeners
         const dimensions = {
             containerTop: 0,
             sectionWidth: 0,
@@ -126,13 +136,13 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
             if (!scrollContainer || !stickyContent) return;
             
             dimensions.containerTop = scrollContainer.getBoundingClientRect().top + window.scrollY;
-            dimensions.sectionWidth = scrollContainer.clientWidth; // Use clientWidth for the viewport width
+            dimensions.sectionWidth = scrollContainer.clientWidth;
             dimensions.maxTranslateX = (numSections - 1) * dimensions.sectionWidth;
             
             const containerHeight = dimensions.maxTranslateX + window.innerHeight;
             scrollContainer.style.height = `${containerHeight}px`;
             
-            handleScroll(); // Recalculate scroll position immediately after resize
+            handleScroll();
         };
 
         const handleScroll = () => {
