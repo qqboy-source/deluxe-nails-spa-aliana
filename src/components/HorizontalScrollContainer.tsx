@@ -37,6 +37,14 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
     const snapTimeoutRef = useRef<number | null>(null);
     const programmaticScrollRef = useRef(false);
 
+    const dimensionsRef = useRef({
+        containerTop: 0,
+        sectionWidth: 0,
+        maxTranslateX: 0,
+    });
+    const touchStartX = useRef(0);
+    const touchStartY = useRef(0);
+
     useEffect(() => {
         const scrollContainer = scrollContainerRef.current;
         const stickyContent = stickyContentRef.current;
@@ -44,20 +52,14 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
 
         let animationFrameId: number | null = null;
         
-        const dimensions = {
-            containerTop: 0,
-            sectionWidth: 0,
-            maxTranslateX: 0,
-        };
-
         const calculateAndSetDimensions = () => {
             if (!scrollContainer || !stickyContent) return;
             
-            dimensions.containerTop = scrollContainer.getBoundingClientRect().top + window.scrollY;
-            dimensions.sectionWidth = scrollContainer.clientWidth;
-            dimensions.maxTranslateX = (numSections - 1) * dimensions.sectionWidth;
+            dimensionsRef.current.containerTop = scrollContainer.getBoundingClientRect().top + window.scrollY;
+            dimensionsRef.current.sectionWidth = scrollContainer.clientWidth;
+            dimensionsRef.current.maxTranslateX = (numSections - 1) * dimensionsRef.current.sectionWidth;
             
-            const containerHeight = dimensions.maxTranslateX + window.innerHeight;
+            const containerHeight = dimensionsRef.current.maxTranslateX + window.innerHeight;
             scrollContainer.style.height = `${containerHeight}px`;
             
             updateTransform();
@@ -66,13 +68,12 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
         const updateTransform = () => {
             if (!stickyContent) return;
             
-            const { containerTop, maxTranslateX, sectionWidth } = dimensions;
+            const { containerTop, maxTranslateX, sectionWidth } = dimensionsRef.current;
             const scrollTop = window.scrollY;
             
             let distance = Math.max(0, scrollTop - containerTop);
             distance = Math.min(distance, maxTranslateX);
             
-            // Rounding the distance prevents sub-pixel rendering jitter/shaking on some browsers.
             stickyContent.style.transform = `translateX(-${Math.round(distance)}px)`;
             
             const newActiveIndex = sectionWidth > 0 ? Math.min(numSections - 1, Math.round(distance / sectionWidth)) : 0;
@@ -88,7 +89,7 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
             if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
 
             snapTimeoutRef.current = window.setTimeout(() => {
-                const { containerTop, sectionWidth, maxTranslateX } = dimensions;
+                const { containerTop, sectionWidth, maxTranslateX } = dimensionsRef.current;
                 if (sectionWidth === 0) return;
 
                 const scrollTop = window.scrollY;
@@ -122,8 +123,49 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
         };
     }, [numSections]);
 
+    const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+        touchStartX.current = e.targetTouches[0].clientX;
+        touchStartY.current = e.targetTouches[0].clientY;
+    };
+
+    const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+
+        const deltaX = touchEndX - touchStartX.current;
+        const deltaY = touchEndY - touchStartY.current;
+
+        touchStartX.current = 0;
+        touchStartY.current = 0;
+        
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+            let targetIndex = activeIndex;
+            if (deltaX < 0) { // Swipe Left
+                targetIndex = Math.min(activeIndex + 1, numSections - 1);
+            } else { // Swipe Right
+                targetIndex = Math.max(activeIndex - 1, 0);
+            }
+
+            if (targetIndex !== activeIndex) {
+                const { containerTop, sectionWidth } = dimensionsRef.current;
+                if (sectionWidth > 0) {
+                    const targetScrollY = containerTop + (targetIndex * sectionWidth);
+                    
+                    programmaticScrollRef.current = true;
+                    window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
+                    setTimeout(() => { programmaticScrollRef.current = false; }, 500); 
+                }
+            }
+        }
+    };
+
     return (
-        <div ref={scrollContainerRef} data-testid="horizontal-scroll-container">
+        <div 
+            ref={scrollContainerRef} 
+            data-testid="horizontal-scroll-container"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+        >
             <div className="sticky top-0 h-screen overflow-hidden">
                 <div ref={stickyContentRef} className="flex flex-nowrap h-full will-change-transform">
                     {Children.map(children, (child, index) => {
