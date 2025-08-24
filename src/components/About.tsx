@@ -1,12 +1,30 @@
 import React from 'react';
+import { MediaCarousel, MediaItem } from './MediaCarousel';
+
+// INSTRUCTIONS FOR YOUR MEDIA:
+// 1. Create a new folder named `media` inside your `public` folder on GitHub.
+// 2. Upload your two videos to this new `public/media` folder.
+// 3. Upload your photo to the `public/images` folder (as you've done before).
+// 4. The `src` paths below are already set up to find these files. You don't need to change them.
+const mediaItems: MediaItem[] = [
+    {
+        type: 'video',
+        src: 'media/store-video-1.mp4',
+        alt: 'A video showcasing the spa interior and ambiance.',
+    },
+    {
+        type: 'image',
+        src: 'images/spa-interior.jpg',
+        alt: 'A beautiful photo of the Deluxe Nails & Spa Aliana interior.',
+    },
+    {
+        type: 'video',
+        src: 'media/store-video-2.mp4',
+        alt: 'A close-up video of a nail artist at work.',
+    },
+];
 
 export const About: React.FC = () => {
-    const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-        e.currentTarget.onerror = null; // Prevent looping
-        e.currentTarget.src = 'https://placehold.co/600x400/9F763B/FBF3E6?text=Our+Beautiful+Spa';
-        e.currentTarget.alt = "A placeholder image showing the text 'Our Beautiful Spa'";
-    };
-
     return (
         <>
             <div className="lg:text-center">
@@ -45,15 +63,8 @@ export const About: React.FC = () => {
                         </li>
                     </ul>
                 </div>
-                <div className="rounded-lg overflow-hidden shadow-xl bg-gold-100">
-                    {/* INSTRUCTION: Please upload a photo of your spa's interior named 'spa-interior.jpg' to the public/images folder on GitHub. */}
-                    <img 
-                        className="w-full h-full object-cover rounded-lg" 
-                        src="images/spa-interior.jpg" 
-                        alt="Interior of the Deluxe Nails & Spa Aliana" 
-                        onError={handleImageError}
-                        loading="lazy"
-                    />
+                <div className="rounded-lg overflow-hidden shadow-xl bg-gold-100 min-h-[400px]">
+                    <MediaCarousel items={mediaItems} />
                 </div>
             </div>
         </>
