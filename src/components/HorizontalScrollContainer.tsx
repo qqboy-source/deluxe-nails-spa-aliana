@@ -7,10 +7,77 @@ interface HorizontalScrollSectionProps {
 }
 
 export const HorizontalScrollSection: React.FC<HorizontalScrollSectionProps> = ({ children, id, isActive }) => {
+    const contentRef = useRef<HTMLDivElement>(null);
+
+    // This effect manually prevents scroll chaining. This is a robust solution to the problem
+    // where scrolling vertically inside a section "leaks" out and triggers the horizontal
+    // scroll of the main page, especially on mobile and trackpads where the CSS-only
+    // `overscroll-behavior` can be unreliable in complex layouts involving transforms.
+    useEffect(() => {
+        const contentElement = contentRef.current;
+        if (!contentElement) return;
+
+        const handleWheel = (e: WheelEvent) => {
+            // Let horizontal scrolls (like on a trackpad) pass through.
+            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+                return;
+            }
+
+            const { scrollTop, scrollHeight, clientHeight } = contentElement;
+            const tolerance = 1; // 1px tolerance for floating point inaccuracies.
+            const isAtTop = scrollTop <= tolerance;
+            const isAtBottom = scrollHeight - scrollTop <= clientHeight + tolerance;
+
+            const isScrollingUp = e.deltaY < 0;
+            const isScrollingDown = e.deltaY > 0;
+
+            if ((isAtTop && isScrollingUp) || (isAtBottom && isScrollingDown)) {
+                e.preventDefault();
+            }
+        };
+        
+        let lastTouchY = 0;
+        const handleTouchStart = (e: TouchEvent) => {
+            lastTouchY = e.touches[0].clientY;
+        };
+
+        const handleTouchMove = (e: TouchEvent) => {
+            const { scrollTop, scrollHeight, clientHeight } = contentElement;
+            const tolerance = 1;
+            const isAtTop = scrollTop <= tolerance;
+            const isAtBottom = scrollHeight - scrollTop <= clientHeight + tolerance;
+            
+            const currentY = e.touches[0].clientY;
+            const isScrollingUp = currentY > lastTouchY;
+            const isScrollingDown = currentY < lastTouchY;
+
+            if ((isAtTop && isScrollingUp) || (isAtBottom && isScrollingDown)) {
+                // At a boundary and trying to scroll past it, so prevent the page scroll.
+                e.preventDefault();
+            }
+            lastTouchY = currentY;
+        };
+
+        // Add event listeners. `passive: false` is required for `preventDefault` to work.
+        contentElement.addEventListener('wheel', handleWheel, { passive: false });
+        contentElement.addEventListener('touchstart', handleTouchStart, { passive: true }); // Can be passive, just reading value.
+        contentElement.addEventListener('touchmove', handleTouchMove, { passive: false }); // Must not be passive to prevent scroll.
+
+        return () => {
+            contentElement.removeEventListener('wheel', handleWheel);
+            contentElement.removeEventListener('touchstart', handleTouchStart);
+            contentElement.removeEventListener('touchmove', handleTouchMove);
+        };
+    }, []); // Run only once on mount.
+
+
     return (
         <section id={id} className="horizontal-scroll-section-item w-screen h-screen flex-shrink-0 flex justify-center items-center p-4 sm:p-6 lg:p-8">
             <div className="w-full h-full max-w-7xl mx-auto flex flex-col rounded-xl">
-                <div className={`w-full flex-grow pt-24 pb-12 px-2 md:px-4 hide-scrollbar overflow-y-auto overscroll-y-contain ${!isActive ? 'pointer-events-none' : ''}`}>
+                <div 
+                    ref={contentRef}
+                    className={`w-full flex-grow pt-24 pb-12 px-2 md:px-4 hide-scrollbar overflow-y-auto overscroll-y-contain ${!isActive ? 'pointer-events-none' : ''}`}
+                >
                      {children}
                 </div>
             </div>
