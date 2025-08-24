@@ -9,39 +9,31 @@ interface HorizontalScrollSectionProps {
 export const HorizontalScrollSection: React.FC<HorizontalScrollSectionProps> = ({ children, id, isActive }) => {
     const contentRef = useRef<HTMLDivElement>(null);
 
-    // This effect implements a robust, manual scroll-handling mechanism to prevent
-    // scroll chaining issues and provide an intuitive transition between vertical
-    // content scrolling and horizontal page scrolling.
     useEffect(() => {
         const contentElement = contentRef.current;
         if (!contentElement) return;
 
         const handleWheel = (e: WheelEvent) => {
-            // Let horizontal scrolls (like on a trackpad) pass through without interference.
             if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
                 return;
             }
             
             const { scrollTop, scrollHeight, clientHeight } = contentElement;
-            const tolerance = 2; // Tolerance for floating point inaccuracies.
+            const tolerance = 2;
 
-            // If content is not scrollable, do nothing and let the event bubble up.
             if (scrollHeight <= clientHeight + tolerance) {
                 return;
             }
 
             const isAtTop = scrollTop <= tolerance;
             const isAtBottom = scrollHeight - scrollTop <= clientHeight + tolerance;
-
             const isScrollingUp = e.deltaY < 0;
             const isScrollingDown = e.deltaY > 0;
 
-            // If at a boundary and trying to scroll past it, let the event bubble up to the parent.
             if ((isAtTop && isScrollingUp) || (isAtBottom && isScrollingDown)) {
                 return;
             }
             
-            // If scrolling within the content, prevent the parent from scrolling and manually scroll the content.
             e.preventDefault();
             contentElement.scrollTop += e.deltaY;
         };
@@ -71,12 +63,10 @@ export const HorizontalScrollSection: React.FC<HorizontalScrollSectionProps> = (
             const isScrollingDown = currentY < lastTouchY;
 
             if ((isAtTop && isScrollingUp) || (isAtBottom && isScrollingDown)) {
-                // At a boundary, let the default touch scroll take over for the parent.
                 lastTouchY = currentY;
                 return;
             }
             
-            // Scrolling within the content, so prevent default and handle manually.
             e.preventDefault();
             const deltaY = lastTouchY - currentY;
             contentElement.scrollTop += deltaY;
@@ -119,6 +109,9 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
     const [activeIndex, setActiveIndex] = useState(0);
     const numSections = Children.count(children);
 
+    const snapTimeoutRef = useRef<number | null>(null);
+    const programmaticScrollRef = useRef(false);
+
     useEffect(() => {
         const scrollContainer = scrollContainerRef.current;
         const stickyContent = stickyContentRef.current;
@@ -142,41 +135,64 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
             const containerHeight = dimensions.maxTranslateX + window.innerHeight;
             scrollContainer.style.height = `${containerHeight}px`;
             
-            handleScroll();
+            updateTransform();
         };
 
+        const updateTransform = () => {
+            if (!stickyContent) return;
+            
+            const { containerTop, maxTranslateX, sectionWidth } = dimensions;
+            const scrollTop = window.scrollY;
+            
+            let distance = Math.max(0, scrollTop - containerTop);
+            distance = Math.min(distance, maxTranslateX);
+            
+            stickyContent.style.transform = `translateX(-${distance}px)`;
+            
+            const newActiveIndex = sectionWidth > 0 ? Math.min(numSections - 1, Math.round(distance / sectionWidth)) : 0;
+            setActiveIndex(newActiveIndex);
+        };
+        
         const handleScroll = () => {
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-            }
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            animationFrameId = requestAnimationFrame(updateTransform);
 
-            animationFrameId = requestAnimationFrame(() => {
-                if (!stickyContent) return;
-                
-                const { containerTop, maxTranslateX, sectionWidth } = dimensions;
+            if (programmaticScrollRef.current) return;
+
+            if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
+
+            snapTimeoutRef.current = window.setTimeout(() => {
+                const { containerTop, sectionWidth, maxTranslateX } = dimensions;
+                if (sectionWidth === 0) return;
+
                 const scrollTop = window.scrollY;
-                
-                let distance = Math.max(0, scrollTop - containerTop);
-                distance = Math.min(distance, maxTranslateX);
-                
-                stickyContent.style.transform = `translateX(-${distance}px)`;
-                
-                const newActiveIndex = sectionWidth > 0 ? Math.min(numSections - 1, Math.round(distance / sectionWidth)) : 0;
-                setActiveIndex(newActiveIndex);
-            });
+                if (scrollTop < containerTop || scrollTop > containerTop + maxTranslateX) {
+                    return;
+                }
+
+                const distance = scrollTop - containerTop;
+                const targetIndex = Math.round(distance / sectionWidth);
+                const targetScrollY = containerTop + (targetIndex * sectionWidth);
+
+                if (Math.abs(window.scrollY - targetScrollY) > 5) {
+                    programmaticScrollRef.current = true;
+                    window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
+                    
+                    setTimeout(() => { programmaticScrollRef.current = false; }, 500);
+                }
+            }, 150);
         };
         
         calculateAndSetDimensions();
-
+        
         window.addEventListener('resize', calculateAndSetDimensions);
         window.addEventListener('scroll', handleScroll, { passive: true });
         
         return () => {
             window.removeEventListener('resize', calculateAndSetDimensions);
             window.removeEventListener('scroll', handleScroll);
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-            }
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
         };
     }, [numSections]);
 
