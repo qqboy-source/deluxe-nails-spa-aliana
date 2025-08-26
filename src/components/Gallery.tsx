@@ -119,8 +119,8 @@ export const Gallery: React.FC = () => {
         <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-gray-900 sm:text-4xl text-shadow-subtle">
           A Glimpse of Perfection
         </p>
-        <p className="mt-4 max-w-2xl text-xl text-gray-700 lg:mx-auto font-sans">
-          Our gallery showcases the beautiful, continuous craft we pour into our work every day. Hover to pause, click to zoom.
+        <p className="mt-4 max-w-2xl text-lg text-gray-700 lg:mx-auto font-sans">
+          Our gallery showcases the beautiful, continuous craft we pour into our work every day.
         </p>
       </div>
 
