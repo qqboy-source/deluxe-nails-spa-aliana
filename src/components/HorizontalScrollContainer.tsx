@@ -6,16 +6,14 @@ interface HorizontalScrollSectionProps {
     isActive?: boolean;
 }
 
+// Replaced `hide-scrollbar` with `custom-scrollbar` to make it visually clear to users
+// when a section has more content to scroll through.
 export const HorizontalScrollSection: React.FC<HorizontalScrollSectionProps> = ({ children, id, isActive }) => {
-    // This component is now much simpler.
-    // The complex JS for scroll handling has been replaced with a single CSS utility class: `overscroll-y-contain`.
-    // This provides a native scrolling experience on all devices while preventing "scroll chaining,"
-    // which is what was causing the page to scroll horizontally when reaching the top/bottom of the content.
     return (
         <section id={id} className="horizontal-scroll-section-item w-screen h-screen flex-shrink-0 flex justify-center items-center p-4 sm:p-6 lg:p-8">
             <div className="w-full h-full max-w-7xl mx-auto flex flex-col rounded-xl">
                 <div 
-                    className={`w-full flex-grow pt-24 pb-12 px-2 md:px-4 hide-scrollbar overflow-y-auto overscroll-y-contain ${!isActive ? 'pointer-events-none' : ''}`}
+                    className={`w-full flex-grow pt-24 pb-12 px-2 md:px-4 custom-scrollbar overflow-y-auto overscroll-y-contain ${!isActive ? 'pointer-events-none' : ''}`}
                 >
                      {children}
                 </div>
@@ -28,14 +26,13 @@ interface HorizontalScrollContainerProps {
     children: ReactNode;
 }
 
+// Removed all "snap-to-page" logic. The horizontal scrolling is now directly and smoothly
+// tied 1:1 with the browser's vertical scrollbar for a more predictable and fluid experience.
 export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps> = ({ children }) => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const stickyContentRef = useRef<HTMLDivElement>(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const numSections = Children.count(children);
-
-    const snapTimeoutRef = useRef<number | null>(null);
-    const programmaticScrollRef = useRef(false);
 
     const dimensionsRef = useRef({
         containerTop: 0,
@@ -83,31 +80,6 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
         const handleScroll = () => {
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
             animationFrameId = requestAnimationFrame(updateTransform);
-
-            if (programmaticScrollRef.current) return;
-
-            if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
-
-            snapTimeoutRef.current = window.setTimeout(() => {
-                const { containerTop, sectionWidth, maxTranslateX } = dimensionsRef.current;
-                if (sectionWidth === 0) return;
-
-                const scrollTop = window.scrollY;
-                if (scrollTop < containerTop || scrollTop > containerTop + maxTranslateX) {
-                    return;
-                }
-
-                const distance = scrollTop - containerTop;
-                const targetIndex = Math.round(distance / sectionWidth);
-                const targetScrollY = containerTop + (targetIndex * sectionWidth);
-
-                if (Math.abs(window.scrollY - targetScrollY) > 5) {
-                    programmaticScrollRef.current = true;
-                    window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
-                    
-                    setTimeout(() => { programmaticScrollRef.current = false; }, 500);
-                }
-            }, 150);
         };
         
         calculateAndSetDimensions();
@@ -119,7 +91,6 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
             window.removeEventListener('resize', calculateAndSetDimensions);
             window.removeEventListener('scroll', handleScroll);
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
-            if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
         };
     }, [numSections]);
 
@@ -150,16 +121,13 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
                 const { containerTop, sectionWidth } = dimensionsRef.current;
                 if (sectionWidth > 0) {
                     const targetScrollY = containerTop + (targetIndex * sectionWidth);
-                    
-                    programmaticScrollRef.current = true;
                     window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
-                    setTimeout(() => { programmaticScrollRef.current = false; }, 500); 
                 }
             }
         }
     };
 
-    return (
+    return (a
         <div 
             ref={scrollContainerRef} 
             data-testid="horizontal-scroll-container"
