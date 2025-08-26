@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { MediaCarousel, MediaItem } from './MediaCarousel';
 
 // INSTRUCTIONS FOR YOUR MEDIA:
