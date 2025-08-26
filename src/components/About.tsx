@@ -30,8 +30,11 @@ export const OurStory: React.FC = () => {
 
     return (
         <>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-                <div className="bg-black/25 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-white/20 shadow-xl order-2 lg:order-1">
+            <div className="grid grid-cols-1 gap-10">
+                <div className="w-full aspect-video rounded-lg overflow-hidden shadow-xl bg-gold-100 order-1">
+                    <MediaCarousel items={mediaItems} />
+                </div>
+                <div className="bg-black/25 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-white/20 shadow-xl order-2">
                     <h2 className="text-base text-gold-400 font-semibold tracking-wide uppercase">Our Commitment</h2>
                     <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-white sm:text-4xl">
                         Our Values & Vision
@@ -72,9 +75,6 @@ export const OurStory: React.FC = () => {
                     >
                         {isExpanded ? 'Show Less' : 'Show More'}
                     </button>
-                </div>
-                <div className="w-full aspect-video md:aspect-[4/3] lg:aspect-[4/5] rounded-lg overflow-hidden shadow-xl bg-gold-100 order-1 lg:order-2">
-                    <MediaCarousel items={mediaItems} />
                 </div>
             </div>
         </>
