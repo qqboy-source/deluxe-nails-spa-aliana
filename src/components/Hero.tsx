@@ -17,7 +17,7 @@ const HeroBackgroundImage: React.FC = () => {
         <img
             src={imageUrl}
             alt="Luxurious spa-themed background"
-            className="absolute top-0 left-0 w-full h-full object-cover object-center"
+            className="absolute top-0 left-0 w-full h-full object-cover object-[55%_center]"
             onError={() => setHasError(true)}
         />
     );
