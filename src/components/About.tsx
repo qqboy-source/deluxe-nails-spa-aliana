@@ -45,7 +45,7 @@ export const About: React.FC = () => {
 export const OurStory: React.FC = () => {
     const [isExpanded, setIsExpanded] = useState(false);
     return (
-        <div className="grid grid-cols-1 gap-12 lg:w-1/2 lg:mx-auto">
+        <div className="grid grid-cols-1 gap-12 lg:w-[48%] lg:mx-auto">
             <div className="w-full aspect-video rounded-lg overflow-hidden shadow-xl border border-white/20">
                 <MediaCarousel items={mediaItems} />
             </div>
