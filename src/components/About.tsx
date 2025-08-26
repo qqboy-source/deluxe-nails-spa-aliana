@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { MediaCarousel, MediaItem } from './MediaCarousel';
 
@@ -29,19 +28,16 @@ const mediaItems: MediaItem[] = [
 export const OurStory: React.FC = () => {
     return (
         <>
-            <div className="lg:text-center">
-                <h2 className="text-base text-gold-700 font-semibold tracking-wide uppercase">Our Commitment</h2>
-                <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-gray-900 sm:text-4xl text-shadow-subtle">
-                    Our Values & Vision
-                </p>
-                <p className="mt-4 max-w-2xl text-xl text-gray-700 lg:mx-auto font-sans">
-                    We are dedicated to excellence, integrity, and the well-being of our clients. Discover the principles that guide our craft and our commitment to you.
-                </p>
-            </div>
-            <div className="mt-12 grid grid-cols-1 lg:grid-cols-5 gap-10 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 items-center">
                 <div className="bg-black/25 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-white/20 shadow-xl h-full order-2 lg:order-1 lg:col-span-3">
-                    <h3 className="text-2xl font-serif font-bold text-white">Our Core Values</h3>
-                    <ul className="mt-6 space-y-5 font-sans text-gray-200">
+                    <h2 className="text-base text-gold-400 font-semibold tracking-wide uppercase">Our Commitment</h2>
+                    <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-white sm:text-4xl">
+                        Our Values & Vision
+                    </p>
+                    <p className="mt-4 max-w-2xl text-lg text-gray-300 font-sans">
+                        We are dedicated to excellence, integrity, and the well-being of our clients. Discover the principles that guide our craft and our commitment to you.
+                    </p>
+                    <ul className="mt-8 space-y-5 font-sans text-gray-200">
                         <li className="flex items-start">
                             <span className="text-gold-500 font-bold mr-3 mt-1">◆</span>
                             <span>An Aliana-based, women-owned and operated establishment catering to a diverse, international clientele.</span>
