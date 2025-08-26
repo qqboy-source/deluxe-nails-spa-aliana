@@ -92,7 +92,7 @@ export const Header: React.FC = () => {
                                     {link.name}
                                 </a>
                             ))}
-                            <a href="tel:2817620878" className="ml-4 text-gray-900 font-semibold px-4 py-2 rounded-md text-sm shadow btn-charging">
+                            <a href="tel:2817620878" className="ml-4 font-semibold px-4 py-2 text-sm btn-3d-gold">
                                 Book Your Escape
                             </a>
                         </div>
@@ -123,7 +123,7 @@ export const Header: React.FC = () => {
                                 {link.name}
                             </a>
                         ))}
-                         <a href="tel:2817620878" className="block w-full text-center text-gray-900 font-semibold mt-2 px-3 py-2 rounded-md text-base shadow btn-charging border border-gold-600">
+                         <a href="tel:2817620878" className="block w-full text-center font-semibold mt-2 px-3 py-2 text-base btn-3d-gold">
                             Book Your Escape
                         </a>
                     </div>
