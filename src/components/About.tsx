@@ -40,7 +40,7 @@ export const OurStory: React.FC = () => {
                         We are dedicated to excellence, integrity, and the well-being of our clients. Discover the principles that guide our craft and our commitment to you.
                     </p>
                     
-                    <div className={`transition-all duration-700 ease-in-out overflow-hidden ${isExpanded ? 'max-h-[500px] opacity-100 mt-8' : 'max-h-0 opacity-0'}`}>
+                    <div className={`transition-all duration-700 ease-in-out overflow-hidden ${isExpanded ? 'max-h-[1000px] opacity-100 mt-8' : 'max-h-0 opacity-0'}`}>
                         <ul className="space-y-5 font-sans text-gray-200">
                             <li className="flex items-start">
                                 <span className="text-gold-500 font-bold mr-3 mt-1">◆</span>
