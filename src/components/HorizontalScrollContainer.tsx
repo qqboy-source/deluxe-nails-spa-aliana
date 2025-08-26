@@ -127,7 +127,7 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
         }
     };
 
-    return (a
+    return (
         <div 
             ref={scrollContainerRef} 
             data-testid="horizontal-scroll-container"
