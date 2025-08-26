@@ -119,9 +119,6 @@ export const Gallery: React.FC = () => {
         <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-gray-900 sm:text-4xl text-shadow-subtle">
           A Glimpse of Perfection
         </p>
-        <p className="mt-4 max-w-2xl text-lg text-gray-700 mx-auto font-sans">
-          Our gallery showcases the beautiful, continuous craft we pour into our work every day.
-        </p>
       </div>
 
       <div className="mt-12 w-full max-w-4xl mx-auto h-[60vh] max-h-[500px] flex gap-4" aria-label="Image gallery with animated columns">
