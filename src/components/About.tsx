@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MediaCarousel, MediaItem } from './MediaCarousel';
 
 // INSTRUCTIONS FOR YOUR MEDIA:
@@ -26,6 +26,8 @@ const mediaItems: MediaItem[] = [
 
 // This is the new component for the second page (Core Values & Media)
 export const OurStory: React.FC = () => {
+    const [isExpanded, setIsExpanded] = useState(false);
+
     return (
         <>
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 items-start">
@@ -37,28 +39,39 @@ export const OurStory: React.FC = () => {
                     <p className="mt-4 max-w-2xl text-lg text-gray-300 font-sans">
                         We are dedicated to excellence, integrity, and the well-being of our clients. Discover the principles that guide our craft and our commitment to you.
                     </p>
-                    <ul className="mt-8 space-y-5 font-sans text-gray-200">
-                        <li className="flex items-start">
-                            <span className="text-gold-500 font-bold mr-3 mt-1">◆</span>
-                            <span>An Aliana-based, women-owned and operated establishment catering to a diverse, international clientele.</span>
-                        </li>
-                        <li className="flex items-start">
-                            <span className="text-gold-500 font-bold mr-3 mt-1">◆</span>
-                            <span>Each reservation is customized to fit each individual’s personal experience.</span>
-                        </li>
-                        <li className="flex items-start">
-                            <span className="text-gold-500 font-bold mr-3 mt-1">◆</span>
-                            <span>Our skilled staff are always up-to-date with the latest trends and hygienic practices, while applying innovative design techniques.</span>
-                        </li>
-                        <li className="flex items-start">
-                            <span className="text-gold-500 font-bold mr-3 mt-1">◆</span>
-                            <span>To be an inspiration to our guests, operating with pride, integrity, and respect as an honest leader in the nail and spa industry.</span>
-                        </li>
-                        <li className="flex items-start">
-                            <span className="text-gold-500 font-bold mr-3 mt-1">◆</span>
-                            <span>We strive to set the highest standards of beauty with our extraordinary products, exceptional service, and dedication to your well-being.</span>
-                        </li>
-                    </ul>
+                    
+                    <div className={`transition-all duration-700 ease-in-out overflow-hidden ${isExpanded ? 'max-h-[500px] opacity-100 mt-8' : 'max-h-0 opacity-0'}`}>
+                        <ul className="space-y-5 font-sans text-gray-200">
+                            <li className="flex items-start">
+                                <span className="text-gold-500 font-bold mr-3 mt-1">◆</span>
+                                <span>An Aliana-based, women-owned and operated establishment catering to a diverse, international clientele.</span>
+                            </li>
+                            <li className="flex items-start">
+                                <span className="text-gold-500 font-bold mr-3 mt-1">◆</span>
+                                <span>Each reservation is customized to fit each individual’s personal experience.</span>
+                            </li>
+                            <li className="flex items-start">
+                                <span className="text-gold-500 font-bold mr-3 mt-1">◆</span>
+                                <span>Our skilled staff are always up-to-date with the latest trends and hygienic practices, while applying innovative design techniques.</span>
+                            </li>
+                            <li className="flex items-start">
+                                <span className="text-gold-500 font-bold mr-3 mt-1">◆</span>
+                                <span>To be an inspiration to our guests, operating with pride, integrity, and respect as an honest leader in the nail and spa industry.</span>
+                            </li>
+                            <li className="flex items-start">
+                                <span className="text-gold-500 font-bold mr-3 mt-1">◆</span>
+                                <span>We strive to set the highest standards of beauty with our extraordinary products, exceptional service, and dedication to your well-being.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <button
+                        onClick={() => setIsExpanded(!isExpanded)}
+                        className="mt-6 text-gold-400 font-semibold hover:text-gold-300 transition-colors"
+                        aria-expanded={isExpanded}
+                    >
+                        {isExpanded ? 'Show Less' : 'Show More'}
+                    </button>
                 </div>
                 <div className="w-full aspect-video md:aspect-[4/3] lg:aspect-[4/5] rounded-lg overflow-hidden shadow-xl bg-gold-100 order-1 lg:order-2 lg:col-span-2">
                     <MediaCarousel items={mediaItems} />
