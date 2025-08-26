@@ -2,11 +2,13 @@
 import React from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
+// The About file now exports both `About` and `OurStory` components
 import { About, OurStory } from './components/About';
 import { Services } from './components/Services';
 import { Gallery } from './components/Gallery';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
+// Correctly importing the named exports from the definitive HorizontalScrollContainer component
 import { HorizontalScrollContainer, HorizontalScrollSection } from './components/HorizontalScrollContainer';
 import { FadeInSection } from './components/FadeInSection';
 
@@ -19,30 +21,36 @@ function App(): React.ReactNode {
         <Hero />
         
         <HorizontalScrollContainer>
+            {/* Page 1: About */}
             <HorizontalScrollSection id="about">
                 <FadeInSection variant="horizontal">
                     <About />
                 </FadeInSection>
             </HorizontalScrollSection>
             
+            {/* Page 2: Our Values & Vision */}
             <HorizontalScrollSection id="our-values">
                 <FadeInSection variant="horizontal">
                     <OurStory />
                 </FadeInSection>
             </HorizontalScrollSection>
 
+            {/* Page 3: Services */}
             <HorizontalScrollSection id="services">
                 <FadeInSection variant="horizontal">
                     <Services />
                 </FadeInSection>
             </HorizontalScrollSection>
-            <HorizontalScrollSection id="gallery">
+
+            {/* Page 4: Gallery */}
+            <HorizontalScrollSection id="gallery">a
                 <FadeInSection variant="horizontal">
                     <Gallery />
                 </FadeInSection>
             </HorizontalScrollSection>
         </HorizontalScrollContainer>
 
+        {/* This section appears vertically after the horizontal scroll area */}
         <FadeInSection>
           <Contact />
         </FadeInSection>
