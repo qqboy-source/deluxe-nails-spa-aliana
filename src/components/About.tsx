@@ -5,12 +5,11 @@ import { ArrowDownIcon, ArrowUpIcon } from './icons';
 // INSTRUCTIONS: To add your own media, place your files in the public folder and update the paths below.
 // - Images go in `public/images`
 // - Videos go in `public/media`
-// Example: { type: 'image', src: 'images/your-photo.jpg', alt: 'Description of your photo.' },
-// Example: { type: 'video', src: 'media/your-video.mp4', alt: 'Description of your video.' },
+// The paths below have been updated to match your files.
 const mediaItems: MediaItem[] = [
-    { type: 'image', src: 'images/salon-1.jpg', alt: 'A photo showcasing the elegant interior of Deluxe Nails & Spa Aliana.' },
-    { type: 'video', src: 'media/promo-video.mp4', alt: 'A promotional video of the spa experience.' },
-    { type: 'image', src: 'images/salon-2.jpg', alt: 'Another view of the beautiful and relaxing spa ambiance.' },
+    { type: 'video', src: 'media/store-video-1.mp4', alt: 'A promotional video of the spa experience.' },
+    { type: 'image', src: 'images/spa-interior.jpg', alt: 'A photo showcasing the elegant interior of Deluxe Nails & Spa Aliana.' },
+    { type: 'video', src: 'media/store-video-2.mp4', alt: 'Another view of the beautiful and relaxing spa ambiance.' },
 ];
 
 const coreValues = [
@@ -46,7 +45,7 @@ export const About: React.FC = () => {
 export const OurStory: React.FC = () => {
     const [isExpanded, setIsExpanded] = useState(false);
     return (
-        <div className="grid grid-cols-1 gap-12 lg:w-2/5 lg:mx-auto">
+        <div className="grid grid-cols-1 gap-12 lg:w-1/2 lg:mx-auto">
             <div className="w-full aspect-video rounded-lg overflow-hidden shadow-xl border border-white/20">
                 <MediaCarousel items={mediaItems} />
             </div>
