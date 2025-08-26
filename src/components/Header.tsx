@@ -29,12 +29,14 @@ export const Header: React.FC = () => {
 
             const horizontalContainer = document.querySelector<HTMLElement>('[data-testid="horizontal-scroll-container"]');
             
+            // Check if the target is inside the horizontal scroll container
             if (horizontalContainer && horizontalContainer.contains(targetElement)) {
                 const sections = Array.from(horizontalContainer.querySelectorAll<HTMLElement>('.horizontal-scroll-section-item'));
                 const sectionIndex = sections.findIndex(section => section.id === targetId);
 
                 if (sectionIndex !== -1) {
                     const containerTop = horizontalContainer.getBoundingClientRect().top + window.scrollY;
+                    // Use the container's own width for the most reliable calculation
                     const sectionWidth = horizontalContainer.clientWidth;
                     const targetScrollY = containerTop + (sectionIndex * sectionWidth);
                     
@@ -42,10 +44,11 @@ export const Header: React.FC = () => {
                         top: targetScrollY,
                         behavior: 'smooth',
                     });
-                    return;
+                    return; // Exit after handling horizontal scroll
                 }
             }
             
+            // Fallback for vertical sections like 'Contact'
             const header = document.querySelector('header');
             const headerHeight = header ? header.offsetHeight : 80;
             const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
@@ -61,7 +64,7 @@ export const Header: React.FC = () => {
             setIsOpen(false);
             // Then, wait for the DOM to update before calculating scroll positions.
             // This timeout ensures calculations are based on the layout *after* the menu is gone.
-            setTimeout(performScroll, 50);
+            setTimeout(performScroll, 100);
         } else {
             // If the menu is not open (i.e., on desktop), scroll immediately.
             performScroll();
@@ -95,7 +98,7 @@ export const Header: React.FC = () => {
                         </div>
                     </nav>
                     <div className="md:hidden">
-                        <button onClick={() => setIsOpen(!isOpen)} className="text-gold-800 hover:text-gold-600 focus:outline-none" aria-label="Toggle menu">
+                        <button onClick={() => setIsOpen(!isOpen)} className="text-gold-800 hover:text-gold-600 focus:outline-none" aria-label="Toggle menu" aria-expanded={isOpen}>
                             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 {isOpen ? (
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -120,7 +123,7 @@ export const Header: React.FC = () => {
                                 {link.name}
                             </a>
                         ))}
-                         <a href="tel:2817620878" className="block w-full text-center text-gray-900 font-semibold mt-2 px-3 py-2 rounded-md text-base shadow btn-charging">
+                         <a href="tel:2817620878" className="block w-full text-center text-gray-900 font-semibold mt-2 px-3 py-2 rounded-md text-base shadow btn-charging border border-gold-600">
                             Book Your Escape
                         </a>
                     </div>
