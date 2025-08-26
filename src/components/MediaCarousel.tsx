@@ -14,10 +14,20 @@ interface MediaCarouselProps {
 export const MediaCarousel: React.FC<MediaCarouselProps> = ({ items }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isTransitioning, setIsTransitioning] = useState(false);
+    const [isInitiallyVisible, setIsInitiallyVisible] = useState(true);
     const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
     const carouselRef = useRef<HTMLDivElement>(null);
     const touchStartX = useRef(0);
     const touchEndX = useRef(0);
+
+    // Effect to make arrows visible for 8 seconds on load
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsInitiallyVisible(false);
+        }, 8000); // 8 seconds
+
+        return () => clearTimeout(timer); // Cleanup on unmount
+    }, []);
 
     // Effect to control video playback
     useEffect(() => {
@@ -126,14 +136,14 @@ export const MediaCarousel: React.FC<MediaCarouselProps> = ({ items }) => {
             {/* Navigation Arrows */}
             <button
                 onClick={goToPrevious}
-                className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-black/40 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-gold-400"
+                className={`absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-black/40 text-white p-2 rounded-full group-hover:opacity-100 transition-opacity duration-500 hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-gold-400 ${isInitiallyVisible ? 'opacity-100' : 'opacity-0'}`}
                 aria-label="Previous slide"
             >
                 <LeftArrowIcon className="w-6 h-6" />
             </button>
             <button
                 onClick={goToNext}
-                className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-black/40 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-gold-400"
+                className={`absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-black/40 text-white p-2 rounded-full group-hover:opacity-100 transition-opacity duration-500 hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-gold-400 ${isInitiallyVisible ? 'opacity-100' : 'opacity-0'}`}
                 aria-label="Next slide"
             >
                 <RightArrowIcon className="w-6 h-6" />
