@@ -1,88 +1,157 @@
-import React, { useRef, useLayoutEffect, useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { LeftArrowIcon, RightArrowIcon } from './icons';
 
-// A robust background image component with a fallback
-const HeroBackgroundImage: React.FC = () => {
-    const [hasError, setHasError] = useState(false);
+export interface MediaItem {
+    type: 'image' | 'video';
+    src: string;
+    alt: string;
+}
 
-    // INSTRUCTION: Please upload your main background image named 'hero-background.jpg' to the public/images folder on GitHub.
-    // The "?v=2" is a "cache-busting" string. If you change the image again, update it to "?v=3"
-    const imageUrl = 'images/hero-background.jpg?v=2';
+interface MediaCarouselProps {
+    items: MediaItem[];
+}
 
-    if (hasError) {
-        // Fallback to a solid color if the image fails to load.
-        return <div className="absolute top-0 left-0 w-full h-full bg-gold-900/80"></div>;
-    }
+export const MediaCarousel: React.FC<MediaCarouselProps> = ({ items }) => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isTransitioning, setIsTransitioning] = useState(false);
+    const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+    const carouselRef = useRef<HTMLDivElement>(null);
+    const touchStartX = useRef(0);
+    const touchEndX = useRef(0);
 
-    return (
-        <img
-            src={imageUrl}
-            alt="Luxurious spa-themed background"
-            className="absolute top-0 left-0 w-full h-full object-cover object-[60%_center]"
-            onError={() => setHasError(true)}
-        />
-    );
-};
-
-export const Hero: React.FC = () => {
-    const heroRef = useRef<HTMLElement>(null);
-    const [isTextVisible, setIsTextVisible] = useState(true);
-
-    // This effect addresses the 100vh issue on mobile browsers where the
-    // address bar's appearance/disappearance changes the viewport height.
-    // By setting the height dynamically, we ensure the layout is stable.
-    useLayoutEffect(() => {
-        const setHeroHeight = () => {
-            if (heroRef.current) {
-                // 80px is the height of the sticky header.
-                const headerHeight = 80; 
-                heroRef.current.style.height = `${window.innerHeight - headerHeight}px`;
-            }
-        };
-
-        setHeroHeight();
-        window.addEventListener('resize', setHeroHeight);
-        return () => window.removeEventListener('resize', setHeroHeight);
-    }, []);
-
-    // This effect adds the scroll-based fade-in/out animation.
+    // Effect to control video playback
     useEffect(() => {
-        const handleScroll = () => {
-            // The text box will be visible only when the user is scrolled less than 100px from the top.
-            const shouldBeVisible = window.scrollY < 100;
-            setIsTextVisible(shouldBeVisible);
-        };
+        videoRefs.current.forEach((video, index) => {
+            if (video) {
+                if (index === currentIndex) {
+                    video.play().catch(error => console.log("Autoplay was prevented:", error));
+                } else {
+                    video.pause();
+                    video.currentTime = 0;
+                }
+            }
+        });
+    }, [currentIndex]);
 
-        // Listen for scroll events
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        
-        // Clean up the event listener when the component is removed
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []); // The empty array ensures this effect runs only once when the component mounts.
+    const goToNext = () => {
+        if (isTransitioning) return;
+        setIsTransitioning(true);
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
+    };
 
+    const goToPrevious = () => {
+        if (isTransitioning) return;
+        setIsTransitioning(true);
+        setCurrentIndex((prevIndex) => (prevIndex - 1 + items.length) % items.length);
+    };
+
+    const goToSlide = (index: number) => {
+        if (isTransitioning) return;
+        setIsTransitioning(true);
+        setCurrentIndex(index);
+    };
+    
+    // Handlers for touch gestures
+    const handleTouchStart = (e: React.TouchEvent) => {
+        touchStartX.current = e.targetTouches[0].clientX;
+    };
+    
+    const handleTouchMove = (e: React.TouchEvent) => {
+        touchEndX.current = e.targetTouches[0].clientX;
+    };
+
+    const handleTouchEnd = () => {
+        if (touchStartX.current - touchEndX.current > 75) {
+            goToNext();
+        } else if (touchStartX.current - touchEndX.current < -75) {
+            goToPrevious();
+        }
+        touchStartX.current = 0;
+        touchEndX.current = 0;
+    };
 
     return (
-        <section ref={heroRef} id="home" className="relative min-h-[500px] flex items-center justify-center text-center text-white overflow-hidden">
-            <HeroBackgroundImage />
-            <div className="absolute top-0 left-0 w-full h-full bg-gold-900/40"></div>
-            <div 
-                className={`relative z-10 p-8 max-w-3xl bg-black/25 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl transition-all duration-500 ease-in-out ${
-                    isTextVisible 
-                        ? 'opacity-100 translate-y-0' 
-                        : 'opacity-0 translate-y-8 pointer-events-none'
-                }`}
+        <div 
+            ref={carouselRef}
+            className="relative w-full h-full overflow-hidden rounded-lg group"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+        >
+            <div
+                className="flex w-full h-full transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+                onTransitionEnd={() => setIsTransitioning(false)}
             >
-                <h1 className="text-5xl md:text-7xl font-serif font-bold text-white tracking-wider leading-tight text-shadow-strong">
-                    Elegance at Your Fingertips
-                </h1>
-                <p className="mt-4 text-lg md:text-xl font-sans font-light text-gold-100 max-w-xl mx-auto text-shadow-strong">
-                    Experience tranquility and bespoke nail artistry at Deluxe Nails & Spa Aliana.
-                </p>
-                <div className="mt-8">
-                    <a href="tel:2817620878" className="text-gray-900 font-bold py-3 px-8 rounded-lg text-lg shadow-lg btn-charging">
-                        Book Your Escape
-                    </a>
-                </div>
+                {items.map((item, index) => (
+                    <div key={index} className="flex-shrink-0 w-full h-full relative bg-black">
+                        {item.type === 'image' ? (
+                            <img
+                                src={item.src}
+                                alt={item.alt}
+                                className="w-full h-full object-cover"
+                                loading={index === 0 ? 'eager' : 'lazy'}
+                                onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.src = `https://placehold.co/600x400/9F763B/FBF3E6?text=Image+Not+Found`;
+                                }}
+                            />
+                        ) : (
+                            <video
+                                ref={el => { videoRefs.current[index] = el; }}
+                                src={item.src}
+                                className="w-full h-full object-cover"
+                                loop
+                                muted
+                                playsInline
+                                preload="auto"
+                                onError={(e) => {
+                                    const videoElement = e.currentTarget;
+                                    const parent = videoElement.parentElement;
+                                    if(parent) {
+                                        const placeholder = document.createElement('div');
+                                        placeholder.className = "w-full h-full flex items-center justify-center bg-gray-800 text-white";
+                                        placeholder.innerHTML = `<span>Video Not Found</span>`;
+                                        parent.replaceChild(placeholder, videoElement);
+                                    }
+                                }}
+                            >
+                                Your browser does not support the video tag.
+                            </video>
+                        )}
+                    </div>
+                ))}
             </div>
-        </section>
+
+            {/* Navigation Arrows */}
+            <button
+                onClick={goToPrevious}
+                className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-black/40 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-gold-400"
+                aria-label="Previous slide"
+            >
+                <LeftArrowIcon className="w-6 h-6" />
+            </button>
+            <button
+                onClick={goToNext}
+                className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-black/40 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-gold-400"
+                aria-label="Next slide"
+            >
+                <RightArrowIcon className="w-6 h-6" />
+            </button>
+            
+            {/* Dot Indicators */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex space-x-2">
+                {items.map((_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => goToSlide(index)}
+                        className={`w-3 h-3 rounded-full transition-colors duration-300 ${
+                            currentIndex === index ? 'bg-white' : 'bg-white/50 hover:bg-white/75'
+                        }`}
+                        aria-label={`Go to slide ${index + 1}`}
+                    />
+                ))}
+            </div>
+        </div>
     );
 };
