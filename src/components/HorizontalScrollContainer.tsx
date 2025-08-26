@@ -6,14 +6,14 @@ interface HorizontalScrollSectionProps {
     isActive?: boolean;
 }
 
-// Replaced `hide-scrollbar` with `custom-scrollbar` to make it visually clear to users
-// when a section has more content to scroll through.
+// Replaced `custom-scrollbar` with `hide-scrollbar` to hide the scrollbar indicator
+// while keeping the content scrollable via mouse wheel or touch.
 export const HorizontalScrollSection: React.FC<HorizontalScrollSectionProps> = ({ children, id, isActive }) => {
     return (
         <section id={id} className="horizontal-scroll-section-item w-screen h-screen flex-shrink-0 flex justify-center items-center p-4 sm:p-6 lg:p-8">
             <div className="w-full h-full max-w-7xl mx-auto flex flex-col rounded-xl">
                 <div 
-                    className={`w-full flex-grow pt-24 pb-12 px-2 md:px-4 custom-scrollbar overflow-y-auto overscroll-y-contain ${!isActive ? 'pointer-events-none' : ''}`}
+                    className={`w-full flex-grow pt-24 pb-12 px-2 md:px-4 hide-scrollbar overflow-y-auto overscroll-y-contain ${!isActive ? 'pointer-events-none' : ''}`}
                 >
                      {children}
                 </div>
