@@ -50,36 +50,27 @@
         animation-play-state: paused;
       }
       
-      /* Charging Button Effect: Uses pseudo-elements which are not directly styleable with Tailwind utilities */
-      .btn-charging {
+      /* 3D Gold Button Effect */
+      .btn-3d-gold {
         position: relative;
-        overflow: hidden;
-        z-index: 1;
-        transition: color 0.4s ease-out;
-      }
-      .btn-charging::after {
-        content: '';
-        position: absolute;
         top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        cursor: pointer;
+        display: inline-block;
         background-color: white;
-        z-index: -2;
+        color: #503C1D; /* gold-900 */
+        border: 2px solid #C6934A; /* gold-600 */
+        border-radius: 8px; /* rounded-lg */
+        box-shadow: 0 4px #9F763B; /* gold-700 */
+        transition: all 0.15s ease-out;
       }
-      .btn-charging::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 0;
-        height: 100%;
-        background-color: #C6934A; /* tailwind gold-600 */
-        transition: width 0.4s ease-out;
-        z-index: -1;
+      .btn-3d-gold:hover {
+        top: -2px; /* Lifts the button up */
+        box-shadow: 0 6px #9F763B;
       }
-      .btn-charging:hover { color: white; }
-      .btn-charging:hover::before { width: 100%; }
+      .btn-3d-gold:active {
+        top: 2px; /* Pushes the button down */
+        box-shadow: 0 2px #9F763B;
+      }
     </style>
   <script type="importmap">
 {
