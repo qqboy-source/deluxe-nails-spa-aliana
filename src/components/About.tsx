@@ -1,23 +1,40 @@
 import React from 'react';
 import { MediaCarousel, MediaItem } from './MediaCarousel';
 
-// INSTRUCTIONS FOR YOUR MEDIA:
-// 1. Create a new folder named `media` inside your `public` folder on GitHub.
-// 2. Upload your two videos to this new `public/media` folder.
-// 3. Upload your photo to the `public/images` folder (as you've done before).
-// 4. The `src` paths below are already set up to find these files. You don't need to change them.
+// INSTRUCTIONS: To add your own media, replace the placeholder URLs below with your file paths.
+// For videos, make sure to change the 'type' from 'image' back to 'video' and place the video files in the `public/media` folder.
 const mediaItems: MediaItem[] = [
-    { type: 'video', src: 'media/ambience-video-1.mp4', alt: 'First video showing the relaxing ambiance of the spa.' },
-    { type: 'image', src: 'images/our-story-photo.jpg', alt: 'A photo showcasing the elegant interior of Deluxe Nails & Spa Aliana.' },
-    { type: 'video', src: 'media/ambience-video-2.mp4', alt: 'Second video highlighting the details and decor of the spa.' },
+    { type: 'image', src: 'https://placehold.co/800x450/9F763B/FBF3E6?text=Our+Ambiance', alt: 'Placeholder showing the relaxing ambiance of the spa.' },
+    { type: 'image', src: 'https://placehold.co/800x450/c6934a/FBF3E6?text=Our+Salon', alt: 'A photo showcasing the elegant interior of Deluxe Nails & Spa Aliana.' },
+    { type: 'image', src: 'https://placehold.co/800x450/78592C/FBF3E6?text=Craftsmanship', alt: 'Placeholder highlighting the details and decor of the spa.' },
 ];
+
 
 /**
  * The introductory "About Us" page.
  */
 export const About: React.FC = () => {
+    
+    const scrollToNext = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        const horizontalContainer = document.querySelector<HTMLElement>('[data-testid="horizontal-scroll-container"]');
+        if (!horizontalContainer) return;
+        
+        // The "our-values" section is the second one in the sequence, so its index is 1.
+        const sectionIndex = 1;
+
+        const containerTop = horizontalContainer.getBoundingClientRect().top + window.scrollY;
+        const sectionWidth = horizontalContainer.clientWidth;
+        const targetScrollY = containerTop + (sectionIndex * sectionWidth);
+        
+        window.scrollTo({
+            top: targetScrollY,
+            behavior: 'smooth',
+        });
+    };
+
     return (
-        <div className="text-center">
+        <div className="text-center flex flex-col items-center">
             <h2 className="text-base text-gold-700 font-semibold tracking-wide uppercase">About Us</h2>
             <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-gray-900 sm:text-4xl text-shadow-subtle">
                 Your Sanctuary of Beauty & Relaxation
@@ -25,6 +42,18 @@ export const About: React.FC = () => {
             <p className="mt-4 max-w-2xl text-xl text-gray-700 mx-auto font-sans">
                 At Deluxe Nails & Spa Aliana, we believe that self-care is a priority, not a luxury. Our mission is to provide an unparalleled spa experience, where you can unwind, rejuvenate, and leave feeling more beautiful and confident than ever.
             </p>
+            <div className="mt-10">
+                <button 
+                    onClick={scrollToNext} 
+                    className="font-sans font-semibold text-gold-800 hover:text-gold-900 transition-colors flex items-center group text-lg"
+                    aria-label="Scroll to Our Values and Vision section"
+                >
+                    Our Values & Vision
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 ml-2 transform group-hover:translate-x-1.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                </button>
+            </div>
         </div>
     );
 };
