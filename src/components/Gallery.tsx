@@ -114,12 +114,12 @@ export const Gallery: React.FC = () => {
 
   return (
     <>
-      <div className="lg:text-center">
+      <div className="text-center">
         <h2 className="text-base text-gold-700 font-semibold tracking-wide uppercase">Our Work</h2>
         <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-gray-900 sm:text-4xl text-shadow-subtle">
           A Glimpse of Perfection
         </p>
-        <p className="mt-4 max-w-2xl text-lg text-gray-700 lg:mx-auto font-sans">
+        <p className="mt-4 max-w-2xl text-lg text-gray-700 mx-auto font-sans">
           Our gallery showcases the beautiful, continuous craft we pour into our work every day.
         </p>
       </div>
