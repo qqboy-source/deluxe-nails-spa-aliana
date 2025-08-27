@@ -74,28 +74,37 @@
         box-shadow: 0 6px 12px rgba(159, 118, 59, 0.25); /* gold-700 */
       }
 
-      /* Charging Bar Button Animation */
-      .has-charging-bar {
+      /* Button Fill Animation */
+      .btn-fill-gold {
         position: relative;
         overflow: hidden;
+        z-index: 1; /* Establishes a stacking context */
+        transition: color 0.4s ease-in-out;
       }
-      .has-charging-bar::after {
+      .btn-fill-gold::before {
         content: '';
         position: absolute;
-        bottom: 0;
+        top: 0;
         left: 0;
         width: 100%;
-        height: 4px;
+        height: 100%;
         background-color: #D9AC64; /* gold-500 */
-        transform: translateX(-101%);
+        transform: translateX(-100%);
         transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        z-index: -1; /* Place it behind the content */
       }
-      .has-charging-bar:hover::after {
+      .btn-fill-gold:hover::before {
         transform: translateX(0);
       }
-      /* Modifier for dark buttons to show a light bar */
-      .has-charging-bar.bar-light::after {
-        background-color: #F6E5C9; /* gold-200 */
+      .btn-fill-gold:hover {
+        color: white; /* Change text color to contrast with gold fill */
+      }
+      /* Modifier for dark buttons to fill with a light color */
+      .btn-fill-gold.fill-light::before {
+        background-color: #EED6AB; /* gold-300 */
+      }
+      .btn-fill-gold.fill-light:hover {
+        color: #503C1D; /* gold-900 */
       }
     </style>
   <script type="importmap">
