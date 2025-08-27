@@ -47,7 +47,7 @@ export const OurStory: React.FC = () => {
     return (
         <div className="grid grid-cols-1 gap-8 lg:w-[47%] lg:mx-auto">
             <div className="bg-black/25 backdrop-blur-md rounded-2xl p-6 md:p-10 border border-white/20 shadow-xl">
-                 <h3 className="text-2xl font-serif font-bold text-gold-200 text-center">Our Values & Vision</h3>
+                 <h3 className="text-3xl font-serif font-bold text-gold-300 text-center">Our Values & Vision</h3>
                 
                 {/* Collapsible section for ALL items */}
                 <div className={`grid transition-all duration-500 ease-in-out mt-6 ${isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
