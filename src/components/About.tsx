@@ -45,7 +45,7 @@ export const About: React.FC = () => {
 export const OurStory: React.FC = () => {
     const [isExpanded, setIsExpanded] = useState(false);
     return (
-        <div className="grid grid-cols-1 gap-8 lg:w-[45%] lg:mx-auto">
+        <div className="grid grid-cols-1 gap-8 lg:w-[47%] lg:mx-auto">
             <div className="bg-black/25 backdrop-blur-md rounded-2xl p-6 md:p-10 border border-white/20 shadow-xl">
                  <h3 className="text-2xl font-serif font-bold text-gold-200 text-center">Our Values & Vision</h3>
                 
