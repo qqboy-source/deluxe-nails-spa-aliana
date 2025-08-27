@@ -79,7 +79,7 @@ export const OurStory: React.FC = () => {
                 </div>
             </div>
 
-            <div className="w-full aspect-video rounded-lg overflow-hidden shadow-xl border border-white/20">
+            <div className="w-full aspect-[4/3] rounded-lg overflow-hidden shadow-xl border border-white/20">
                 <MediaCarousel items={mediaItems} />
             </div>
         </div>
