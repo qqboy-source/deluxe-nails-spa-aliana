@@ -78,7 +78,7 @@ export const Hero: React.FC = () => {
                     Experience tranquility and bespoke nail artistry at Deluxe Nails & Spa Aliana.
                 </p>
                 <div className="mt-8">
-                    <a href="tel:2817620878" className="text-gray-900 font-bold py-3 px-8 rounded-lg text-lg btn-golden-glow">
+                    <a href="tel:2817620878" className="text-gray-900 font-bold py-3 px-8 rounded-lg text-lg btn-golden-glow has-charging-bar">
                         Book Your Escape
                     </a>
                 </div>
