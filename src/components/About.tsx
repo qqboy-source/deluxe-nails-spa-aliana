@@ -49,22 +49,8 @@ export const OurStory: React.FC = () => {
             <div className="bg-black/25 backdrop-blur-md rounded-2xl p-6 md:p-10 border border-white/20 shadow-xl">
                  <h3 className="text-3xl font-serif font-bold text-gold-300 text-center">Our Values & Vision</h3>
                 
-                {/* Collapsible section for ALL items */}
-                <div className={`grid transition-all duration-500 ease-in-out mt-6 ${isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
-                    <div className="overflow-hidden">
-                        <ul className="space-y-5 font-sans text-gray-200 text-sm md:text-base">
-                            {coreValues.map((value, index) => (
-                                 <li key={index} className="flex items-start">
-                                    <span className="text-gold-500 font-bold mr-3 mt-1">◆</span>
-                                    <span>{value}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
-                
                 {/* Show More/Less Button */}
-                <div className="mt-6 text-center">
+                <div className="mt-2 text-center">
                     <button 
                         onClick={() => setIsExpanded(!isExpanded)} 
                         className="flex items-center mx-auto font-semibold text-gold-300 hover:text-gold-100 transition-colors"
@@ -76,6 +62,20 @@ export const OurStory: React.FC = () => {
                             : <ArrowDownIcon className="w-5 h-5 ml-2" />
                         }
                     </button>
+                </div>
+
+                {/* Collapsible section for ALL items */}
+                <div className={`grid transition-all duration-500 ease-in-out mt-4 ${isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
+                    <div className="overflow-hidden">
+                        <ul className="space-y-5 font-sans text-gray-200 text-sm md:text-base">
+                            {coreValues.map((value, index) => (
+                                 <li key={index} className="flex items-start">
+                                    <span className="text-gold-500 font-bold mr-3 mt-1">◆</span>
+                                    <span>{value}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
             </div>
 
