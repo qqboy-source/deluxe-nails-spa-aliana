@@ -110,7 +110,7 @@ export const MediaCarousel: React.FC<MediaCarouselProps> = ({ items }) => {
                             <video
                                 ref={el => { videoRefs.current[index] = el; }}
                                 src={item.src}
-                                className="w-full h-full object-contain"
+                                className="w-full h-full object-cover"
                                 loop
                                 muted
                                 playsInline
