@@ -45,8 +45,8 @@ export const About: React.FC = () => {
 export const OurStory: React.FC = () => {
     const [isExpanded, setIsExpanded] = useState(false);
     return (
-        <div className="grid grid-cols-1 gap-8 lg:w-[47%] lg:mx-auto">
-            <div className="bg-black/25 backdrop-blur-md rounded-2xl p-6 md:p-10 border border-white/20 shadow-xl">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
+            <div className="w-full lg:w-[45%] bg-black/25 backdrop-blur-md rounded-2xl p-6 md:p-10 border border-white/20 shadow-xl">
                  <h3 className="text-3xl font-serif font-bold text-gold-300 text-center">Our Values & Vision</h3>
                 
                 {/* Show More/Less Button */}
@@ -79,7 +79,7 @@ export const OurStory: React.FC = () => {
                 </div>
             </div>
 
-            <div className="w-full aspect-[4/3] rounded-lg overflow-hidden shadow-xl border border-white/20">
+            <div className="w-full lg:w-[55%] aspect-[4/3] rounded-lg overflow-hidden shadow-xl border border-white/20">
                 <MediaCarousel items={mediaItems} />
             </div>
         </div>
