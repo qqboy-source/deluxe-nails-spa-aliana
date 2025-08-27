@@ -52,42 +52,34 @@ export const OurStory: React.FC = () => {
 
             <div className="bg-black/25 backdrop-blur-md rounded-2xl p-6 md:p-10 border border-white/20 shadow-xl">
                  <h3 className="text-2xl font-serif font-bold text-gold-200 text-center">Our Values & Vision</h3>
-                <div className="mt-6 font-sans text-gray-200 text-sm md:text-base">
-                    {/* Always visible first item */}
-                    <div className="flex items-start">
-                        <span className="text-gold-500 font-bold mr-3 mt-1">◆</span>
-                        <span>{coreValues[0]}</span>
+                
+                {/* Collapsible section for ALL items */}
+                <div className={`grid transition-all duration-500 ease-in-out mt-6 ${isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
+                    <div className="overflow-hidden">
+                        <ul className="space-y-5 font-sans text-gray-200 text-sm md:text-base">
+                            {coreValues.map((value, index) => (
+                                 <li key={index} className="flex items-start">
+                                    <span className="text-gold-500 font-bold mr-3 mt-1">◆</span>
+                                    <span>{value}</span>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
-
-                    {/* Collapsible section for the rest of the items */}
-                    <div className={`grid transition-all duration-500 ease-in-out ${isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
-                        <div className="overflow-hidden">
-                             <ul className="space-y-5 pt-5">
-                                {coreValues.slice(1).map((value, index) => (
-                                     <li key={index} className="flex items-start">
-                                        <span className="text-gold-500 font-bold mr-3 mt-1">◆</span>
-                                        <span>{value}</span>
-                                    </li>
-
-                                ))}
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    {/* Show More/Less Button */}
-                    <div className="mt-6 text-center">
-                        <button 
-                            onClick={() => setIsExpanded(!isExpanded)} 
-                            className="flex items-center mx-auto font-semibold text-gold-300 hover:text-gold-100 transition-colors"
-                            aria-expanded={isExpanded}
-                        >
-                            <span>{isExpanded ? 'Show Less' : 'Show More'}</span>
-                            {isExpanded 
-                                ? <ArrowUpIcon className="w-5 h-5 ml-2" /> 
-                                : <ArrowDownIcon className="w-5 h-5 ml-2" />
-                            }
-                        </button>
-                    </div>
+                </div>
+                
+                {/* Show More/Less Button */}
+                <div className="mt-6 text-center">
+                    <button 
+                        onClick={() => setIsExpanded(!isExpanded)} 
+                        className="flex items-center mx-auto font-semibold text-gold-300 hover:text-gold-100 transition-colors"
+                        aria-expanded={isExpanded}
+                    >
+                        <span>{isExpanded ? 'Show Less' : 'Show More'}</span>
+                        {isExpanded 
+                            ? <ArrowUpIcon className="w-5 h-5 ml-2" /> 
+                            : <ArrowDownIcon className="w-5 h-5 ml-2" />
+                        }
+                    </button>
                 </div>
             </div>
         </div>
