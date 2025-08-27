@@ -44,16 +44,24 @@ export const About: React.FC = () => {
  */
 export const OurStory: React.FC = () => {
     const [isExpanded, setIsExpanded] = useState(false);
+
+    const boxClasses = isExpanded
+        ? 'bg-black/40 backdrop-blur-lg rounded-2xl p-6 md:p-10 border border-white/20 shadow-xl'
+        : 'p-6 md:p-10';
+
+    const textClasses = isExpanded ? 'text-gold-300' : 'text-gray-900';
+    const buttonHoverClass = isExpanded ? 'hover:text-gold-100' : 'hover:text-gold-700';
+    
     return (
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
-            <div className="w-full lg:w-[45%] bg-black/25 backdrop-blur-md rounded-2xl p-6 md:p-10 border border-white/20 shadow-xl">
-                 <h3 className="text-3xl font-serif font-bold text-gold-300 text-center">Our Values & Vision</h3>
+            <div className={`w-full lg:w-[45%] transition-all duration-500 ease-in-out ${boxClasses}`}>
+                 <h3 className={`text-3xl font-serif font-bold text-center transition-colors duration-500 ${textClasses}`}>Our Values & Vision</h3>
                 
                 {/* Show More/Less Button */}
                 <div className="mt-2 text-center">
                     <button 
                         onClick={() => setIsExpanded(!isExpanded)} 
-                        className="flex items-center mx-auto font-semibold text-gold-300 hover:text-gold-100 transition-colors"
+                        className={`flex items-center mx-auto font-semibold transition-colors duration-500 ${textClasses} ${buttonHoverClass}`}
                         aria-expanded={isExpanded}
                     >
                         <span>{isExpanded ? 'Show Less' : 'Show More'}</span>
