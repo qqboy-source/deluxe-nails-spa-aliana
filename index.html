@@ -50,26 +50,28 @@
         animation-play-state: paused;
       }
       
-      /* 3D Gold Button Effect */
-      .btn-3d-gold {
-        position: relative;
-        top: 0;
-        cursor: pointer;
-        display: inline-block;
+      /* Golden Glow Button Effect */
+      @keyframes golden-glow {
+        0%, 100% { 
+          box-shadow: 0 0 4px rgba(217, 172, 100, 0.5), 0 0 8px rgba(217, 172, 100, 0.4);
+          border-color: #D9AC64; /* gold-500 */
+        }
+        50% { 
+          box-shadow: 0 0 8px rgba(228, 193, 134, 0.6), 0 0 16px rgba(228, 193, 134, 0.5);
+          border-color: #E4C186; /* gold-400 */
+        }
+      }
+      .btn-golden-glow {
         background-color: white;
-        color: #503C1D; /* gold-900 */
-        border: 2px solid #C6934A; /* gold-600 */
-        border-radius: 8px; /* rounded-lg */
-        box-shadow: 0 4px #9F763B; /* gold-700 */
-        transition: all 0.15s ease-out;
+        color: #78592C; /* gold-800 */
+        border: 1px solid #C6934A; /* gold-600 */
+        animation: golden-glow 4s ease-in-out infinite;
+        transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
       }
-      .btn-3d-gold:hover {
-        top: -2px; /* Lifts the button up */
-        box-shadow: 0 6px #9F763B;
-      }
-      .btn-3d-gold:active {
-        top: 2px; /* Pushes the button down */
-        box-shadow: 0 2px #9F763B;
+      .btn-golden-glow:hover {
+        animation-play-state: paused;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(159, 118, 59, 0.25); /* gold-700 */
       }
     </style>
   <script type="importmap">
