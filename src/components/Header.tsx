@@ -14,60 +14,47 @@ export const Header: React.FC = () => {
 
     const handleNavClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
         event.preventDefault();
-
-        // The core scrolling logic is extracted into its own function to be called later.
-        const performScroll = () => {
-            const targetId = href.substring(1);
-
-            if (targetId === 'home') {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                return;
-            }
-            
-            const targetElement = document.getElementById(targetId);
-            if (!targetElement) return;
-
-            const horizontalContainer = document.querySelector<HTMLElement>('[data-testid="horizontal-scroll-container"]');
-            
-            // Check if the target is inside the horizontal scroll container
-            if (horizontalContainer && horizontalContainer.contains(targetElement)) {
-                const sections = Array.from(horizontalContainer.querySelectorAll<HTMLElement>('.horizontal-scroll-section-item'));
-                const sectionIndex = sections.findIndex(section => section.id === targetId);
-
-                if (sectionIndex !== -1) {
-                    const containerTop = horizontalContainer.getBoundingClientRect().top + window.scrollY;
-                    // Use the container's own width for the most reliable calculation
-                    const sectionWidth = horizontalContainer.clientWidth;
-                    const targetScrollY = containerTop + (sectionIndex * sectionWidth);
-                    
-                    window.scrollTo({
-                        top: targetScrollY,
-                        behavior: 'smooth',
-                    });
-                    return; // Exit after handling horizontal scroll
-                }
-            }
-            
-            // Fallback for vertical sections like 'Contact'
-            const header = document.querySelector('header');
-            const headerHeight = header ? header.offsetHeight : 80;
-            const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
-            
-            window.scrollTo({
-                top: elementTop - headerHeight,
-                behavior: 'smooth',
-            });
-        };
-
-        // If the mobile menu is open, close it first.
         if (isOpen) {
             setIsOpen(false);
-            // Then, wait for the DOM to update before calculating scroll positions.
-            // This timeout ensures calculations are based on the layout *after* the menu is gone.
-            setTimeout(performScroll, 100);
+        }
+
+        const targetId = href.substring(1);
+
+        if (targetId === 'home') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+        
+        const horizontalContainer = document.querySelector<HTMLElement>('[data-testid="horizontal-scroll-container"]');
+        if (!horizontalContainer) return;
+
+        const horizontalSections = Array.from(horizontalContainer.querySelectorAll<HTMLElement>('.horizontal-scroll-section-item'));
+        const sectionIndex = horizontalSections.findIndex(section => section.id === targetId);
+
+        if (sectionIndex !== -1) {
+            // It's a horizontal section.
+            const containerTop = horizontalContainer.getBoundingClientRect().top + window.scrollY;
+            // Use getBoundingClientRect().width for the most precise measurement, matching the container.
+            const sectionWidth = horizontalSections[0]?.getBoundingClientRect().width || window.innerWidth;
+            const targetScrollY = containerTop + (sectionIndex * sectionWidth);
+            
+            window.scrollTo({
+                top: targetScrollY,
+                behavior: 'smooth',
+            });
         } else {
-            // If the menu is not open (i.e., on desktop), scroll immediately.
-            performScroll();
+            // It's a vertical section (e.g., Contact).
+            const targetElement = document.getElementById(targetId);
+            const header = document.querySelector('header');
+            const headerHeight = header ? header.offsetHeight : 80; // Default to 80px if header not found
+
+            if (targetElement) {
+                const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
+                window.scrollTo({
+                    top: elementTop - headerHeight, // Adjust for sticky header
+                    behavior: 'smooth',
+                });
+            }
         }
     };
 
@@ -92,13 +79,13 @@ export const Header: React.FC = () => {
                                     {link.name}
                                 </a>
                             ))}
-                            <a href="tel:2817620878" className="ml-4 text-gray-900 font-semibold px-4 py-2 rounded-md text-sm btn-golden-glow btn-fill-gold">
+                            <a href="tel:2817620878" className="ml-4 font-semibold px-4 py-2 rounded-md text-sm btn-golden-glow btn-fill-gold">
                                 Book Your Escape
                             </a>
                         </div>
                     </nav>
                     <div className="md:hidden">
-                        <button onClick={() => setIsOpen(!isOpen)} className="text-gold-800 hover:text-gold-600 focus:outline-none" aria-label="Toggle menu" aria-expanded={isOpen}>
+                        <button onClick={() => setIsOpen(!isOpen)} className="text-gold-800 hover:text-gold-600 focus:outline-none" aria-label="Toggle menu">
                             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 {isOpen ? (
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -123,7 +110,7 @@ export const Header: React.FC = () => {
                                 {link.name}
                             </a>
                         ))}
-                         <a href="tel:2817620878" className="block w-full text-center text-gray-900 font-semibold mt-2 px-3 py-2 rounded-md text-base btn-golden-glow btn-fill-gold">
+                         <a href="tel:2817620878" className="block w-full text-center font-semibold mt-2 px-3 py-2 rounded-md text-base btn-golden-glow btn-fill-gold">
                             Book Your Escape
                         </a>
                     </div>
