@@ -113,7 +113,7 @@ export const Services: React.FC = () => {
                     <h2 id="services-heading" className="text-2xl font-serif font-bold text-gold-200">Our Services</h2>
                     <button onClick={() => setIsMenuVisible(false)} className="text-4xl font-light leading-none text-gray-400 hover:text-white transition-colors" aria-label="Close services menu">&times;</button>
                 </header>
-                <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar flex-grow">
+                <div className="p-6 md:p-8 overflow-y-auto hide-scrollbar flex-grow">
                     {servicesData.map((category) => (
                         <div key={category.category} className="mb-8">
                             <h3 className="text-xl font-serif font-bold text-gold-400 border-b-2 border-gold-500/50 pb-2 mb-4">{category.category}</h3>
@@ -133,7 +133,7 @@ export const Services: React.FC = () => {
                     ))}
                 </div>
                 <footer className="p-4 border-t border-gold-600/30 text-center flex-shrink-0">
-                     <a href="tel:2817620878" className="inline-block bg-gold-600 text-white font-bold py-2 px-6 rounded-lg text-base shadow-lg hover:bg-gold-500 transition-colors">
+                     <a href="tel:2817620878" className="inline-block bg-gold-600 text-white font-bold py-2 px-6 rounded-lg text-base shadow-lg hover:bg-gold-500 transition-colors has-charging-bar bar-light">
                         Book Now
                     </a>
                 </footer>
@@ -152,7 +152,7 @@ export const Services: React.FC = () => {
                     Explore our wide range of services designed to make you look and feel your best. Click below to view our full service menu.
                 </p>
                 <div className="mt-16">
-                    <button onClick={() => setIsMenuVisible(true)} className="text-gray-900 font-bold py-3 px-8 rounded-lg text-lg shadow-lg btn-charging"
+                    <button onClick={() => setIsMenuVisible(true)} className="font-bold py-3 px-8 rounded-lg text-lg shadow-lg btn-golden-glow has-charging-bar"
                         aria-haspopup="dialog" aria-expanded={isMenuVisible}>
                         View Full Menu
                     </button>
