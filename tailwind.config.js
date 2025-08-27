@@ -21,7 +21,7 @@ export default {
         },
       },
       animation: {
-        'fade-in-up': 'fadeInUp 2.5s ease-out 5s forwards',
+        'fade-in-up': 'fadeInUp 1s ease-out forwards',
         'fade-in': 'fadeIn 0.3s ease-out forwards',
         'scale-in': 'scaleIn 0.3s ease-out forwards',
         'scroll-up': 'scroll-up 25s linear infinite',
