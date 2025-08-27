@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { ServiceCategory } from '../types';
@@ -133,7 +134,7 @@ export const Services: React.FC = () => {
                     ))}
                 </div>
                 <footer className="p-4 border-t border-gold-600/30 text-center flex-shrink-0">
-                     <a href="tel:2817620878" className="inline-block bg-gold-600 text-white font-bold py-2 px-6 rounded-lg text-base shadow-lg hover:bg-gold-500 transition-colors has-charging-bar bar-light">
+                     <a href="tel:2817620878" className="inline-block bg-gold-600 text-white font-bold py-2 px-6 rounded-lg text-base shadow-lg btn-fill-gold fill-light">
                         Book Now
                     </a>
                 </footer>
@@ -152,7 +153,7 @@ export const Services: React.FC = () => {
                     Explore our wide range of services designed to make you look and feel your best. Click below to view our full service menu.
                 </p>
                 <div className="mt-16">
-                    <button onClick={() => setIsMenuVisible(true)} className="font-bold py-3 px-8 rounded-lg text-lg shadow-lg btn-golden-glow has-charging-bar"
+                    <button onClick={() => setIsMenuVisible(true)} className="font-bold py-3 px-8 rounded-lg text-lg shadow-lg btn-golden-glow btn-fill-gold"
                         aria-haspopup="dialog" aria-expanded={isMenuVisible}>
                         View Full Menu
                     </button>
