@@ -45,14 +45,14 @@ export const About: React.FC = () => {
 export const OurStory: React.FC = () => {
     const [isExpanded, setIsExpanded] = useState(false);
     return (
-        <div className="grid grid-cols-1 gap-12 lg:w-[48%] lg:mx-auto">
+        <div className="grid grid-cols-1 gap-8 lg:w-[45%] lg:mx-auto">
             <div className="w-full aspect-video rounded-lg overflow-hidden shadow-xl border border-white/20">
                 <MediaCarousel items={mediaItems} />
             </div>
 
-            <div className="bg-black/25 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-white/20 shadow-xl">
+            <div className="bg-black/25 backdrop-blur-md rounded-2xl p-6 md:p-10 border border-white/20 shadow-xl">
                  <h3 className="text-2xl font-serif font-bold text-gold-200 text-center">Our Values & Vision</h3>
-                <div className="mt-6 font-sans text-gray-200 text-base md:text-lg">
+                <div className="mt-6 font-sans text-gray-200 text-sm md:text-base">
                     {/* Always visible first item */}
                     <div className="flex items-start">
                         <span className="text-gold-500 font-bold mr-3 mt-1">◆</span>
@@ -68,6 +68,7 @@ export const OurStory: React.FC = () => {
                                         <span className="text-gold-500 font-bold mr-3 mt-1">◆</span>
                                         <span>{value}</span>
                                     </li>
+
                                 ))}
                             </ul>
                         </div>
