@@ -40,9 +40,9 @@ export const About: React.FC = () => {
 
 
 /**
- * The "Our Values & Vision" page, now featuring a media carousel and collapsible text.
+ * The "Our Vision" page, now featuring a media carousel and collapsible text.
  */
-export const OurStory: React.FC = () => {
+export const OurVision: React.FC = () => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     const boxClasses = isExpanded
