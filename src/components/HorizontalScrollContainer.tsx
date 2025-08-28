@@ -1,5 +1,4 @@
-
-import React, { useRef, useEffect, Children, useState, cloneElement, isValidElement, ReactNode } from 'react';
+import React, { useRef, useLayoutEffect, Children, useState, cloneElement, isValidElement, ReactNode } from 'react';
 
 interface HorizontalScrollSectionProps {
     children: React.ReactNode;
@@ -51,7 +50,7 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
     const touchStartX = useRef(0);
     const touchStartY = useRef(0);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const scrollContainer = scrollContainerRef.current;
         const stickyContent = stickyContentRef.current;
         if (!scrollContainer || !stickyContent || numSections === 0) return;
@@ -88,7 +87,7 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
             stickyContent.style.transform = `translateX(-${Math.round(distance)}px)`;
             
             const newActiveIndex = sectionWidth > 0 ? Math.min(numSections - 1, Math.round(distance / sectionWidth)) : 0;
-            setActiveIndex(newActiveIndex);
+            setActiveIndex(prevIndex => prevIndex !== newActiveIndex ? newActiveIndex : prevIndex);
         };
         
         const handleScroll = () => {
@@ -98,11 +97,14 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
         
         calculateAndSetDimensions();
         
-        window.addEventListener('resize', calculateAndSetDimensions);
+        // The ResizeObserver is the key fix for mobile viewport changes.
+        const resizeObserver = new ResizeObserver(calculateAndSetDimensions);
+        resizeObserver.observe(scrollContainer);
+
         window.addEventListener('scroll', handleScroll, { passive: true });
         
         return () => {
-            window.removeEventListener('resize', calculateAndSetDimensions);
+            resizeObserver.disconnect();
             window.removeEventListener('scroll', handleScroll);
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
         };
