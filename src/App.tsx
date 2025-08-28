@@ -11,7 +11,7 @@ import { Footer } from './components/Footer';
 // Correctly importing the named exports from the definitive HorizontalScrollContainer component
 import { HorizontalScrollContainer, HorizontalScrollSection } from './components/HorizontalScrollContainer';
 import { FadeInSection } from './components/FadeInSection';
-import { HorizontalScrollProvider } from './contexts/HorizontalScrollContext';
+import { HorizontalScrollProvider } from './HorizontalScrollContext';
 
 function App(): React.ReactNode {
 
