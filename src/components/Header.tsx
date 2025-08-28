@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { useHorizontalScroll } from '../HorizontalScrollContext';
+import { useHorizontalScroll } from '../App';
 
 export const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
