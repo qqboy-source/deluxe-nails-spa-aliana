@@ -85,6 +85,8 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
         };
         
         calculateAndSetDimensions();
+        // Re-calculate after a delay to ensure mobile browser UI has stabilized.
+        const timeoutId = setTimeout(calculateAndSetDimensions, 100);
         
         const resizeObserver = new ResizeObserver(calculateAndSetDimensions);
         resizeObserver.observe(scrollContainer);
@@ -95,6 +97,7 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
             resizeObserver.disconnect();
             window.removeEventListener('scroll', handleScroll);
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            clearTimeout(timeoutId);
         };
     }, [numSections]);
 
