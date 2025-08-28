@@ -17,9 +17,11 @@ export const Hero: React.FC = () => {
             }
         };
 
-        setHeroHeight();
-        // Recalculate after a short delay to account for mobile browser UI changes.
-        const timeoutId = setTimeout(setHeroHeight, 100);
+        // We only run the calculation after a delay. This gives the mobile browser
+        // time to settle its UI (like the address bar) and report the correct final window height.
+        // This prevents a race condition where other components might measure the hero's
+        // height before it has been properly set.
+        const timeoutId = setTimeout(setHeroHeight, 150);
 
         window.addEventListener('resize', setHeroHeight);
         
