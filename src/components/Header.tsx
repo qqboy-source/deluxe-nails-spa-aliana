@@ -1,167 +1,184 @@
 
-import React, { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
+import React, { useRef, useLayoutEffect, Children, useState, cloneElement, isValidElement, ReactNode, useCallback } from 'react';
 import { useHorizontalScroll } from '../HorizontalScrollContext';
 
-export const Header: React.FC = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [isPromotionModalOpen, setIsPromotionModalOpen] = useState(false);
-    const [modalContainer, setModalContainer] = useState<Element | null>(null);
-    const { scrollToSection } = useHorizontalScroll();
+interface HorizontalScrollSectionProps {
+    children: React.ReactNode;
+    id: string;
+    isActive?: boolean;
+}
 
-    useEffect(() => {
-        setModalContainer(document.getElementById('modal-root'));
+/**
+ * A single "page" or "section" within the horizontal scroll container.
+ * It is a named export, which is what the build tool expects.
+ */
+export const HorizontalScrollSection: React.FC<HorizontalScrollSectionProps> = ({ children, id, isActive }) => {
+    return (
+        <section 
+            id={id} 
+            className="horizontal-scroll-section-item w-screen h-screen flex-shrink-0 flex justify-center items-center p-4 sm:p-6 lg:p-8"
+            aria-hidden={!isActive} // Hide inactive sections from screen readers for better accessibility
+        >
+            <div className="w-full h-full max-w-7xl mx-auto flex flex-col rounded-xl">
+                <div 
+                    className={`w-full flex-grow pt-24 pb-12 px-2 md:px-4 hide-scrollbar overflow-y-auto overscroll-y-contain ${!isActive ? 'pointer-events-none' : ''}`}
+                >
+                     {children}
+                </div>
+            </div>
+        </section>
+    );
+};
+
+interface HorizontalScrollContainerProps {
+    children: ReactNode;
+}
+
+/**
+ * The main container that orchestrates the horizontal scrolling effect.
+ * It is also a named export, resolving the build error.
+ */
+export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps> = ({ children }) => {
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const stickyContentRef = useRef<HTMLDivElement>(null);
+    const [activeIndex, setActiveIndex] = useState(0);
+    const numSections = Children.count(children);
+    const { setScrollToSection } = useHorizontalScroll();
+
+    const dimensionsRef = useRef({
+        containerTop: 0,
+        sectionWidth: 0,
+        maxTranslateX: 0,
+    });
+    const touchStartX = useRef(0);
+    const touchStartY = useRef(0);
+
+    const scrollToSectionById = useCallback((id: string) => {
+        const stickyContent = stickyContentRef.current;
+        if (!stickyContent) return;
+        
+        const horizontalSections = Array.from(stickyContent.querySelectorAll<HTMLElement>('.horizontal-scroll-section-item'));
+        const sectionIndex = horizontalSections.findIndex(section => section.id === id);
+
+        if (sectionIndex !== -1) {
+            const { containerTop, sectionWidth } = dimensionsRef.current;
+            if (sectionWidth > 0) {
+                const targetScrollY = containerTop + (sectionIndex * sectionWidth);
+                window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
+            }
+        }
     }, []);
-    
-    useEffect(() => {
-        const originalOverflow = document.body.style.overflow;
-        if (isPromotionModalOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = originalOverflow;
-        }
-        return () => { document.body.style.overflow = originalOverflow; };
-    }, [isPromotionModalOpen]);
 
-    const navLinks = [
-        { name: 'Home', href: '#home' },
-        { name: 'About', href: '#about' },
-        { name: 'Our Values', href: '#our-values' },
-        { name: 'Services', href: '#services' },
-        { name: 'Gallery', href: '#gallery' },
-        { name: 'Promotion', href: '#promotion' },
-        { name: 'Contact', href: '#contact' },
-    ];
+    useLayoutEffect(() => {
+        const scrollContainer = scrollContainerRef.current;
+        const stickyContent = stickyContentRef.current;
+        if (!scrollContainer || !stickyContent || numSections === 0) return;
 
-    const handleNavClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-        event.preventDefault();
+        // Register the centralized scroll function to the context
+        setScrollToSection(() => scrollToSectionById);
+
+        let animationFrameId: number | null = null;
         
-        if (href === '#promotion') {
-            setIsPromotionModalOpen(true);
-            if (isOpen) setIsOpen(false); // Close mobile menu if open
-            return;
-        }
+        const calculateAndSetDimensions = () => {
+            if (!scrollContainer || !stickyContent) return;
+            
+            const rect = scrollContainer.getBoundingClientRect();
+            const sectionWidth = window.innerWidth;
 
-        if (isOpen) {
-            setIsOpen(false);
-        }
+            dimensionsRef.current.containerTop = rect.top + window.scrollY;
+            dimensionsRef.current.sectionWidth = sectionWidth;
+            dimensionsRef.current.maxTranslateX = (numSections - 1) * sectionWidth;
+            
+            const containerHeight = dimensionsRef.current.maxTranslateX + window.innerHeight;
+            scrollContainer.style.height = `${containerHeight}px`;
+            
+            updateTransform();
+        };
 
-        const targetId = href.substring(1);
-
-        if (targetId === 'home') {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            return;
-        }
+        const updateTransform = () => {
+            if (!stickyContent) return;
+            
+            const { containerTop, maxTranslateX, sectionWidth } = dimensionsRef.current;
+            const scrollTop = window.scrollY;
+            
+            let distance = Math.max(0, scrollTop - containerTop);
+            distance = Math.min(distance, maxTranslateX);
+            
+            stickyContent.style.transform = `translateX(-${Math.round(distance)}px)`;
+            
+            const newActiveIndex = sectionWidth > 0 ? Math.min(numSections - 1, Math.round(distance / sectionWidth)) : 0;
+            setActiveIndex(prevIndex => prevIndex !== newActiveIndex ? newActiveIndex : prevIndex);
+        };
         
-        const targetElement = document.getElementById(targetId);
-        if (!targetElement) return;
-
-        const horizontalContainer = document.querySelector<HTMLElement>('[data-testid="horizontal-scroll-container"]');
+        const handleScroll = () => {
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            animationFrameId = requestAnimationFrame(updateTransform);
+        };
         
-        // Check if the target is a horizontal section by seeing if it's a child of the container
-        if (horizontalContainer && horizontalContainer.contains(targetElement)) {
-            // It's a horizontal section. Use the centralized context function.
-            scrollToSection(targetId);
-        } else {
-            // It's a vertical section (e.g., Contact).
-            const header = document.querySelector('header');
-            const headerHeight = header ? header.offsetHeight : 80;
+        calculateAndSetDimensions();
+        
+        const resizeObserver = new ResizeObserver(calculateAndSetDimensions);
+        resizeObserver.observe(scrollContainer);
 
-            const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
-            window.scrollTo({
-                top: elementTop - headerHeight,
-                behavior: 'smooth',
-            });
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        
+        return () => {
+            resizeObserver.disconnect();
+            window.removeEventListener('scroll', handleScroll);
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        };
+    }, [numSections, setScrollToSection, scrollToSectionById]);
+
+    const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+        touchStartX.current = e.targetTouches[0].clientX;
+        touchStartY.current = e.targetTouches[0].clientY;
+    };
+
+    const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+
+        const deltaX = touchEndX - touchStartX.current;
+        const deltaY = touchEndY - touchStartY.current;
+
+        touchStartX.current = 0;
+        touchStartY.current = 0;
+        
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+            let targetIndex = activeIndex;
+            if (deltaX < 0) { // Swipe Left
+                targetIndex = Math.min(activeIndex + 1, numSections - 1);
+            } else { // Swipe Right
+                targetIndex = Math.max(activeIndex - 1, 0);
+            }
+
+            if (targetIndex !== activeIndex) {
+                const { containerTop, sectionWidth } = dimensionsRef.current;
+                if (sectionWidth > 0) {
+                    const targetScrollY = containerTop + (targetIndex * sectionWidth);
+                    window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
+                }
+            }
         }
     };
 
-    const promotionModal = (
+    return (
         <div 
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex justify-center items-center animate-fade-in p-4" 
-            onClick={() => setIsPromotionModalOpen(false)}
-            role="dialog" aria-modal="true" aria-labelledby="promotion-modal-title"
+            ref={scrollContainerRef} 
+            data-testid="horizontal-scroll-container"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
         >
-            <button
-                onClick={() => setIsPromotionModalOpen(false)}
-                className="absolute top-4 right-4 text-white text-5xl font-light leading-none z-[210] hover:text-gold-300 transition-colors"
-                aria-label="Close promotion view"
-            >&times;</button>
-            <div className="relative animate-scale-in z-[205]" onClick={e => e.stopPropagation()}>
-                <h2 id="promotion-modal-title" className="sr-only">Current Promotion</h2>
-                <img
-                    src="images/promotion.jpg"
-                    alt="Current promotion flyer. To update, replace the image in the public/images folder."
-                    className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
-                />
+            <div className="sticky top-0 h-screen overflow-hidden">
+                <div ref={stickyContentRef} className="flex flex-nowrap h-full will-change-transform">
+                    {Children.map(children, (child, index) => {
+                        if (isValidElement(child)) {
+                            return cloneElement(child as React.ReactElement<HorizontalScrollSectionProps>, { isActive: index === activeIndex });
+                        }
+                        return child;
+                    })}
+                </div>
             </div>
         </div>
-    );
-
-    return (
-        <>
-            <header className="bg-white/80 backdrop-blur-sm sticky top-0 z-50 w-full border-b border-white/20 shadow-sm">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between h-20">
-                        <div className="flex-shrink-0">
-                            <a href="#home" onClick={(e) => handleNavClick(e, '#home')} className="text-2xl md:text-3xl font-serif font-bold text-gold-800">
-                                Deluxe Nails & Spa Aliana
-                            </a>
-                        </div>
-                        <nav className="hidden md:flex items-center">
-                            <div className="ml-10 flex items-baseline space-x-4">
-                                {navLinks.map(link => (
-                                    <a 
-                                        key={link.name} 
-                                        href={link.href} 
-                                        onClick={(e) => handleNavClick(e, link.href)}
-                                        className="text-gray-800 hover:text-gold-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300"
-                                    >
-                                        {link.name}
-                                    </a>
-                                ))}
-                                <a href="tel:2817620878" className="ml-4 font-semibold px-4 py-2 rounded-md text-sm btn-golden-glow btn-fill-gold">
-                                    Book Your Escape
-                                </a>
-                            </div>
-                        </nav>
-                        <div className="md:hidden">
-                            <button onClick={() => setIsOpen(!isOpen)} className="text-gold-800 hover:text-gold-600 focus:outline-none" aria-label="Toggle menu">
-                                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    {isOpen ? (
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    ) : (
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
-                                    )}
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                {/* 
-                  FIX: The mobile dropdown now correctly inherits the glass effect from the parent <header>
-                  by removing its own redundant background styles.
-                */}
-                {isOpen && (
-                    <div className="md:hidden">
-                        <div className="px-2 pt-2 pb-4 space-y-1 sm:px-3">
-                            {navLinks.map(link => (
-                                <a 
-                                    key={link.name} 
-                                    href={link.href} 
-                                    onClick={(e) => handleNavClick(e, link.href)}
-                                    className="text-gray-800 hover:text-gold-700 block px-3 py-2 rounded-md text-base font-medium transition-colors duration-300"
-                                >
-                                    {link.name}
-                                </a>
-                            ))}
-                            <a href="tel:2817620878" className="block w-full text-center font-semibold mt-2 px-3 py-2 rounded-md text-base btn-golden-glow btn-fill-gold">
-                                Book Your Escape
-                            </a>
-                        </div>
-                    </div>
-                )}
-            </header>
-            {isPromotionModalOpen && modalContainer && createPortal(promotionModal, modalContainer)}
-        </>
     );
 };
