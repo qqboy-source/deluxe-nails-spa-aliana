@@ -35,12 +35,14 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
     const [activeIndex, setActiveIndex] = useState(0);
     const numSections = Children.count(children);
     
+    // Use a ref to store dimensions to avoid re-running the effect unnecessarily.
     const dimensionsRef = useRef({
         containerTop: 0,
         sectionWidth: 0,
         maxTranslateX: 0,
     });
 
+    // This effect is now robust, relying on events and observers instead of timers.
     useLayoutEffect(() => {
         const scrollContainer = scrollContainerRef.current;
         const stickyContent = stickyContentRef.current;
@@ -49,10 +51,12 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
         let animationFrameId: number | null = null;
         
         const calculateAndSetDimensions = () => {
-            if (!scrollContainer || !stickyContent) return;
+            if (!scrollContainer) return;
             
             const rect = scrollContainer.getBoundingClientRect();
-            const sectionWidth = window.innerWidth;
+            // Using the section's actual width is more reliable than window.innerWidth
+            const firstSection = scrollContainer.querySelector<HTMLElement>('.horizontal-scroll-section-item');
+            const sectionWidth = firstSection ? firstSection.getBoundingClientRect().width : window.innerWidth;
 
             dimensionsRef.current.containerTop = rect.top + window.scrollY;
             dimensionsRef.current.sectionWidth = sectionWidth;
@@ -61,6 +65,7 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
             const containerHeight = dimensionsRef.current.maxTranslateX + window.innerHeight;
             scrollContainer.style.height = `${containerHeight}px`;
             
+            // After calculating, immediately update the transform to reflect the current scroll position.
             updateTransform();
         };
 
@@ -84,22 +89,24 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
             animationFrameId = requestAnimationFrame(updateTransform);
         };
         
-        // Just like with the Hero section, we delay the initial dimension calculation.
-        // This ensures that we measure the container's starting position AFTER the hero
-        // section above it has settled into its final, correct height.
-        // This synchronization is critical for accurate navigation.
-        const timeoutId = setTimeout(calculateAndSetDimensions, 150);
+        // Listen for the custom event dispatched by Hero/Header when layout settles.
+        window.addEventListener('layoutUpdated', calculateAndSetDimensions);
         
+        // Observe the entire body. This is more reliable for catching layout shifts
+        // caused by elements outside this component (like the Hero section).
         const resizeObserver = new ResizeObserver(calculateAndSetDimensions);
-        resizeObserver.observe(scrollContainer);
+        resizeObserver.observe(document.body);
 
         window.addEventListener('scroll', handleScroll, { passive: true });
         
+        // Run an initial calculation on mount.
+        calculateAndSetDimensions();
+
         return () => {
             resizeObserver.disconnect();
             window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('layoutUpdated', calculateAndSetDimensions);
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
-            clearTimeout(timeoutId);
         };
     }, [numSections]);
 
