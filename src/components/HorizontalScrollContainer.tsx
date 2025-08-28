@@ -1,6 +1,5 @@
 
-import React, { useRef, useLayoutEffect, Children, useState, cloneElement, isValidElement, ReactNode, useCallback } from 'react';
-import { useHorizontalScroll } from '../App';
+import React, { useRef, useLayoutEffect, Children, useState, cloneElement, isValidElement, ReactNode } from 'react';
 
 interface HorizontalScrollSectionProps {
     children: React.ReactNode;
@@ -8,16 +7,12 @@ interface HorizontalScrollSectionProps {
     isActive?: boolean;
 }
 
-/**
- * A single "page" or "section" within the horizontal scroll container.
- * It is a named export, which is what the build tool expects.
- */
 export const HorizontalScrollSection: React.FC<HorizontalScrollSectionProps> = ({ children, id, isActive }) => {
     return (
         <section 
             id={id} 
             className="horizontal-scroll-section-item w-screen h-screen flex-shrink-0 flex justify-center items-center p-4 sm:p-6 lg:p-8"
-            aria-hidden={!isActive} // Hide inactive sections from screen readers for better accessibility
+            aria-hidden={!isActive}
         >
             <div className="w-full h-full max-w-7xl mx-auto flex flex-col rounded-xl">
                 <div 
@@ -34,48 +29,22 @@ interface HorizontalScrollContainerProps {
     children: ReactNode;
 }
 
-/**
- * The main container that orchestrates the horizontal scrolling effect.
- * It is also a named export, resolving the build error.
- */
 export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps> = ({ children }) => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const stickyContentRef = useRef<HTMLDivElement>(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const numSections = Children.count(children);
-    const { setScrollToSection } = useHorizontalScroll();
-
+    
     const dimensionsRef = useRef({
         containerTop: 0,
         sectionWidth: 0,
         maxTranslateX: 0,
     });
-    const touchStartX = useRef(0);
-    const touchStartY = useRef(0);
-
-    const scrollToSectionById = useCallback((id: string) => {
-        const stickyContent = stickyContentRef.current;
-        if (!stickyContent) return;
-        
-        const horizontalSections = Array.from(stickyContent.querySelectorAll<HTMLElement>('.horizontal-scroll-section-item'));
-        const sectionIndex = horizontalSections.findIndex(section => section.id === id);
-
-        if (sectionIndex !== -1) {
-            const { containerTop, sectionWidth } = dimensionsRef.current;
-            if (sectionWidth > 0) {
-                const targetScrollY = containerTop + (sectionIndex * sectionWidth);
-                window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
-            }
-        }
-    }, []);
 
     useLayoutEffect(() => {
         const scrollContainer = scrollContainerRef.current;
         const stickyContent = stickyContentRef.current;
         if (!scrollContainer || !stickyContent || numSections === 0) return;
-
-        // Register the centralized scroll function to the context
-        setScrollToSection(() => scrollToSectionById);
 
         let animationFrameId: number | null = null;
         
@@ -127,47 +96,12 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
             window.removeEventListener('scroll', handleScroll);
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
         };
-    }, [numSections, setScrollToSection, scrollToSectionById]);
-
-    const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-        touchStartX.current = e.targetTouches[0].clientX;
-        touchStartY.current = e.targetTouches[0].clientY;
-    };
-
-    const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
-        const touchEndX = e.changedTouches[0].clientX;
-        const touchEndY = e.changedTouches[0].clientY;
-
-        const deltaX = touchEndX - touchStartX.current;
-        const deltaY = touchEndY - touchStartY.current;
-
-        touchStartX.current = 0;
-        touchStartY.current = 0;
-        
-        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
-            let targetIndex = activeIndex;
-            if (deltaX < 0) { // Swipe Left
-                targetIndex = Math.min(activeIndex + 1, numSections - 1);
-            } else { // Swipe Right
-                targetIndex = Math.max(activeIndex - 1, 0);
-            }
-
-            if (targetIndex !== activeIndex) {
-                const { containerTop, sectionWidth } = dimensionsRef.current;
-                if (sectionWidth > 0) {
-                    const targetScrollY = containerTop + (targetIndex * sectionWidth);
-                    window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
-                }
-            }
-        }
-    };
+    }, [numSections]);
 
     return (
         <div 
             ref={scrollContainerRef} 
             data-testid="horizontal-scroll-container"
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
         >
             <div className="sticky top-0 h-screen overflow-hidden">
                 <div ref={stickyContentRef} className="flex flex-nowrap h-full will-change-transform">
