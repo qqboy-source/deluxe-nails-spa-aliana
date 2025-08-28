@@ -1,6 +1,6 @@
 
 import React, { useRef, useLayoutEffect, Children, useState, cloneElement, isValidElement, ReactNode, useCallback } from 'react';
-import { useHorizontalScroll } from '../contexts/HorizontalScrollContext';
+import { useHorizontalScroll } from '../HorizontalScrollContext';
 
 interface HorizontalScrollSectionProps {
     children: React.ReactNode;
