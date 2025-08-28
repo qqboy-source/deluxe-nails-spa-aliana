@@ -19,45 +19,46 @@ export const Header: React.FC = () => {
             setIsOpen(false);
         }
 
-        const targetId = href.substring(1);
+        // Defer scroll logic to allow the DOM to update after the mobile menu closes.
+        // This prevents miscalculations of element positions due to layout shifts.
+        setTimeout(() => {
+            const targetId = href.substring(1);
 
-        if (targetId === 'home') {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            return;
-        }
-        
-        const targetElement = document.getElementById(targetId);
-        if (!targetElement) return;
+            if (targetId === 'home') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+            
+            const targetElement = document.getElementById(targetId);
+            if (!targetElement) return;
 
-        const horizontalContainer = document.querySelector<HTMLElement>('[data-testid="horizontal-scroll-container"]');
-        
-        if (horizontalContainer && horizontalContainer.contains(targetElement)) {
-            const containerTop = horizontalContainer.getBoundingClientRect().top + window.scrollY;
-            const horizontalSections = Array.from(horizontalContainer.querySelectorAll<HTMLElement>('.horizontal-scroll-section-item'));
-            const sectionIndex = horizontalSections.findIndex(section => section.id === targetId);
+            const horizontalContainer = document.querySelector<HTMLElement>('[data-testid="horizontal-scroll-container"]');
+            
+            if (horizontalContainer && horizontalContainer.contains(targetElement)) {
+                const containerTop = horizontalContainer.getBoundingClientRect().top + window.scrollY;
+                const horizontalSections = Array.from(horizontalContainer.querySelectorAll<HTMLElement>('.horizontal-scroll-section-item'));
+                const sectionIndex = horizontalSections.findIndex(section => section.id === targetId);
 
-            if (sectionIndex !== -1) {
-                // The distance scrolled vertically maps 1:1 to horizontal translation.
-                // The width of a section is used to calculate the scroll distance needed.
-                const sectionWidth = horizontalSections[0]?.getBoundingClientRect().width || window.innerWidth;
-                const targetScrollY = containerTop + (sectionIndex * sectionWidth);
+                if (sectionIndex !== -1) {
+                    const sectionWidth = horizontalSections[0]?.getBoundingClientRect().width || window.innerWidth;
+                    const targetScrollY = containerTop + (sectionIndex * sectionWidth);
+                    
+                    window.scrollTo({
+                        top: targetScrollY,
+                        behavior: 'smooth',
+                    });
+                }
+            } else {
+                const header = document.querySelector('header');
+                const headerHeight = header ? header.offsetHeight : 80;
+                const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
                 
                 window.scrollTo({
-                    top: targetScrollY,
+                    top: elementTop - headerHeight,
                     behavior: 'smooth',
                 });
             }
-        } else {
-            // Vertical section (e.g., Contact)
-            const header = document.querySelector('header');
-            const headerHeight = header ? header.offsetHeight : 80;
-            const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
-            
-            window.scrollTo({
-                top: elementTop - headerHeight,
-                behavior: 'smooth',
-            });
-        }
+        }, 100); // A 100ms delay gives the browser time to repaint after the menu closes.
     };
 
     return (
