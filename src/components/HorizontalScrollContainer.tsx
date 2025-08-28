@@ -1,3 +1,4 @@
+
 import React, { useRef, useLayoutEffect, Children, useState, cloneElement, isValidElement, ReactNode } from 'react';
 
 interface HorizontalScrollSectionProps {
@@ -61,9 +62,9 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
             if (!scrollContainer || !stickyContent) return;
             
             const rect = scrollContainer.getBoundingClientRect();
-            // Using a precise width from getBoundingClientRect() prevents cumulative
-            // rounding errors, ensuring the transform calculation is always accurate.
-            const sectionWidth = rect.width;
+            // Using window.innerWidth ensures the calculation is based on the viewport,
+            // matching the `w-screen` utility and providing a consistent value on mobile.
+            const sectionWidth = window.innerWidth;
 
             dimensionsRef.current.containerTop = rect.top + window.scrollY;
             dimensionsRef.current.sectionWidth = sectionWidth;
