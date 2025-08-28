@@ -5,22 +5,18 @@ export const Hero: React.FC = () => {
     const heroRef = useRef<HTMLElement>(null);
     const [opacity, setOpacity] = useState(1);
 
-    // This effect addresses the 100vh issue on mobile browsers where the
-    // address bar's appearance/disappearance changes the viewport height.
-    // By setting the height dynamically, we ensure the layout is stable.
     useLayoutEffect(() => {
         const setHeroHeight = () => {
             if (heroRef.current) {
-                // 80px is the height of the sticky header.
-                const headerHeight = 80; 
+                const headerHeight = 80; // Height of the sticky header
                 heroRef.current.style.height = `${window.innerHeight - headerHeight}px`;
+                // Announce that the layout has been updated. This is the key to fixing the race condition.
+                window.dispatchEvent(new CustomEvent('layoutUpdated'));
             }
         };
 
-        // We only run the calculation after a delay. This gives the mobile browser
-        // time to settle its UI (like the address bar) and report the correct final window height.
-        // This prevents a race condition where other components might measure the hero's
-        // height before it has been properly set.
+        // We still use a timeout here to wait for the mobile browser UI to stabilize.
+        // The crucial difference is that we now signal other components when we are done.
         const timeoutId = setTimeout(setHeroHeight, 150);
 
         window.addEventListener('resize', setHeroHeight);
@@ -34,16 +30,13 @@ export const Hero: React.FC = () => {
     // This effect handles the fade-out on scroll for the hero text box
     useEffect(() => {
         const handleScroll = () => {
-            // Define the distance over which the element should fade out
             const fadeOutDistance = 400;
-            // Calculate the new opacity based on scroll position
             const newOpacity = Math.max(0, 1 - window.scrollY / fadeOutDistance);
             setOpacity(newOpacity);
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
         
-        // Clean up the event listener when the component unmounts
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
