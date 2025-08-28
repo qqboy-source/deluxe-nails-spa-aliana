@@ -2,7 +2,7 @@
 import React from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
-import { About } from './components/About';
+import { About, OurVision } from './components/About';
 import { Services } from './components/Services';
 import { Gallery } from './components/Gallery';
 import { Contact } from './components/Contact';
@@ -27,14 +27,21 @@ function App(): React.ReactNode {
                 </FadeInSection>
             </HorizontalScrollSection>
             
-            {/* Page 2: Services */}
+            {/* Page 2: Our Vision */}
+            <HorizontalScrollSection id="vision">
+                <FadeInSection variant="horizontal">
+                    <OurVision />
+                </FadeInSection>
+            </HorizontalScrollSection>
+
+            {/* Page 3: Services */}
             <HorizontalScrollSection id="services">
                 <FadeInSection variant="horizontal">
                     <Services />
                 </FadeInSection>
             </HorizontalScrollSection>
 
-            {/* Page 3: Gallery */}
+            {/* Page 4: Gallery */}
             <HorizontalScrollSection id="gallery">
                 <FadeInSection variant="horizontal">
                     <Gallery />
