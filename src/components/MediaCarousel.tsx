@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
+
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { LeftArrowIcon, RightArrowIcon } from './icons';
 
 export interface MediaItem {
@@ -15,19 +16,36 @@ export const MediaCarousel: React.FC<MediaCarouselProps> = ({ items }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isTransitioning, setIsTransitioning] = useState(false);
     const [isInitiallyVisible, setIsInitiallyVisible] = useState(true);
+    const [isHovered, setIsHovered] = useState(false);
     const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
     const carouselRef = useRef<HTMLDivElement>(null);
     const touchStartX = useRef(0);
     const touchEndX = useRef(0);
 
-    // Effect to make arrows visible for 8 seconds on load
+    // Effect to make arrows visible for 7 seconds on load
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsInitiallyVisible(false);
-        }, 8000); // 8 seconds
+        }, 7000); // 7 seconds
 
         return () => clearTimeout(timer); // Cleanup on unmount
     }, []);
+
+    const goToNext = useCallback(() => {
+        if (isTransitioning) return;
+        setIsTransitioning(true);
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
+    }, [isTransitioning, items.length]);
+
+    // Effect to auto-advance the carousel
+    useEffect(() => {
+        if (isHovered) return;
+
+        const autoAdvanceTimer = setInterval(goToNext, 7000); // Auto-advance every 7 seconds
+
+        return () => clearInterval(autoAdvanceTimer);
+    }, [currentIndex, isHovered, goToNext]);
+
 
     // Effect to control video playback
     useEffect(() => {
@@ -43,11 +61,6 @@ export const MediaCarousel: React.FC<MediaCarouselProps> = ({ items }) => {
         });
     }, [currentIndex]);
 
-    const goToNext = () => {
-        if (isTransitioning) return;
-        setIsTransitioning(true);
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
-    };
 
     const goToPrevious = () => {
         if (isTransitioning) return;
@@ -87,6 +100,8 @@ export const MediaCarousel: React.FC<MediaCarouselProps> = ({ items }) => {
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
         >
             <div
                 className="flex w-full h-full transition-transform duration-500 ease-in-out"
