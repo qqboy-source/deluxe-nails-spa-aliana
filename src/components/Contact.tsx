@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { LocationPinIcon, PhoneIcon, ClockIcon } from './icons';
 
@@ -49,7 +50,7 @@ export const Contact: React.FC = () => {
 
                 <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
                     {contactInfo.map(({ Icon, title, content, link, linkText }) => (
-                        <div key={title} className="p-6 bg-black/20 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 group flex flex-col">
+                        <div key={title} className="p-6 bg-black/20 rounded-2xl shadow-xl border border-white/20 group flex flex-col liquid-glass-bg">
                             <div className="w-20 h-20 mx-auto flex items-center justify-center rounded-full bg-gold-900/40 border border-gold-500/50 transition-all duration-300 group-hover:bg-gold-800/60 group-hover:border-gold-400/80 group-hover:scale-105 flex-shrink-0">
                                 <Icon className="w-10 h-10 text-gold-400 transition-colors duration-300 group-hover:text-gold-300" />
                             </div>
