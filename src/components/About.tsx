@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { MediaCarousel, MediaItem } from './MediaCarousel';
 import { ArrowDownIcon, ArrowUpIcon } from './icons';
@@ -5,7 +6,6 @@ import { ArrowDownIcon, ArrowUpIcon } from './icons';
 // INSTRUCTIONS: To add your own media, place your files in the public folder and update the paths below.
 // - Images go in `public/images`
 // - Videos go in `public/media`
-// The paths below have been updated to match your files.
 const mediaItems: MediaItem[] = [
     { type: 'video', src: 'media/store-video-1.mp4', alt: 'A promotional video of the spa experience.' },
     { type: 'image', src: 'images/spa-interior.jpg', alt: 'A photo showcasing the elegant interior of Deluxe Nails & Spa Aliana.' },
