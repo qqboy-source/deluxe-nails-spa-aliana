@@ -21,6 +21,18 @@ export const Header: React.FC = () => {
         return () => { document.body.style.overflow = originalOverflow; };
     }, [isPromotionModalOpen]);
 
+    // This new effect is crucial for fixing the post-modal navigation bug.
+    // When the modal closes, it dispatches an event to notify other components
+    // that the layout has changed (e.g., scrollbars reappearing).
+    useEffect(() => {
+        if (!isPromotionModalOpen) {
+            const timeoutId = setTimeout(() => {
+                window.dispatchEvent(new CustomEvent('layoutUpdated'));
+            }, 300); // Delay matches modal animation time.
+            return () => clearTimeout(timeoutId);
+        }
+    }, [isPromotionModalOpen]);
+
     const navLinks = [
         { name: 'Home', href: '#home' },
         { name: 'About', href: '#about' },
@@ -61,8 +73,10 @@ export const Header: React.FC = () => {
             const sectionIndex = horizontalSections.findIndex(section => section.id === targetId);
 
             if (sectionIndex !== -1) {
-                const scrollDistancePerSection = window.innerWidth;
-                const targetScrollY = containerTop + (sectionIndex * scrollDistancePerSection);
+                // The distance scrolled vertically maps 1:1 to horizontal translation.
+                // The width of a section is used to calculate the scroll distance needed.
+                const sectionWidth = horizontalSections[0]?.getBoundingClientRect().width || window.innerWidth;
+                const targetScrollY = containerTop + (sectionIndex * sectionWidth);
                 
                 window.scrollTo({
                     top: targetScrollY,
