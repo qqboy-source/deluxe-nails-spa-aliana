@@ -59,10 +59,11 @@ export const Header: React.FC = () => {
 
         if (sectionIndex !== -1) {
             // It's a horizontal section.
-            const containerTop = horizontalContainer.getBoundingClientRect().top + window.scrollY;
-            // Using the container's clientWidth ensures the calculation is perfectly
-            // aligned with the transform logic inside the HorizontalScrollContainer component.
-            const sectionWidth = horizontalContainer.clientWidth;
+            const rect = horizontalContainer.getBoundingClientRect();
+            const containerTop = rect.top + window.scrollY;
+            // Using a precise width from getBoundingClientRect() prevents cumulative
+            // rounding errors that can occur with clientWidth, ensuring sections align perfectly.
+            const sectionWidth = rect.width;
             const targetScrollY = containerTop + (sectionIndex * sectionWidth);
             
             window.scrollTo({
