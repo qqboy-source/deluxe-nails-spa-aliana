@@ -1,11 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useHorizontalScroll } from '../contexts/HorizontalScrollContext';
 
 export const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isPromotionModalOpen, setIsPromotionModalOpen] = useState(false);
     const [modalContainer, setModalContainer] = useState<Element | null>(null);
+    const { scrollToSection } = useHorizontalScroll();
 
     useEffect(() => {
         setModalContainer(document.getElementById('modal-root'));
@@ -51,38 +53,25 @@ export const Header: React.FC = () => {
             return;
         }
         
+        const targetElement = document.getElementById(targetId);
+        if (!targetElement) return;
+
         const horizontalContainer = document.querySelector<HTMLElement>('[data-testid="horizontal-scroll-container"]');
-        if (!horizontalContainer) return;
-
-        const horizontalSections = Array.from(horizontalContainer.querySelectorAll<HTMLElement>('.horizontal-scroll-section-item'));
-        const sectionIndex = horizontalSections.findIndex(section => section.id === targetId);
-
-        if (sectionIndex !== -1) {
-            // It's a horizontal section.
-            const rect = horizontalContainer.getBoundingClientRect();
-            const containerTop = rect.top + window.scrollY;
-            // Using window.innerWidth provides a consistent, reliable source of truth
-            // for the viewport width, matching the w-screen utility and fixing mobile discrepancies.
-            const sectionWidth = window.innerWidth;
-            const targetScrollY = containerTop + (sectionIndex * sectionWidth);
-            
-            window.scrollTo({
-                top: targetScrollY,
-                behavior: 'smooth',
-            });
+        
+        // Check if the target is a horizontal section by seeing if it's a child of the container
+        if (horizontalContainer && horizontalContainer.contains(targetElement)) {
+            // It's a horizontal section. Use the centralized context function.
+            scrollToSection(targetId);
         } else {
             // It's a vertical section (e.g., Contact).
-            const targetElement = document.getElementById(targetId);
             const header = document.querySelector('header');
             const headerHeight = header ? header.offsetHeight : 80;
 
-            if (targetElement) {
-                const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
-                window.scrollTo({
-                    top: elementTop - headerHeight,
-                    behavior: 'smooth',
-                });
-            }
+            const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
+            window.scrollTo({
+                top: elementTop - headerHeight,
+                behavior: 'smooth',
+            });
         }
     };
 
