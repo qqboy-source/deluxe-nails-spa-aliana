@@ -1,17 +1,53 @@
 
-import React from 'react';
+import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
-// The About file now exports both `About` and `OurStory` components
 import { About, OurStory } from './components/About';
 import { Services } from './components/Services';
 import { Gallery } from './components/Gallery';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
-// Correctly importing the named exports from the definitive HorizontalScrollContainer component
 import { HorizontalScrollContainer, HorizontalScrollSection } from './components/HorizontalScrollContainer';
 import { FadeInSection } from './components/FadeInSection';
-import { HorizontalScrollProvider } from './HorizontalScrollContext';
+
+// --- Start of Merged HorizontalScrollContext Logic ---
+
+interface HorizontalScrollContextType {
+  scrollToSection: (id: string) => void;
+  setScrollToSection: (fn: (id: string) => void) => void;
+}
+
+const HorizontalScrollContext = createContext<HorizontalScrollContextType | undefined>(undefined);
+
+const HorizontalScrollProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [scrollToSection, setScrollToSectionState] = useState<(id: string) => void>(() => () => console.warn("scrollToSection not implemented"));
+  
+  const setScrollToSection = (fn: (id: string) => void) => {
+    setScrollToSectionState(() => fn);
+  };
+
+  const value = {
+    scrollToSection,
+    setScrollToSection,
+  };
+
+  return (
+    <HorizontalScrollContext.Provider value={value}>
+      {children}
+    </HorizontalScrollContext.Provider>
+  );
+};
+
+export const useHorizontalScroll = (): HorizontalScrollContextType => {
+  const context = useContext(HorizontalScrollContext);
+  if (context === undefined) {
+    throw new Error('useHorizontalScroll must be used within a HorizontalScrollProvider');
+  }
+  return context;
+};
+
+// --- End of Merged HorizontalScrollContext Logic ---
+
 
 function App(): React.ReactNode {
 
