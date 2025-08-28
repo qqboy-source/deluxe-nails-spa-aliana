@@ -46,7 +46,7 @@ export const Hero: React.FC = () => {
             <div className="absolute top-0 left-0 w-full h-full bg-cover bg-center" style={{ backgroundImage: "url('images/hero-background.jpg')" }}></div>
             <div className="absolute top-0 left-0 w-full h-full bg-gold-900/40"></div>
             <div 
-                className="relative z-10 p-8 max-w-3xl bg-black/40 backdrop-blur-lg rounded-2xl border border-white/20 shadow-xl"
+                className="relative z-10 p-8 max-w-3xl bg-black/20 backdrop-blur-xl rounded-2xl border border-white/20 shadow-xl"
                 style={{ opacity: opacity, transition: 'opacity 0.1s linear', willChange: 'opacity' }}
             >
                 <h1 className="text-5xl md:text-7xl font-serif font-bold text-white tracking-wider leading-tight text-shadow-strong">
