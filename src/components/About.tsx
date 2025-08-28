@@ -49,8 +49,8 @@ export const OurVision: React.FC = () => {
         ? 'bg-black/40 backdrop-blur-lg rounded-2xl p-6 md:p-10 border border-white/20 shadow-xl'
         : 'p-6 md:p-10';
 
-    const textClasses = isExpanded ? 'text-gold-300' : 'text-gray-900';
-    const buttonHoverClass = isExpanded ? 'hover:text-gold-100' : 'hover:text-gold-700';
+    const textClasses = isExpanded ? 'text-gold-300' : 'text-gold-700';
+    const buttonHoverClass = isExpanded ? 'hover:text-gold-100' : 'hover:text-gold-800';
     
     return (
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
