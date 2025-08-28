@@ -84,9 +84,11 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
             animationFrameId = requestAnimationFrame(updateTransform);
         };
         
-        calculateAndSetDimensions();
-        // Re-calculate after a delay to ensure mobile browser UI has stabilized.
-        const timeoutId = setTimeout(calculateAndSetDimensions, 100);
+        // Just like with the Hero section, we delay the initial dimension calculation.
+        // This ensures that we measure the container's starting position AFTER the hero
+        // section above it has settled into its final, correct height.
+        // This synchronization is critical for accurate navigation.
+        const timeoutId = setTimeout(calculateAndSetDimensions, 150);
         
         const resizeObserver = new ResizeObserver(calculateAndSetDimensions);
         resizeObserver.observe(scrollContainer);
