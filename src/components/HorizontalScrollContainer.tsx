@@ -1,5 +1,6 @@
 
-import React, { useRef, useLayoutEffect, Children, useState, cloneElement, isValidElement, ReactNode } from 'react';
+import React, { useRef, useLayoutEffect, Children, useState, cloneElement, isValidElement, ReactNode, useCallback } from 'react';
+import { useHorizontalScroll } from '../contexts/HorizontalScrollContext';
 
 interface HorizontalScrollSectionProps {
     children: React.ReactNode;
@@ -42,6 +43,7 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
     const stickyContentRef = useRef<HTMLDivElement>(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const numSections = Children.count(children);
+    const { setScrollToSection } = useHorizontalScroll();
 
     const dimensionsRef = useRef({
         containerTop: 0,
@@ -51,10 +53,29 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
     const touchStartX = useRef(0);
     const touchStartY = useRef(0);
 
+    const scrollToSectionById = useCallback((id: string) => {
+        const stickyContent = stickyContentRef.current;
+        if (!stickyContent) return;
+        
+        const horizontalSections = Array.from(stickyContent.querySelectorAll<HTMLElement>('.horizontal-scroll-section-item'));
+        const sectionIndex = horizontalSections.findIndex(section => section.id === id);
+
+        if (sectionIndex !== -1) {
+            const { containerTop, sectionWidth } = dimensionsRef.current;
+            if (sectionWidth > 0) {
+                const targetScrollY = containerTop + (sectionIndex * sectionWidth);
+                window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
+            }
+        }
+    }, []);
+
     useLayoutEffect(() => {
         const scrollContainer = scrollContainerRef.current;
         const stickyContent = stickyContentRef.current;
         if (!scrollContainer || !stickyContent || numSections === 0) return;
+
+        // Register the centralized scroll function to the context
+        setScrollToSection(() => scrollToSectionById);
 
         let animationFrameId: number | null = null;
         
@@ -62,8 +83,6 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
             if (!scrollContainer || !stickyContent) return;
             
             const rect = scrollContainer.getBoundingClientRect();
-            // Using window.innerWidth ensures the calculation is based on the viewport,
-            // matching the `w-screen` utility and providing a consistent value on mobile.
             const sectionWidth = window.innerWidth;
 
             dimensionsRef.current.containerTop = rect.top + window.scrollY;
@@ -98,7 +117,6 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
         
         calculateAndSetDimensions();
         
-        // The ResizeObserver is the key fix for mobile viewport changes.
         const resizeObserver = new ResizeObserver(calculateAndSetDimensions);
         resizeObserver.observe(scrollContainer);
 
@@ -109,7 +127,7 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
             window.removeEventListener('scroll', handleScroll);
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
         };
-    }, [numSections]);
+    }, [numSections, setScrollToSection, scrollToSectionById]);
 
     const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
         touchStartX.current = e.targetTouches[0].clientX;
@@ -126,7 +144,6 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
         touchStartX.current = 0;
         touchStartY.current = 0;
         
-        // Only trigger swipe if it's more horizontal than vertical and a significant distance
         if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
             let targetIndex = activeIndex;
             if (deltaX < 0) { // Swipe Left
@@ -156,7 +173,6 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
                 <div ref={stickyContentRef} className="flex flex-nowrap h-full will-change-transform">
                     {Children.map(children, (child, index) => {
                         if (isValidElement(child)) {
-                            // Cloning the child to pass down the `isActive` prop
                             return cloneElement(child as React.ReactElement<HorizontalScrollSectionProps>, { isActive: index === activeIndex });
                         }
                         return child;
