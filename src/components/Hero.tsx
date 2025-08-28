@@ -18,8 +18,15 @@ export const Hero: React.FC = () => {
         };
 
         setHeroHeight();
+        // Recalculate after a short delay to account for mobile browser UI changes.
+        const timeoutId = setTimeout(setHeroHeight, 100);
+
         window.addEventListener('resize', setHeroHeight);
-        return () => window.removeEventListener('resize', setHeroHeight);
+        
+        return () => {
+            window.removeEventListener('resize', setHeroHeight);
+            clearTimeout(timeoutId);
+        };
     }, []);
 
     // This effect handles the fade-out on scroll for the hero text box
