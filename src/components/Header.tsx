@@ -1,13 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { useHorizontalScroll } from '../App';
 
 export const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isPromotionModalOpen, setIsPromotionModalOpen] = useState(false);
     const [modalContainer, setModalContainer] = useState<Element | null>(null);
-    const { scrollToSection } = useHorizontalScroll();
 
     useEffect(() => {
         setModalContainer(document.getElementById('modal-root'));
@@ -29,7 +27,6 @@ export const Header: React.FC = () => {
         { name: 'Our Values', href: '#our-values' },
         { name: 'Services', href: '#services' },
         { name: 'Gallery', href: '#gallery' },
-        { name: 'Promotion', href: '#promotion' },
         { name: 'Contact', href: '#contact' },
     ];
 
@@ -38,7 +35,7 @@ export const Header: React.FC = () => {
         
         if (href === '#promotion') {
             setIsPromotionModalOpen(true);
-            if (isOpen) setIsOpen(false); // Close mobile menu if open
+            if (isOpen) setIsOpen(false);
             return;
         }
 
@@ -58,16 +55,27 @@ export const Header: React.FC = () => {
 
         const horizontalContainer = document.querySelector<HTMLElement>('[data-testid="horizontal-scroll-container"]');
         
-        // Check if the target is a horizontal section by seeing if it's a child of the container
         if (horizontalContainer && horizontalContainer.contains(targetElement)) {
-            // It's a horizontal section. Use the centralized context function.
-            scrollToSection(targetId);
+            const containerTop = horizontalContainer.getBoundingClientRect().top + window.scrollY;
+            const horizontalSections = Array.from(horizontalContainer.querySelectorAll<HTMLElement>('.horizontal-scroll-section-item'));
+            const sectionIndex = horizontalSections.findIndex(section => section.id === targetId);
+
+            if (sectionIndex !== -1) {
+                // Each horizontal section's scroll height corresponds to the window's width
+                const scrollDistancePerSection = window.innerWidth;
+                const targetScrollY = containerTop + (sectionIndex * scrollDistancePerSection);
+                
+                window.scrollTo({
+                    top: targetScrollY,
+                    behavior: 'smooth',
+                });
+            }
         } else {
-            // It's a vertical section (e.g., Contact).
+            // Vertical section (e.g., Contact)
             const header = document.querySelector('header');
             const headerHeight = header ? header.offsetHeight : 80;
-
             const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
+            
             window.scrollTo({
                 top: elementTop - headerHeight,
                 behavior: 'smooth',
@@ -119,6 +127,9 @@ export const Header: React.FC = () => {
                                         {link.name}
                                     </a>
                                 ))}
+                                 <button onClick={() => setIsPromotionModalOpen(true)} className="text-gray-800 hover:text-gold-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300">
+                                    Promotion
+                                </button>
                                 <a href="tel:2817620878" className="ml-4 font-semibold px-4 py-2 rounded-md text-sm btn-golden-glow btn-fill-gold">
                                     Book Your Escape
                                 </a>
@@ -137,10 +148,6 @@ export const Header: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                {/* 
-                  FIX: The mobile dropdown now correctly inherits the glass effect from the parent <header>
-                  by removing its own redundant background styles.
-                */}
                 {isOpen && (
                     <div className="md:hidden">
                         <div className="px-2 pt-2 pb-4 space-y-1 sm:px-3">
@@ -154,6 +161,9 @@ export const Header: React.FC = () => {
                                     {link.name}
                                 </a>
                             ))}
+                             <button onClick={() => setIsPromotionModalOpen(true)} className="text-left w-full text-gray-800 hover:text-gold-700 block px-3 py-2 rounded-md text-base font-medium transition-colors duration-300">
+                                Promotion
+                            </button>
                             <a href="tel:2817620878" className="block w-full text-center font-semibold mt-2 px-3 py-2 rounded-md text-base btn-golden-glow btn-fill-gold">
                                 Book Your Escape
                             </a>
