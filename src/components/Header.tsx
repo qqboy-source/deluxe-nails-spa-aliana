@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 
 export const Header: React.FC = () => {
@@ -63,7 +64,7 @@ export const Header: React.FC = () => {
     };
 
     return (
-        <header className="bg-white/30 backdrop-blur-lg sticky top-0 z-50 w-full border-b border-white/20 shadow-sm">
+        <header className="bg-white/30 sticky top-0 z-50 w-full border-b border-white/20 shadow-sm liquid-glass-bg">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-20">
                     <div className="flex-shrink-0">
