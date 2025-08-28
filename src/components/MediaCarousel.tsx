@@ -22,29 +22,40 @@ export const MediaCarousel: React.FC<MediaCarouselProps> = ({ items }) => {
     const touchStartX = useRef(0);
     const touchEndX = useRef(0);
 
-    // Effect to make arrows visible for 7 seconds on load
+    // Effect to make arrows visible for a few seconds on load
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsInitiallyVisible(false);
-        }, 7000); // 7 seconds
+        }, 7000);
 
-        return () => clearTimeout(timer); // Cleanup on unmount
+        return () => clearTimeout(timer);
     }, []);
 
     const goToNext = useCallback(() => {
-        if (isTransitioning) return;
+        if (isTransitioning || items.length <= 1) return;
         setIsTransitioning(true);
         setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
     }, [isTransitioning, items.length]);
 
-    // Effect to auto-advance the carousel
+    // Effect for smart auto-advancing
     useEffect(() => {
         if (isHovered) return;
 
-        const autoAdvanceTimer = setInterval(goToNext, 7000); // Auto-advance every 7 seconds
+        const currentItem = items[currentIndex];
+        let timerId: number | undefined;
 
-        return () => clearInterval(autoAdvanceTimer);
-    }, [currentIndex, isHovered, goToNext]);
+        if (currentItem.type === 'image') {
+            // For images, advance after 5 seconds
+            timerId = window.setTimeout(goToNext, 5000);
+        }
+        // For videos, the `onEnded` event on the video element will trigger `goToNext`
+
+        return () => {
+            if (timerId) {
+                clearTimeout(timerId);
+            }
+        };
+    }, [currentIndex, isHovered, items, goToNext]);
 
 
     // Effect to control video playback
@@ -52,10 +63,10 @@ export const MediaCarousel: React.FC<MediaCarouselProps> = ({ items }) => {
         videoRefs.current.forEach((video, index) => {
             if (video) {
                 if (index === currentIndex) {
+                    video.currentTime = 0; // Ensure video starts from the beginning
                     video.play().catch(error => console.log("Autoplay was prevented:", error));
                 } else {
                     video.pause();
-                    video.currentTime = 0;
                 }
             }
         });
@@ -63,7 +74,7 @@ export const MediaCarousel: React.FC<MediaCarouselProps> = ({ items }) => {
 
 
     const goToPrevious = () => {
-        if (isTransitioning) return;
+        if (isTransitioning || items.length <= 1) return;
         setIsTransitioning(true);
         setCurrentIndex((prevIndex) => (prevIndex - 1 + items.length) % items.length);
     };
@@ -126,10 +137,10 @@ export const MediaCarousel: React.FC<MediaCarouselProps> = ({ items }) => {
                                 ref={el => { videoRefs.current[index] = el; }}
                                 src={item.src}
                                 className="w-full h-full object-cover"
-                                loop
                                 muted
                                 playsInline
                                 preload="auto"
+                                onEnded={goToNext}
                                 onError={(e) => {
                                     const videoElement = e.currentTarget;
                                     const parent = videoElement.parentElement;
