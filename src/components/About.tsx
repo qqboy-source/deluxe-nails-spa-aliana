@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { MediaCarousel, MediaItem } from './MediaCarousel';
 import { ArrowDownIcon, ArrowUpIcon } from './icons';
@@ -49,19 +48,23 @@ export const OurVision: React.FC = () => {
         ? 'bg-black/40 backdrop-blur-lg rounded-2xl p-6 md:p-10 border border-white/20 shadow-xl'
         : 'p-6 md:p-10';
 
-    const textClasses = isExpanded ? 'text-gold-300' : 'text-gold-700';
-    const buttonHoverClass = isExpanded ? 'hover:text-gold-100' : 'hover:text-gold-800';
+    // Classes for the title. Gold in both states, but different shades for contrast.
+    const titleClasses = isExpanded ? 'text-gold-300' : 'text-gold-700';
+    
+    // Classes for the button. Black on light bg, light gray on dark bg for contrast.
+    const buttonTextClasses = isExpanded ? 'text-gray-200' : 'text-black';
+    const buttonHoverClass = isExpanded ? 'hover:text-white' : 'hover:text-gray-600';
     
     return (
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
             <div className={`w-full lg:w-[45%] transition-all duration-500 ease-in-out ${boxClasses}`}>
-                 <h3 className={`text-3xl font-serif font-bold text-center transition-colors duration-500 ${textClasses}`}>Our Values & Vision</h3>
+                 <h3 className={`text-3xl font-serif font-bold text-center transition-colors duration-500 ${titleClasses}`}>Our Values & Vision</h3>
                 
                 {/* Show More/Less Button */}
                 <div className="mt-2 text-center">
                     <button 
                         onClick={() => setIsExpanded(!isExpanded)} 
-                        className={`flex items-center mx-auto font-semibold transition-colors duration-500 ${textClasses} ${buttonHoverClass}`}
+                        className={`flex items-center mx-auto font-semibold transition-colors duration-500 ${buttonTextClasses} ${buttonHoverClass}`}
                         aria-expanded={isExpanded}
                     >
                         <span>{isExpanded ? 'Show Less' : 'Show More'}</span>
