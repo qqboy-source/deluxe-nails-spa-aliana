@@ -61,9 +61,14 @@ export const HorizontalScrollContainer: React.FC<HorizontalScrollContainerProps>
         const calculateAndSetDimensions = () => {
             if (!scrollContainer || !stickyContent) return;
             
-            dimensionsRef.current.containerTop = scrollContainer.getBoundingClientRect().top + window.scrollY;
-            dimensionsRef.current.sectionWidth = scrollContainer.clientWidth;
-            dimensionsRef.current.maxTranslateX = (numSections - 1) * dimensionsRef.current.sectionWidth;
+            const rect = scrollContainer.getBoundingClientRect();
+            // Using a precise width from getBoundingClientRect() prevents cumulative
+            // rounding errors, ensuring the transform calculation is always accurate.
+            const sectionWidth = rect.width;
+
+            dimensionsRef.current.containerTop = rect.top + window.scrollY;
+            dimensionsRef.current.sectionWidth = sectionWidth;
+            dimensionsRef.current.maxTranslateX = (numSections - 1) * sectionWidth;
             
             const containerHeight = dimensionsRef.current.maxTranslateX + window.innerHeight;
             scrollContainer.style.height = `${containerHeight}px`;
