@@ -60,7 +60,9 @@ export const Header: React.FC = () => {
         if (sectionIndex !== -1) {
             // It's a horizontal section.
             const containerTop = horizontalContainer.getBoundingClientRect().top + window.scrollY;
-            const sectionWidth = horizontalSections[0]?.getBoundingClientRect().width || window.innerWidth;
+            // Using the container's clientWidth ensures the calculation is perfectly
+            // aligned with the transform logic inside the HorizontalScrollContainer component.
+            const sectionWidth = horizontalContainer.clientWidth;
             const targetScrollY = containerTop + (sectionIndex * sectionWidth);
             
             window.scrollTo({
@@ -145,9 +147,13 @@ export const Header: React.FC = () => {
                         </div>
                     </div>
                 </div>
+                {/* 
+                  FIX: The mobile dropdown now correctly inherits the glass effect from the parent <header>
+                  by removing its own redundant background styles.
+                */}
                 {isOpen && (
-                    <div className="md:hidden bg-white/80 backdrop-blur-sm pb-4">
-                        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <div className="md:hidden">
+                        <div className="px-2 pt-2 pb-4 space-y-1 sm:px-3">
                             {navLinks.map(link => (
                                 <a 
                                     key={link.name} 
