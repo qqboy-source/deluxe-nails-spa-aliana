@@ -61,7 +61,6 @@ export const Header: React.FC = () => {
             const sectionIndex = horizontalSections.findIndex(section => section.id === targetId);
 
             if (sectionIndex !== -1) {
-                // Each horizontal section's scroll height corresponds to the window's width
                 const scrollDistancePerSection = window.innerWidth;
                 const targetScrollY = containerTop + (sectionIndex * scrollDistancePerSection);
                 
