@@ -61,9 +61,9 @@ export const Header: React.FC = () => {
             // It's a horizontal section.
             const rect = horizontalContainer.getBoundingClientRect();
             const containerTop = rect.top + window.scrollY;
-            // Using a precise width from getBoundingClientRect() prevents cumulative
-            // rounding errors that can occur with clientWidth, ensuring sections align perfectly.
-            const sectionWidth = rect.width;
+            // Using window.innerWidth provides a consistent, reliable source of truth
+            // for the viewport width, matching the w-screen utility and fixing mobile discrepancies.
+            const sectionWidth = window.innerWidth;
             const targetScrollY = containerTop + (sectionIndex * sectionWidth);
             
             window.scrollTo({
