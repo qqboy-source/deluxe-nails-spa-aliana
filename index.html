@@ -131,6 +131,8 @@
         z-index: -1;
         /* This is required to make the ::before element respect the parent's border-radius */
         border-radius: inherit;
+        /* HINT: This promotes the element to its own compositing layer, fixing a common rendering bug in Safari where backdrop-filter and SVG filters don't play well together. */
+        transform: translateZ(0);
       }
     </style>
   <script type="importmap">
