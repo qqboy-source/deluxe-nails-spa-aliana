@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 
 export const Hero: React.FC = () => {
