@@ -1,5 +1,6 @@
 
-import React from 'react';
+
+import React, { useState } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { About, OurVision } from './components/About';
@@ -9,13 +10,15 @@ import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { HorizontalScrollContainer, HorizontalScrollSection } from './components/HorizontalScrollContainer';
 import { FadeInSection } from './components/FadeInSection';
+import { PromotionModal } from './components/PromotionModal';
 
 
 function App(): React.ReactNode {
+  const [isPromotionModalOpen, setIsPromotionModalOpen] = useState(false);
 
   return (
     <div className="font-sans text-gray-800">
-      <Header />
+      <Header onPromotionClick={() => setIsPromotionModalOpen(true)} />
       <main>
         <Hero />
         
@@ -37,7 +40,7 @@ function App(): React.ReactNode {
             {/* Page 3: Services */}
             <HorizontalScrollSection id="services">
                 <FadeInSection variant="horizontal">
-                    <Services />
+                    <Services onPromotionClick={() => setIsPromotionModalOpen(true)} />
                 </FadeInSection>
             </HorizontalScrollSection>
 
@@ -55,6 +58,7 @@ function App(): React.ReactNode {
         </FadeInSection>
       </main>
       <Footer />
+      <PromotionModal isOpen={isPromotionModalOpen} onClose={() => setIsPromotionModalOpen(false)} />
     </div>
   );
 }
