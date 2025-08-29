@@ -139,7 +139,7 @@ export const Gallery: React.FC = () => {
 
       {selectedImageSrc && modalContainer && createPortal(
         <div
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex justify-center items-center animate-fade-in p-4"
+          className="fixed inset-0 bg-black/70 liquid-glass-bg z-[200] flex justify-center items-center animate-fade-in p-4"
           onClick={closeModal}
           role="dialog"
           aria-modal="true"
