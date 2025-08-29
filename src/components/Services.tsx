@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { ServiceCategory } from '../types';
@@ -81,9 +82,8 @@ const servicesData: ServiceCategory[] = [
     },
 ];
 
-export const Services: React.FC = () => {
+export const Services: React.FC<{ onPromotionClick: () => void }> = ({ onPromotionClick }) => {
     const [isMenuVisible, setIsMenuVisible] = useState(false);
-    const [isPromotionModalOpen, setIsPromotionModalOpen] = useState(false);
     const [modalContainer, setModalContainer] = useState<Element | null>(null);
 
     useEffect(() => {
@@ -92,13 +92,13 @@ export const Services: React.FC = () => {
 
     useEffect(() => {
         const originalOverflow = document.body.style.overflow;
-        if (isMenuVisible || isPromotionModalOpen) {
+        if (isMenuVisible) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = originalOverflow;
         }
         return () => { document.body.style.overflow = originalOverflow; };
-    }, [isMenuVisible, isPromotionModalOpen]);
+    }, [isMenuVisible]);
 
     const menuModal = (
         <div 
@@ -142,28 +142,6 @@ export const Services: React.FC = () => {
         </div>
     );
 
-    const promotionModal = (
-        <div 
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex justify-center items-center animate-fade-in p-4" 
-            onClick={() => setIsPromotionModalOpen(false)}
-            role="dialog" aria-modal="true" aria-labelledby="promotion-modal-title"
-        >
-            <button
-                onClick={() => setIsPromotionModalOpen(false)}
-                className="absolute top-4 right-4 text-white text-5xl font-light leading-none z-[210] hover:text-gold-300 transition-colors"
-                aria-label="Close promotion view"
-            >&times;</button>
-            <div className="relative animate-scale-in z-[205]" onClick={e => e.stopPropagation()}>
-                <h2 id="promotion-modal-title" className="sr-only">Current Promotion</h2>
-                <img
-                    src="images/promotion.jpg"
-                    alt="Current promotion flyer. To update, replace the image in the public/images folder."
-                    className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
-                />
-            </div>
-        </div>
-    );
-
     return (
         <>
             <div className="lg:text-center">
@@ -179,14 +157,13 @@ export const Services: React.FC = () => {
                         aria-haspopup="dialog" aria-expanded={isMenuVisible}>
                         View Full Menu
                     </button>
-                    <button onClick={() => setIsPromotionModalOpen(true)} className="font-bold py-3 px-8 rounded-lg text-lg btn-golden-glow btn-fill-gold"
-                        aria-haspopup="dialog" aria-expanded={isPromotionModalOpen}>
+                    <button onClick={onPromotionClick} className="font-bold py-3 px-8 rounded-lg text-lg btn-golden-glow btn-fill-gold"
+                        aria-haspopup="dialog">
                         View Promotion
                     </button>
                 </div>
             </div>
             {isMenuVisible && modalContainer && createPortal(menuModal, modalContainer)}
-            {isPromotionModalOpen && modalContainer && createPortal(promotionModal, modalContainer)}
         </>
     );
 };
