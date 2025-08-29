@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { InstagramIcon, TikTokIcon } from './icons';
 
 export const Footer: React.FC = () => {
     return (
-        <footer className="bg-black/20 backdrop-blur-lg text-white border-t border-white/20">
+        <footer className="bg-black/20 text-white border-t border-white/20 liquid-glass-bg">
             <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
                     <div>
