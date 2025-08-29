@@ -1,5 +1,4 @@
 
-
 import React from 'react';
 import { LocationPinIcon, PhoneIcon, ClockIcon } from './icons';
 
