@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 interface PromotionModalProps {
@@ -7,32 +7,25 @@ interface PromotionModalProps {
 }
 
 export const PromotionModal: React.FC<PromotionModalProps> = ({ isOpen, onClose }) => {
-    const [modalContainer, setModalContainer] = useState<Element | null>(null);
+    const modalRoot = document.getElementById('modal-root');
 
     useEffect(() => {
-        setModalContainer(document.getElementById('modal-root'));
-    }, []);
-
-    useEffect(() => {
-        const originalOverflow = document.body.style.overflow;
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') onClose();
+            if (e.key === 'Escape') {
+                onClose();
+            }
         };
 
         if (isOpen) {
-            document.body.style.overflow = 'hidden';
             window.addEventListener('keydown', handleKeyDown);
-        } else {
-            document.body.style.overflow = originalOverflow;
         }
 
         return () => {
-            document.body.style.overflow = originalOverflow;
             window.removeEventListener('keydown', handleKeyDown);
         };
     }, [isOpen, onClose]);
 
-    if (!isOpen || !modalContainer) {
+    if (!isOpen || !modalRoot) {
         return null;
     }
 
@@ -56,6 +49,6 @@ export const PromotionModal: React.FC<PromotionModalProps> = ({ isOpen, onClose 
                 />
             </div>
         </div>,
-        modalContainer
+        modalRoot
     );
 };
