@@ -16,6 +16,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+    <!-- FIX: Load CSS directly via a <link> tag for reliability -->
+    <link rel="stylesheet" href="src/index.css">
+
     <style>
       /* Base styles and complex effects not achievable with Tailwind utilities alone */
       html { scroll-behavior: smooth; }
@@ -168,8 +171,8 @@
     <script type="text/babel" data-type="module">
       import React from 'react';
       import ReactDOM from 'react-dom/client';
-      import App from './src/App';
-      import './src/index.css';
+      // FIX: Use explicit .tsx extension to ensure the server can find the file.
+      import App from './src/App.tsx';
 
       const rootElement = document.getElementById('root');
       if (!rootElement) {
