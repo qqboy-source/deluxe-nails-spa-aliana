@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Deluxe Nails & Spa Aliana</title>
+
+    <!-- FIX: Set the base path for correct asset loading on GitHub Pages -->
+    <base href="/deluxe-nails-spa-aliana/">
     
     <!-- Preload critical images to prevent flicker and improve LCP -->
     <link rel="preload" as="image" href="images/hero-background.jpg?v=2">
@@ -135,7 +138,9 @@
         transform: translateZ(0);
       }
     </style>
-  <script type="importmap">
+    <!-- FIX: Add Babel Standalone for in-browser TSX/JSX transpilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="importmap">
 {
   "imports": {
     "react": "https://esm.sh/react@19.1.1",
@@ -162,6 +167,7 @@
     </svg>
     <div id="root"></div>
     <div id="modal-root"></div>
-    <script type="module" src="src/index.tsx"></script>
+    <!-- FIX: Change script type to text/babel for transpilation -->
+    <script type="text/babel" data-type="module" src="src/index.tsx"></script>
   </body>
 </html>
