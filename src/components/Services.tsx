@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { ServiceCategory } from '../types';
+import { PromotionModal } from './PromotionModal';
 
 const servicesData: ServiceCategory[] = [
     {
@@ -83,6 +83,7 @@ const servicesData: ServiceCategory[] = [
 
 export const Services: React.FC = () => {
     const [isMenuVisible, setIsMenuVisible] = useState(false);
+    const [isPromotionVisible, setIsPromotionVisible] = useState(false);
     const [modalContainer, setModalContainer] = useState<Element | null>(null);
 
     useEffect(() => {
@@ -91,17 +92,17 @@ export const Services: React.FC = () => {
 
     useEffect(() => {
         const originalOverflow = document.body.style.overflow;
-        if (isMenuVisible) {
+        if (isMenuVisible || isPromotionVisible) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = originalOverflow;
         }
         return () => { document.body.style.overflow = originalOverflow; };
-    }, [isMenuVisible]);
+    }, [isMenuVisible, isPromotionVisible]);
 
     const menuModal = (
         <div 
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex justify-center items-center animate-fade-in" 
+            className="fixed inset-0 bg-black/60 liquid-glass-bg z-[100] flex justify-center items-center animate-fade-in" 
             onClick={() => setIsMenuVisible(false)}
             role="dialog" aria-modal="true" aria-labelledby="services-heading"
         >
@@ -151,14 +152,19 @@ export const Services: React.FC = () => {
                 <p className="mt-4 max-w-2xl text-xl text-gray-700 lg:mx-auto font-sans">
                     Explore our wide range of services designed to make you look and feel your best. Click below to view our full service menu.
                 </p>
-                <div className="mt-16">
+                <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-4">
                     <button onClick={() => setIsMenuVisible(true)} className="font-bold py-3 px-8 rounded-lg text-lg btn-golden-glow btn-fill-gold"
                         aria-haspopup="dialog" aria-expanded={isMenuVisible}>
                         View Full Menu
                     </button>
+                    <button onClick={() => setIsPromotionVisible(true)} className="font-bold py-3 px-8 rounded-lg text-lg btn-golden-glow btn-fill-gold"
+                        aria-haspopup="dialog" aria-expanded={isPromotionVisible}>
+                        Promotions
+                    </button>
                 </div>
             </div>
             {isMenuVisible && modalContainer && createPortal(menuModal, modalContainer)}
+            <PromotionModal isOpen={isPromotionVisible} onClose={() => setIsPromotionVisible(false)} />
         </>
     );
 };
