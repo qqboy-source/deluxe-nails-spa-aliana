@@ -164,7 +164,24 @@
     </svg>
     <div id="root"></div>
     <div id="modal-root"></div>
-    <!-- FIX: Change script type to text/babel for transpilation -->
-    <script type="text/babel" data-type="module" src="index.tsx"></script>
+    <!-- FIX: Main script is now inlined to prevent 404 errors on servers that don't serve .tsx files -->
+    <script type="text/babel" data-type="module">
+      import React from 'react';
+      import ReactDOM from 'react-dom/client';
+      import App from './src/App';
+      import './src/index.css';
+
+      const rootElement = document.getElementById('root');
+      if (!rootElement) {
+        throw new Error("Could not find root element to mount to");
+      }
+
+      const root = ReactDOM.createRoot(rootElement);
+      root.render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      );
+    </script>
   </body>
 </html>
