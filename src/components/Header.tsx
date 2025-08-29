@@ -1,8 +1,7 @@
 
-
 import React, { useState } from 'react';
 
-export const Header: React.FC<{ onPromotionClick: () => void }> = ({ onPromotionClick }) => {
+export const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     
     const navLinks = [
@@ -11,19 +10,12 @@ export const Header: React.FC<{ onPromotionClick: () => void }> = ({ onPromotion
         { name: 'Our Vision', href: '#vision' },
         { name: 'Services', href: '#services' },
         { name: 'Gallery', href: '#gallery' },
-        { name: 'Promotion', href: '#promotion' },
         { name: 'Contact', href: '#contact' },
     ];
 
     const handleNavClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
         event.preventDefault();
         
-        if (href === '#promotion') {
-            onPromotionClick();
-            if (isOpen) setIsOpen(false);
-            return;
-        }
-
         if (isOpen) {
             setIsOpen(false);
         }
