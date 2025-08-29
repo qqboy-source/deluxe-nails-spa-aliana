@@ -45,7 +45,7 @@ export const OurVision: React.FC = () => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     const boxClasses = isExpanded
-        ? 'bg-black/40 backdrop-blur-lg rounded-2xl p-6 md:p-10 border border-white/20 shadow-xl'
+        ? 'bg-black/30 liquid-glass-bg rounded-2xl p-6 md:p-10 border border-white/20 shadow-xl'
         : 'p-6 md:p-10';
 
     // Classes for the title. Gold in both states, but different shades for contrast.
