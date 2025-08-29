@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { ServiceCategory } from '../types';
@@ -82,7 +81,7 @@ const servicesData: ServiceCategory[] = [
     },
 ];
 
-export const Services: React.FC<{ onPromotionClick: () => void }> = ({ onPromotionClick }) => {
+export const Services: React.FC = () => {
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [modalContainer, setModalContainer] = useState<Element | null>(null);
 
@@ -150,16 +149,12 @@ export const Services: React.FC<{ onPromotionClick: () => void }> = ({ onPromoti
                     Indulge in Our Services
                 </p>
                 <p className="mt-4 max-w-2xl text-xl text-gray-700 lg:mx-auto font-sans">
-                    Explore our wide range of services designed to make you look and feel your best. Click below to view our full service menu and current promotions.
+                    Explore our wide range of services designed to make you look and feel your best. Click below to view our full service menu.
                 </p>
-                <div className="mt-16 flex flex-col sm:flex-row justify-center items-center gap-6">
+                <div className="mt-16">
                     <button onClick={() => setIsMenuVisible(true)} className="font-bold py-3 px-8 rounded-lg text-lg btn-golden-glow btn-fill-gold"
                         aria-haspopup="dialog" aria-expanded={isMenuVisible}>
                         View Full Menu
-                    </button>
-                    <button onClick={onPromotionClick} className="font-bold py-3 px-8 rounded-lg text-lg btn-golden-glow btn-fill-gold"
-                        aria-haspopup="dialog">
-                        View Promotion
                     </button>
                 </div>
             </div>
