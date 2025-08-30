@@ -588,7 +588,11 @@
                   dimensionsRef.current.sectionWidth = sectionWidth;
                   dimensionsRef.current.maxTranslateX = (numSections - 1) * sectionWidth;
                   const containerHeight = dimensionsRef.current.maxTranslateX + window.innerHeight;
-                  scrollContainer.style.height = `${containerHeight}px`;
+                  // FIX: Only set height if it has changed to prevent ResizeObserver loop error.
+                  const currentHeight = parseFloat(scrollContainer.style.height) || 0;
+                  if (Math.abs(currentHeight - containerHeight) > 1) { // Use a small tolerance
+                      scrollContainer.style.height = `${containerHeight}px`;
+                  }
                   updateTransform();
               };
               const updateTransform = () => {
