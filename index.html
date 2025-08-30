@@ -503,7 +503,7 @@
 
       // === Inlined: components/FadeInSection.tsx ===
       interface FadeInSectionProps {
-          children;
+          children: any;
           variant?: 'vertical' | 'horizontal';
       }
       const FadeInSection = ({ children, variant = 'vertical' }) => {
@@ -540,7 +540,7 @@
       
       // === Inlined: components/HorizontalScrollContainer.tsx ===
       interface HorizontalScrollSectionProps {
-          children;
+          children: any;
           id: string;
           isActive?: boolean;
       }
@@ -562,7 +562,7 @@
           );
       };
       interface HorizontalScrollContainerProps {
-          children;
+          children: any;
       }
       const HorizontalScrollContainer = ({ children }) => {
           const scrollContainerRef = useRef(null);
