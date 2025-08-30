@@ -588,11 +588,17 @@
                   dimensionsRef.current.sectionWidth = sectionWidth;
                   dimensionsRef.current.maxTranslateX = (numSections - 1) * sectionWidth;
                   const containerHeight = dimensionsRef.current.maxTranslateX + window.innerHeight;
-                  // FIX: Only set height if it has changed to prevent ResizeObserver loop error.
-                  const currentHeight = parseFloat(scrollContainer.style.height) || 0;
-                  if (Math.abs(currentHeight - containerHeight) > 1) { // Use a small tolerance
-                      scrollContainer.style.height = `${containerHeight}px`;
-                  }
+                  
+                  // FIX: Use requestAnimationFrame to prevent ResizeObserver loop error.
+                  // This decouples the DOM read (getBoundingClientRect) from the DOM write (style.height),
+                  // breaking the synchronous feedback loop that caused the warning.
+                  requestAnimationFrame(() => {
+                    const currentHeight = parseFloat(scrollContainer.style.height) || 0;
+                    if (Math.abs(currentHeight - containerHeight) > 1) { // Use a small tolerance
+                        scrollContainer.style.height = `${containerHeight}px`;
+                    }
+                  });
+                  
                   updateTransform();
               };
               const updateTransform = () => {
@@ -1038,6 +1044,10 @@
       };
       
       // === Inlined: components/About.tsx ===
+      /*
+        INSTRUCTION: Your videos should be placed in the `public/media` folder.
+        The paths below point to `media/store-video-1.mp4` and `media/store-video-2.mp4`.
+      */
       const mediaItems = [
           { type: 'video', src: 'media/store-video-1.mp4', alt: 'A promotional video of the spa experience.' },
           { type: 'image', src: 'images/spa-interior.jpg', alt: 'A photo showcasing the elegant interior of Deluxe Nails & Spa Aliana.' },
