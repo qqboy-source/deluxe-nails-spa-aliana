@@ -8,8 +8,6 @@
     <!-- Preload critical images to prevent flicker and improve LCP -->
     <link rel="preload" as="image" href="images/hero-background.jpg">
     <link rel="preload" as="image" href="images/site-background.jpg">
-    <!-- INSTRUCTION: The 'Promotion' button loads 'images/promotion.jpg'. -->
-    <!-- To set your promotion, upload your image to the `public/images` folder. -->
     <link rel="preload" as="image" href="images/promotion.jpg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -197,7 +195,10 @@
 <script type="importmap">
 {
   "imports": {
-    "tailwindcss/": "https://esm.sh/tailwindcss@^4.1.11/"
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react-dom": "https://esm.sh/react-dom@^19.2.3"
   }
 }
 </script>
@@ -217,35 +218,11 @@
     <div id="root"></div>
     <div id="modal-root"></div>
     <!-- All application code is inlined into this single script block. -->
-    <!-- This resolves server configuration errors (404s and incorrect MIME types) -->
-    <!-- by eliminating the need for the browser to fetch external .tsx files. -->
     <script type="text/babel">
       // === React/DOM are loaded from UMD scripts, available as globals ===
       const { useState, useRef, useEffect, useCallback, useLayoutEffect, Children, cloneElement, isValidElement } = React;
 
-      // === Inlined: types.ts ===
-      // Note: Interfaces are stripped by Babel during transpilation but help with code clarity.
-      interface ServiceItem {
-          name: string;
-          price: string;
-          description?: string;
-      }
-      interface ServiceCategory {
-          category: string;
-          note?: string;
-          layout?: 'grid' | 'list';
-          items: ServiceItem[];
-      }
-      interface MediaItem {
-          type: 'image' | 'video';
-          src: string;
-          alt: string;
-      }
-
       // === Inlined: components/icons.tsx ===
-      interface IconProps {
-          className?: string;
-      }
       const InstagramIcon = ({ className }) => (
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
               <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
@@ -297,10 +274,6 @@
       );
 
       // === Inlined: components/PromotionModal.tsx ===
-      interface PromotionModalProps {
-          isOpen: boolean;
-          onClose: () => void;
-      }
       const PromotionModal = ({ isOpen, onClose }) => {
           const modalRoot = document.getElementById('modal-root');
           useEffect(() => {
@@ -336,6 +309,10 @@
                           src="images/promotion.jpg"
                           alt="Current promotion flyer. To update, replace the image in the public/images folder."
                           className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
+                          onError={(e) => {
+                              e.currentTarget.onerror = null;
+                              e.currentTarget.src = "https://placehold.co/600x800/9F763B/FBF3E6?text=No+Current+Promotions";
+                          }}
                       />
                   </div>
               </div>,
@@ -344,9 +321,6 @@
       };
       
       // === Inlined: components/MediaCarousel.tsx ===
-      interface MediaCarouselProps {
-          items: MediaItem[];
-      }
       const MediaCarousel = ({ items }) => {
           const [currentIndex, setCurrentIndex] = useState(0);
           const [isTransitioning, setIsTransitioning] = useState(false);
@@ -502,10 +476,6 @@
       };
 
       // === Inlined: components/FadeInSection.tsx ===
-      interface FadeInSectionProps {
-          children: any;
-          variant?: 'vertical' | 'horizontal';
-      }
       const FadeInSection = ({ children, variant = 'vertical' }) => {
           const [isVisible, setVisible] = useState(false);
           const domRef = useRef(null);
@@ -539,11 +509,6 @@
       };
       
       // === Inlined: components/HorizontalScrollContainer.tsx ===
-      interface HorizontalScrollSectionProps {
-          children: any;
-          id: string;
-          isActive?: boolean;
-      }
       const HorizontalScrollSection = ({ children, id, isActive }) => {
           return (
               <section 
@@ -561,9 +526,6 @@
               </section>
           );
       };
-      interface HorizontalScrollContainerProps {
-          children: any;
-      }
       const HorizontalScrollContainer = ({ children }) => {
           const scrollContainerRef = useRef(null);
           const stickyContentRef = useRef(null);
@@ -589,12 +551,9 @@
                   dimensionsRef.current.maxTranslateX = (numSections - 1) * sectionWidth;
                   const containerHeight = dimensionsRef.current.maxTranslateX + window.innerHeight;
                   
-                  // FIX: Use requestAnimationFrame to prevent ResizeObserver loop error.
-                  // This decouples the DOM read (getBoundingClientRect) from the DOM write (style.height),
-                  // breaking the synchronous feedback loop that caused the warning.
                   requestAnimationFrame(() => {
                     const currentHeight = parseFloat(scrollContainer.style.height) || 0;
-                    if (Math.abs(currentHeight - containerHeight) > 1) { // Use a small tolerance
+                    if (Math.abs(currentHeight - containerHeight) > 1) {
                         scrollContainer.style.height = `${containerHeight}px`;
                     }
                   });
@@ -816,7 +775,7 @@
           { category: 'Manicures', note: 'Add Gel/Shellac Polish to any Manicure for $20', items: [ { name: 'Classic', price: '$22', description: 'Basic and express manicure which includes nail trimming, cuticle grooming on hands, hot towel, massage, and finish with your choice of polish.' }, { name: 'Signature', price: '$32', description: 'Includes everything in the Classic Manicure with a mask wrapped around the arms to re-hyrdrate your skin with a choice of lavender paraffin wax OR hot stone massage.' }, { name: 'Aroma Therapy', price: '$40', description: 'Includes everything in the Signature Manicure plus your choice of our exclusive Organic Aroma treatments and extensive hands, arms, neck, and shoulder massages. Scents: Cucumber Dream, Citrus Sensation, Milk and Honey Rejuvenation, Lavender and Mint Relaxation, Organic Soothing Aloe Vera.' }, { name: 'Deluxe', price: '$45', description: 'Our exclusive manicure service with organic ingredients to stimulate your skin, relax your muscles, and enhance healthier nail growth. Pamper yourself with BOTH lavender paraffin wax and hot stone massages for your hands, arms, neck, and shoulder.' }, ] },
           { category: 'Pedicures', note: 'Add Gel/Shellac Polish to any Pedicure for $20', items: [ { name: 'Classic (8 Mins Massage)', price: '$33', description: 'Basic express pedicure with nail trimming, shape, callus treatment, cuticle grooming, exfoliation, hot towel, leg and foot massage, and choice of polish.' }, { name: 'Signature (12 Mins Massage)', price: '$43', description: 'Includes Classic Pedicure plus a mask for the legs and your choice of lavender paraffin wax OR hot stone massage.' }, { name: 'Tropical Paradise (16 Mins Massage)', price: '$51', description: 'Relieve stress with a pleasant tropical citrus sensation, extensive foot treatment, and massages. Your choice of lavender wax OR hot stone massage included.' }, { name: 'Aroma Therapy (20 Mins Massage)', price: '$60', description: 'Pamper yourself with selective natural Aroma treatments and extensive foot massages. Your choice of lavender paraffin wax OR hot stone massage. Scents: Cucumber Dream, Citrus Sensation, Milk and Honey Rejuvenation, Lavender and Mint Relaxation, Organic Soothing Aloe Vera.' }, { name: 'Deluxe (24 Mins Massage)', price: '$69', description: 'Indulge in the most perfect, extensive pedicure treatment with BOTH paraffin wax and hot stone massage, using the highest quality natural ingredients for a luxurious experience.' }, { name: 'Wellness Healing CBD (24 Mins Massage)', price: '$73', description: 'A one-of-a-kind pedicure therapy with high-quality CBD extract infused with selective herbal ingredients to enhance your wellness. Includes lavender paraffin wax and hot stone massages.' }, ] },
           { category: 'Kids 12 & Under', note: 'Add Gel/Shellac Polish for $15', layout: 'grid', items: [ { name: 'Classic Manicure', price: '$12' }, { name: 'Classic Pedicure', price: '$24' }, { name: 'Hand Polish Change', price: '$8' }, { name: 'Toe Polish Change', price: '$10' }, ] },
-          { category: 'Additional Services', layout: 'grid', items: [ { name: 'Nail Repair (Varies w/ design)', price: '$5+' }, { name: 'Nail Enhancement Removal Only', price: '$13' }, { name: 'Nail Enhancement Removal (w/ another service)', price: '$6' }, { name: 'Shellac Gel Polish Change', price: '$30' }, { name: 'Regular Hand Polish Change', price: '$12' }, { name: 'Regular Toe Polish Change', price: '$13' }, { name: 'Basic French / American French Tip', price: '$5+' }, { name: 'Add Lavender Parafin Wax or Hot Stones', price: '$9' }, { name: 'Add Shellac / Gel to Service', price: '$20' }, { name: 'Extra Massages', price: '$1 / Min' }, ] },
+          { category: 'Additional Services', layout: 'grid', items: [ { name: 'Nail Repair (Varies w/ design)', price: '$5+' }, { name: 'NAIL ENHANCEMENT REMOVAL SERVICE ONLY', price: '$15' }, { name: 'Nail Enhancement Removal (WITH SIMILAR OR FULL $33+UP SERVICE)', price: '$7+' }, { name: 'Shellac Gel Polish Change', price: '$30' }, { name: 'Regular Hand Polish Change', price: '$12' }, { name: 'Regular Toe Polish Change', price: '$13' }, { name: 'Basic French / American French Tip', price: '$5+' }, { name: 'Add Lavender Parafin Wax or Hot Stones', price: '$9' }, { name: 'Add Shellac / Gel to Service', price: '$20' }, { name: 'Extra Massages', price: '$1 / Min' }, ] },
           { category: 'Waxing', layout: 'grid', items: [ { name: 'Eyebrows', price: '$12' }, { name: 'Wholeface', price: '$45' }, { name: 'Chin', price: '$10' }, { name: 'Half Arm', price: '$35' }, { name: 'Lip', price: '$10' }, { name: 'Half Leg', price: '$40' }, { name: 'Underarms', price: '$25' }, { name: 'Sideburns', price: '$18' }, { name: 'Full Arm', price: '$45' }, { name: 'Chest', price: '$45' }, { name: 'Full Leg', price: '$55' }, { name: 'Bikini', price: '$45' }, { name: 'Back', price: '$50' }, { name: 'Brazillian', price: '$55' }, ] },
       ];
       const Services = () => {
@@ -879,11 +838,11 @@
           return (
               <>
                   <div className="lg:text-center">
-                      <h2 className="text-base text-gold-700 font-semibold tracking-wide uppercase">Our Menu</h2>
-                      <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-gray-900 sm:text-4xl text-shadow-subtle">
+                      <h2 className="text-4xl md:text-5xl font-serif font-bold text-gold-800 mb-3 text-shadow-subtle">Our Menu</h2>
+                      <p className="text-xl md:text-2xl text-gold-600 font-medium tracking-wide uppercase">
                           Indulge in Our Services
                       </p>
-                      <p className="mt-4 max-w-2xl text-xl text-gray-700 lg:mx-auto font-sans">
+                      <p className="mt-6 max-w-2xl text-xl text-gray-700 lg:mx-auto font-sans">
                           Explore our wide range of services designed to make you look and feel your best. Click below to view our full service menu.
                       </p>
                       <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -980,8 +939,8 @@
         return (
           <>
             <div className="text-center">
-              <h2 className="text-base text-gold-700 font-semibold tracking-wide uppercase">Our Work</h2>
-              <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-gray-900 sm:text-4xl text-shadow-subtle">
+              <h2 className="text-4xl md:text-5xl font-serif font-bold text-gold-800 mb-3 text-shadow-subtle">Our Work</h2>
+              <p className="text-xl md:text-2xl text-gold-600 font-medium tracking-wide uppercase">
                 A Glimpse of Perfection
               </p>
             </div>
@@ -1063,11 +1022,11 @@
       const About = () => {
           return (
               <div className="text-center flex flex-col items-center">
-                  <h2 className="text-base text-gold-700 font-semibold tracking-wide uppercase">About Us</h2>
-                  <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-gray-900 sm:text-4xl text-shadow-subtle">
+                  <h2 className="text-4xl md:text-5xl font-serif font-bold text-gold-800 mb-3 text-shadow-subtle">About Us</h2>
+                  <p className="text-xl md:text-2xl text-gold-600 font-medium tracking-wide uppercase">
                       Your Sanctuary of Beauty & Relaxation
                   </p>
-                  <p className="mt-4 max-w-2xl text-xl text-gray-700 mx-auto font-sans">
+                  <p className="mt-6 max-w-2xl text-xl text-gray-700 mx-auto font-sans">
                       At Deluxe Nails & Spa Aliana, we believe that self-care is a priority, not a luxury. Our mission is to provide an unparalleled spa experience, where you can unwind, rejuvenate, and leave feeling more beautiful and confident than ever.
                   </p>
               </div>
@@ -1084,8 +1043,8 @@
           return (
               <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
                   <div className={`w-full lg:w-[45%] transition-all duration-500 ease-in-out ${boxClasses}`}>
-                       <h3 className={`text-3xl font-serif font-bold text-center transition-colors duration-500 ${titleClasses}`}>Our Values & Vision</h3>
-                      <div className="mt-2 text-center">
+                       <h3 className={`text-4xl md:text-5xl font-serif font-bold text-center transition-colors duration-500 ${titleClasses}`}>Our Values & Vision</h3>
+                      <div className="mt-4 text-center">
                           <button 
                               onClick={() => setIsExpanded(!isExpanded)} 
                               className={`flex items-center mx-auto font-semibold transition-colors duration-500 ${buttonTextClasses} ${buttonHoverClass}`}
@@ -1131,11 +1090,11 @@
               <section id="contact" className="py-20">
                   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                       <div className="lg:text-center">
-                          <h2 className="text-base text-gold-700 font-semibold tracking-wide uppercase">Contact Us</h2>
-                          <p className="mt-2 text-3xl leading-8 font-serif font-bold tracking-tight text-gray-900 sm:text-4xl text-shadow-subtle">
+                          <h2 className="text-4xl md:text-5xl font-serif font-bold text-gold-800 mb-3 text-shadow-subtle">Contact Us</h2>
+                          <p className="text-xl md:text-2xl text-gold-600 font-medium tracking-wide uppercase">
                               Visit Us or Get in Touch
                           </p>
-                          <p className="mt-4 max-w-2xl text-xl text-gray-700 lg:mx-auto font-sans">
+                          <p className="mt-6 max-w-2xl text-xl text-gray-700 lg:mx-auto font-sans">
                               We're excited to welcome you to our spa. Find us at the address below or give us a call to book your next appointment.
                           </p>
                       </div>
