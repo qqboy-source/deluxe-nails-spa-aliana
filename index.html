@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Deluxe Nails & Spa Aliana</title>
 
-    <!-- Preload critical images to prevent flicker and improve LCP -->
     <link rel="preload" as="image" href="images/hero-background.jpg">
     <link rel="preload" as="image" href="images/site-background.jpg">
     <link rel="preload" as="image" href="images/promotion.jpg">
@@ -18,8 +17,7 @@
       /* Base styles and complex effects not achievable with Tailwind utilities alone */
       html { scroll-behavior: smooth; }
       body {
-        /* 
-          INSTRUCTION: To set your website background, upload your image to the 
+        /* INSTRUCTION: To set your website background, upload your image to the 
           `public/images` folder and name it 'site-background.jpg'.
           The site will automatically pick it up.
         */
@@ -139,7 +137,6 @@
       .will-change-transform { will-change: transform; }
 
     </style>
-    <!-- FIX: Use Tailwind CDN for styling in a no-build environment -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       // Configure Tailwind CDN with custom theme settings
@@ -187,9 +184,7 @@
         },
       }
     </script>
-    <!-- Add Babel Standalone for in-browser TSX/JSX transpilation -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Load React and ReactDOM via stable UMD builds to prevent script errors -->
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script type="importmap">
@@ -205,19 +200,15 @@
 </head>
   <body>
     <svg style="display: none">
-      <!-- Filter for a strong, wavy "liquid glass" effect -->
       <filter id="liquid-glass-filter">
-        <!-- Lower frequency for larger, more fluid waves -->
         <feTurbulence type="fractalNoise" baseFrequency="0.015 0.025" numOctaves="2" seed="2" result="noise">
            <animate attributeName="baseFrequency" dur="30s" values="0.015 0.025;0.02 0.03;0.015 0.025" repeatCount="indefinite"></animate>
         </feTurbulence>
-        <!-- Increased scale for a much stronger, more distorted effect -->
         <feDisplacementMap in="SourceGraphic" in2="noise" scale="50" xChannelSelector="R" yChannelSelector="G" />
       </filter>
     </svg>
     <div id="root"></div>
     <div id="modal-root"></div>
-    <!-- All application code is inlined into this single script block. -->
     <script type="text/babel">
       // === React/DOM are loaded from UMD scripts, available as globals ===
       const { useState, useRef, useEffect, useCallback, useLayoutEffect, Children, cloneElement, isValidElement } = React;
@@ -287,7 +278,7 @@
               }
               return () => {
                   window.removeEventListener('keydown', handleKeyDown);
-              };
+              }
           }, [isOpen, onClose]);
           if (!isOpen || !modalRoot) {
               return null;
@@ -302,7 +293,7 @@
                       onClick={onClose}
                       className="absolute top-4 right-4 text-white text-5xl font-light leading-none z-[210] hover:text-gold-300 transition-colors"
                       aria-label="Close promotion view"
-                  >&times;</button>
+                  >×</button>
                   <div className="relative animate-scale-in z-[205]" onClick={e => e.stopPropagation()}>
                       <h2 id="promotion-modal-title" className="sr-only">Current Promotion</h2>
                       <img
@@ -520,7 +511,7 @@
                       <div 
                           className={`w-full flex-grow pt-24 pb-12 px-2 md:px-4 hide-scrollbar overflow-y-auto overscroll-y-contain ${!isActive ? 'pointer-events-none' : ''}`}
                       >
-                           {children}
+                         {children}
                       </div>
                   </div>
               </section>
@@ -768,118 +759,119 @@
       };
       
       // === Inlined: components/Services.tsx ===
-  const servicesData = [
-  { 
-    category: 'Nail Enhancements', // [cite: 7]
-    note: '***Additional pricing for longer nails, shape and specials design requests***', // [cite: 8]
-    items: [ 
-      { name: 'Acrylic with Regular Polish', price: 'Full Set $40+ / Fill $35+' }, // [cite: 9]
-      { name: 'Acrylic with Gel', price: 'Full Set $58+ / Fill $50+' }, // [cite: 9]
-      { name: 'Pink & White French', price: 'Full Set $58+ / Pink Fill Only $47+' }, // [cite: 9]
-      { name: 'Color Powder', price: 'Full Set $48+' }, // [cite: 9]
-      { name: 'Color Powder Refill Same Color', price: '$39+' }, // [cite: 9]
-      { name: 'Color Powder Refill Change Color', price: '$44+' }, // [cite: 9]
-      { name: 'Gel Builder (Basic Nude Colors)', price: 'Full Set $56+ / Fill $47+' }, // [cite: 9]
-      { name: 'Gel Builder w/Gel Colors', price: 'Full Set $65+ / Fill $55+' }, // [cite: 9]
-      { name: 'Gel X', price: 'Full Set $65+' }, // [cite: 9]
-    ], 
-  },
-  { 
-    category: 'Enhancement Add-Ons', 
-    layout: 'grid', 
-    items: [ 
-      { name: 'Length', price: '$5+' }, // [cite: 9]
-      { name: 'Shape (Stiletto/Almond/Coffin/Round, etc...)', price: '$5+' }, // [cite: 9]
-      { name: 'Ombre Design', price: '$15' }, // [cite: 9]
-      { name: 'Chrome Design', price: '$20' }, // [cite: 9]
-      { name: 'Cateyes Design', price: '$15+' }, // [cite: 9]
-      { name: 'Marble Design', price: '$5+' }, // [cite: 9]
-    ] 
-  },
-  { 
-    category: 'Dipping Powder', // [cite: 10]
-    items: [ 
-      { name: 'Dipping Powder w/cuticle push back & hot towel', price: '$52' }, // [cite: 11]
-      { name: 'Dipping French w/cuticle push back & hot towel', price: '$57' }, // [cite: 11]
-    ], 
-  },
-  { 
-    category: 'Gel Manicure', // [cite: 12]
-    items: [ 
-      { name: 'Shellac / Gel Manicure w/Cuticle Grooming & Massage', price: '$44' }, // [cite: 13]
-      { name: 'Shellac/Gel French w/Cuticle Grooming & Massage', price: '$49' }, // [cite: 13]
-      { name: 'Shellac Gel Polish Change', price: '$30' }, // [cite: 13]
-    ], 
-  },
-  { 
-    category: 'Manicures', // [cite: 21]
-    note: 'ADD GEL POLISH TO ANY MANICURES $20', // [cite: 21]
-    items: [ 
-      { name: 'Classic', price: '$24 *5 MINS MASSAGE*', description: 'Express manicure treatments such as nail trimming and cuticle care, hot towel, light massage, with the application of your preferred regular nail polish' }, // [cite: 22]
-      { name: 'Signature Green Tea', price: '$34 *8 MINS MASSAGE*', description: 'Includes all the elements of a Classic Manicure, adding a hydrating mask for the arms to rejuvenate the skin including choice of a lavender paraffin wax or hot stone massage' }, // [cite: 23, 24, 25]
-      { name: 'Aroma Therapy', price: '$42 *12 MINS MASSAGE*', description: 'Our unique Organic Aroma manicure treatments, along with comprehensive massages for the hands, arms, neck, and shoulders with choices of a lavender paraffin wax or hot stone massage' }, // [cite: 26, 27, 28]
-      { name: 'Deluxe', price: '$48 *14 MINS MASSAGE*', description: 'Indulge in the luxurious treatment features organic ingredients and meticulous care designed to invigorate your skin, soothe your muscles, and promote healthier nail growth with combination of BOTH lavender paraffin wax and hot stone massages relaxation for your hands, arms, neck, and shoulders. Scents: Cooling Cucumber, Citrus Vitamin C, Milk and Honey Pampering, Lavender and Mint Relaxation, Organic Healing Aloe Vera' }, // [cite: 29, 30, 31, 32, 33, 34]
-    ] 
-  },
-  { 
-    category: 'Pedicures', // [cite: 35]
-    note: 'ADD GEL POLISH TO ANY PEDICURES $20', // [cite: 35]
-    items: [ 
-      { name: 'Classic', price: '$35 *8 MINS MASSAGE*', description: 'Express pedicure treatments such as nail trimming and shaping, callus removal, cuticle care, the exfoliation of dead skin, hot towel followed by a relaxing leg and foot massage, with the application of your preferred nail polish' }, // [cite: 36]
-      { name: 'Signature Green Tea', price: '$45 *12 MINS MASSAGE*', description: 'Includes all the elements of a Classic Pedicure, adding a hydrating mask for the legs to rejuvenate the skin including choice of a lavender paraffin wax or hot stone massage' }, // [cite: 37]
-      { name: 'Citrus Paradise', price: '$53 *16 MINS MASSAGE*', description: 'Our delightful citrus treatment, designed to alleviate stress, comprehensive and revitalizing massages that enhance both muscle and skin health. You can choose between a lavender wax treatment or a hot stone massage' }, // [cite: 38, 39, 40, 41]
-      { name: 'Aroma Therapy', price: '$62 *20 MINS MASSAGE*', description: 'Exclusive natural Aroma treatments, which feature a luxurious foot massage along with your choice of a lavender paraffin wax or a hot stone massage. Allow yourself to unwind as we showcase our techniques designed to your experience' }, // [cite: 42, 43, 44]
-      { name: 'Deluxe', price: '$70 *24 MINS MASSAGE*', description: 'Our deluxe pedicure utilizes all natural ingredients, ensuring a luxurious treatment that caters to your needs. If you seek the ultimate in pampering, this extensive pedicure is the perfect choice that combines BOTH benefits of lavender paraffin wax with the relaxation of hot stone massage. Scents: Cooling Cucumber, Citrus Vitamin C, Milk and Honey Pampering, Lavender and Mint Relaxation, Organic Healing Aloe Vera' }, // [cite: 45, 46, 47, 48, 49, 50]
-      { name: 'Hemp Extract Therapy', price: '$75 *24 MINS MASSAGE*', description: 'Investing in your wellness is a vital step towards personal well-being. Experience our HEMP pedicure therapy with selected the finest quality hemp extract, and premium herbal ingredients to elevate your wellness journey. This treatment also includes BOTH lavender paraffin wax and hot stone massage' }, // [cite: 51, 52, 53, 54, 55]
-    ] 
-  },
-  { 
-    category: 'Kids 12 & Under', // [cite: 56]
-    note: 'ADD GEL POLISH TO ANY KID MANI or PEDI $15', // [cite: 57]
-    layout: 'grid', 
-    items: [ 
-      { name: 'Kid Manicure', price: '$13' }, // [cite: 58]
-      { name: 'Kid Pedicure', price: '$25' }, // [cite: 58]
-      { name: 'Kid Toe or Hand Polish Change', price: '$10' }, // [cite: 59]
-      { name: 'Kid Gel Polish Change Only', price: '$20' }, // [cite: 59, 61]
-    ] 
-  },
-  { 
-    category: 'Additional Services', // [cite: 14]
-    layout: 'grid', 
-    items: [ 
-      { name: 'Nail Repair (varies with length/shape/designs)', price: '$6+' }, // [cite: 15]
-      { name: 'NAIL ENHANCEMENT REMOVAL SERVICE ONLY', price: '$15' }, // [cite: 15]
-      { name: 'Nail Enhancement Removal (with another service)', price: '$7+' }, // [cite: 15]
-      { name: 'Regular Polish - Hand Polish Change', price: '$13' }, // [cite: 15]
-      { name: 'Regular Polish - Toe Polish Change', price: '$15' }, // [cite: 15]
-      { name: 'Basic French / American French Tip', price: '$5' }, // [cite: 15]
-      { name: 'Add On Lavender Parafin Wax or Hot Stones', price: '$10' }, // [cite: 15]
-      { name: 'Extra Massages', price: '$1/PER MIN' }, // [cite: 15]
-      { name: 'Cuticle Trim (ONLY)', price: '$12' }, // [cite: 15]
-    ] 
-  },
-  { 
-    category: 'Waxing', // [cite: 17]
-    layout: 'grid', 
-    items: [ 
-      { name: 'Eyebrows', price: '$13' }, // [cite: 16]
-      { name: 'Wholeface', price: '$46+' }, // [cite: 16]
-      { name: 'Chin', price: '$11' }, // [cite: 16]
-      { name: 'Half Arm', price: '$37' }, // [cite: 16]
-      { name: 'Lip', price: '$11' }, // [cite: 16]
-      { name: 'Half Leg', price: '$43' }, // [cite: 16]
-      { name: 'Underarms', price: '$27+' }, // [cite: 16]
-      { name: 'Sideburns', price: '$18' }, // [cite: 16]
-      { name: 'Full Arm', price: '$48' }, // [cite: 16]
-      { name: 'Chest', price: '$50+' }, // [cite: 16]
-      { name: 'Full Leg', price: '$60+' }, // [cite: 16]
-      { name: 'Bikini', price: '$47+' }, // [cite: 16]
-      { name: 'Back', price: '$52+' }, // [cite: 16]
-      { name: 'Brazillian', price: '$60+' }, // [cite: 16]
-    ] 
-  },
-];
+      const servicesData = [
+        { 
+          category: 'Nail Enhancements', 
+          note: '***Additional pricing for longer nails, shape and specials design requests***', 
+          items: [ 
+            { name: 'Acrylic with Regular Polish', price: 'Full Set $40+ / Fill $35+' }, 
+            { name: 'Acrylic with Gel', price: 'Full Set $58+ / Fill $50+' }, 
+            { name: 'Pink & White French', price: 'Full Set $58+ / Pink Fill Only $47+' }, 
+            { name: 'Color Powder', price: 'Full Set $48+' }, 
+            { name: 'Color Powder Refill Same Color', price: '$39+' }, 
+            { name: 'Color Powder Refill Change Color', price: '$44+' }, 
+            { name: 'Gel Builder (Basic Nude Colors)', price: 'Full Set $56+ / Fill $47+' }, 
+            { name: 'Gel Builder w/Gel Colors', price: 'Full Set $65+ / Fill $55+' }, 
+            { name: 'Gel X', price: 'Full Set $65+' }, 
+          ], 
+        },
+        { 
+          category: 'Enhancement Add-Ons', 
+          layout: 'grid', 
+          items: [ 
+            { name: 'Length', price: '$5+' }, 
+            { name: 'Shape (Stiletto/Almond/Coffin/Round, etc...)', price: '$5+' }, 
+            { name: 'Ombre Design', price: '$15' }, 
+            { name: 'Chrome Design', price: '$20' }, 
+            { name: 'Cateyes Design', price: '$15+' }, 
+            { name: 'Marble Design', price: '$5+' }, 
+          ] 
+        },
+        { 
+          category: 'Dipping Powder', 
+          items: [ 
+            { name: 'Dipping Powder w/cuticle push back & hot towel', price: '$52' }, 
+            { name: 'Dipping French w/cuticle push back & hot towel', price: '$57' }, 
+          ], 
+        },
+        { 
+          category: 'Gel Manicure', 
+          items: [ 
+            { name: 'Shellac / Gel Manicure w/Cuticle Grooming & Massage', price: '$44' }, 
+            { name: 'Shellac/Gel French w/Cuticle Grooming & Massage', price: '$49' }, 
+            { name: 'Shellac Gel Polish Change', price: '$30' }, 
+          ], 
+        },
+        { 
+          category: 'Manicures', 
+          note: 'ADD GEL POLISH TO ANY MANICURES $20', 
+          items: [ 
+            { name: 'Classic', price: '$24 *5 MINS MASSAGE*', description: 'Express manicure treatments such as nail trimming and cuticle care, hot towel, light massage, with the application of your preferred regular nail polish' }, 
+            { name: 'Signature Green Tea', price: '$34 *8 MINS MASSAGE*', description: 'Includes all the elements of a Classic Manicure, adding a hydrating mask for the arms to rejuvenate the skin including choice of a lavender paraffin wax or hot stone massage' }, 
+            { name: 'Aroma Therapy', price: '$42 *12 MINS MASSAGE*', description: 'Our unique Organic Aroma manicure treatments, along with comprehensive massages for the hands, arms, neck, and shoulders with choices of a lavender paraffin wax or hot stone massage' }, 
+            { name: 'Deluxe', price: '$48 *14 MINS MASSAGE*', description: 'Indulge in the luxurious treatment features organic ingredients and meticulous care designed to invigorate your skin, soothe your muscles, and promote healthier nail growth with combination of BOTH lavender paraffin wax and hot stone massages relaxation for your hands, arms, neck, and shoulders. Scents: Cooling Cucumber, Citrus Vitamin C, Milk and Honey Pampering, Lavender and Mint Relaxation, Organic Healing Aloe Vera' }, 
+          ] 
+        },
+        { 
+          category: 'Pedicures', 
+          note: 'ADD GEL POLISH TO ANY PEDICURES $20', 
+          items: [ 
+            { name: 'Classic', price: '$35 *8 MINS MASSAGE*', description: 'Express pedicure treatments such as nail trimming and shaping, callus removal, cuticle care, the exfoliation of dead skin, hot towel followed by a relaxing leg and foot massage, with the application of your preferred nail polish' }, 
+            { name: 'Signature Green Tea', price: '$45 *12 MINS MASSAGE*', description: 'Includes all the elements of a Classic Pedicure, adding a hydrating mask for the legs to rejuvenate the skin including choice of a lavender paraffin wax or hot stone massage' }, 
+            { name: 'Citrus Paradise', price: '$53 *16 MINS MASSAGE*', description: 'Our delightful citrus treatment, designed to alleviate stress, comprehensive and revitalizing massages that enhance both muscle and skin health. You can choose between a lavender wax treatment or a hot stone massage' }, 
+            { name: 'Aroma Therapy', price: '$62 *20 MINS MASSAGE*', description: 'Exclusive natural Aroma treatments, which feature a luxurious foot massage along with your choice of a lavender paraffin wax or a hot stone massage. Allow yourself to unwind as we showcase our techniques designed to your experience' }, 
+            { name: 'Deluxe', price: '$70 *24 MINS MASSAGE*', description: 'Our deluxe pedicure utilizes all natural ingredients, ensuring a luxurious treatment that caters to your needs. If you seek the ultimate in pampering, this extensive pedicure is the perfect choice that combines BOTH benefits of lavender paraffin wax with the relaxation of hot stone massage. Scents: Cooling Cucumber, Citrus Vitamin C, Milk and Honey Pampering, Lavender and Mint Relaxation, Organic Healing Aloe Vera' }, 
+            { name: 'Hemp Extract Therapy', price: '$75 *24 MINS MASSAGE*', description: 'Investing in your wellness is a vital step towards personal well-being. Experience our HEMP pedicure therapy with selected the finest quality hemp extract, and premium herbal ingredients to elevate your wellness journey. This treatment also includes BOTH lavender paraffin wax and hot stone massage' }, 
+          ] 
+        },
+        { 
+          category: 'Kids 12 & Under', 
+          note: 'ADD GEL POLISH TO ANY KID MANI or PEDI $15', 
+          layout: 'grid', 
+          items: [ 
+            { name: 'Kid Manicure', price: '$13' }, 
+            { name: 'Kid Pedicure', price: '$25' }, 
+            { name: 'Kid Toe or Hand Polish Change', price: '$10' }, 
+            { name: 'Kid Gel Polish Change Only', price: '$20' }, 
+          ] 
+        },
+        { 
+          category: 'Additional Services', 
+          layout: 'grid', 
+          items: [ 
+            { name: 'Nail Repair (varies with length/shape/designs)', price: '$6+' }, 
+            { name: 'NAIL ENHANCEMENT REMOVAL SERVICE ONLY', price: '$15' }, 
+            { name: 'Nail Enhancement Removal (with another service)', price: '$7+' }, 
+            { name: 'Regular Polish - Hand Polish Change', price: '$13' }, 
+            { name: 'Regular Polish - Toe Polish Change', price: '$15' }, 
+            { name: 'Basic French / American French Tip', price: '$5' }, 
+            { name: 'Add On Lavender Parafin Wax or Hot Stones', price: '$10' }, 
+            { name: 'Extra Massages', price: '$1/PER MIN' }, 
+            { name: 'Cuticle Trim (ONLY)', price: '$12' }, 
+          ] 
+        },
+        { 
+          category: 'Waxing', 
+          layout: 'grid', 
+          items: [ 
+            { name: 'Eyebrows', price: '$13' }, 
+            { name: 'Wholeface', price: '$46+' }, 
+            { name: 'Chin', price: '$11' }, 
+            { name: 'Half Arm', price: '$37' }, 
+            { name: 'Lip', price: '$11' }, 
+            { name: 'Half Leg', price: '$43' }, 
+            { name: 'Underarms', price: '$27+' }, 
+            { name: 'Sideburns', price: '$18' }, 
+            { name: 'Full Arm', price: '$48' }, 
+            { name: 'Chest', price: '$50+' }, 
+            { name: 'Full Leg', price: '$60+' }, 
+            { name: 'Bikini', price: '$47+' }, 
+            { name: 'Back', price: '$52+' }, 
+            { name: 'Brazillian', price: '$60+' }, 
+          ] 
+        },
+      ];
+      
       const Services = () => {
           const [isMenuVisible, setIsMenuVisible] = useState(false);
           const [isPromotionVisible, setIsPromotionVisible] = useState(false);
@@ -908,7 +900,7 @@
                   >
                       <header className="p-6 border-b border-gold-600/30 flex justify-between items-center flex-shrink-0">
                           <h2 id="services-heading" className="text-2xl font-serif font-bold text-gold-200">Our Services</h2>
-                          <button onClick={() => setIsMenuVisible(false)} className="text-4xl font-light leading-none text-gray-400 hover:text-white transition-colors" aria-label="Close services menu">&times;</button>
+                          <button onClick={() => setIsMenuVisible(false)} className="text-4xl font-light leading-none text-gray-400 hover:text-white transition-colors" aria-label="Close services menu">×</button>
                       </header>
                       <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar flex-grow">
                           {servicesData.map((category) => (
@@ -1072,7 +1064,7 @@
                       onClick={closeModal}
                       className="absolute top-4 right-4 text-white text-5xl font-light leading-none z-[210] hover:text-gold-300 transition-colors"
                       aria-label="Close image view"
-                  >&times;</button>
+                  >×</button>
                    <div className="relative w-full h-full flex items-center justify-center" onClick={e => e.stopPropagation()}>
                       <button
                           onClick={goToPrevious}
@@ -1270,7 +1262,7 @@
                           </div>
                       </div>
                       <div className="mt-8 border-t border-gray-700 pt-8 text-center text-white/70 text-sm font-sans">
-                          <p>&copy; {new Date().getFullYear()} Deluxe Nails & Spa Aliana. All Rights Reserved.</p>
+                          <p>© {new Date().getFullYear()} Deluxe Nails & Spa Aliana. All Rights Reserved.</p>
                       </div>
                   </div>
               </footer>
