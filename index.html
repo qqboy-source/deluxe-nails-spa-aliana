@@ -768,16 +768,118 @@
       };
       
       // === Inlined: components/Services.tsx ===
-      const servicesData = [
-          { category: 'Nail Enhancements', note: '***Additional pricing for longer nails, shape and specials design requests***', items: [ { name: 'Acrylic', price: 'Full Set $37 / Fill $30' }, { name: 'Acrylic with Shellac/Gel', price: 'Full Set $57 / Fill $48' }, { name: 'Solar Pink & White', price: 'Full Set $55' }, { name: 'Pink Fill Only', price: '$45' }, { name: 'Color Powder', price: 'Full Set $46' }, { name: 'Color Powder Refill Same Color', price: '$37' }, { name: 'Color Powder Refill Change Color', price: '$42' }, ], },
-          { category: 'Enhancement Add-Ons', layout: 'grid', items: [ { name: 'Length', price: '$5+' }, { name: 'Shape (Stiletto/Almond/Coffin/Round, etc...)', price: '$5+' }, { name: 'Ombre Design', price: '$15' }, { name: 'Chrome Design', price: '$20' }, { name: 'Cateyes Design', price: '$10+' }, { name: 'Marble Design', price: '$5+' }, ] },
-          { category: 'Dipping Powder', items: [ { name: 'Dipping Powder w/Cuticle Grooming & Massage', price: '$50' }, { name: 'Dipping French w/Cuticle Grooming & Massage', price: '$55' }, ], },
-          { category: 'Manicures', note: 'Add Gel/Shellac Polish to any Manicure for $20', items: [ { name: 'Classic', price: '$22', description: 'Basic and express manicure which includes nail trimming, cuticle grooming on hands, hot towel, massage, and finish with your choice of polish.' }, { name: 'Signature', price: '$32', description: 'Includes everything in the Classic Manicure with a mask wrapped around the arms to re-hyrdrate your skin with a choice of lavender paraffin wax OR hot stone massage.' }, { name: 'Aroma Therapy', price: '$40', description: 'Includes everything in the Signature Manicure plus your choice of our exclusive Organic Aroma treatments and extensive hands, arms, neck, and shoulder massages. Scents: Cucumber Dream, Citrus Sensation, Milk and Honey Rejuvenation, Lavender and Mint Relaxation, Organic Soothing Aloe Vera.' }, { name: 'Deluxe', price: '$45', description: 'Our exclusive manicure service with organic ingredients to stimulate your skin, relax your muscles, and enhance healthier nail growth. Pamper yourself with BOTH lavender paraffin wax and hot stone massages for your hands, arms, neck, and shoulder.' }, ] },
-          { category: 'Pedicures', note: 'Add Gel/Shellac Polish to any Pedicure for $20', items: [ { name: 'Classic (8 Mins Massage)', price: '$33', description: 'Basic express pedicure with nail trimming, shape, callus treatment, cuticle grooming, exfoliation, hot towel, leg and foot massage, and choice of polish.' }, { name: 'Signature (12 Mins Massage)', price: '$43', description: 'Includes Classic Pedicure plus a mask for the legs and your choice of lavender paraffin wax OR hot stone massage.' }, { name: 'Tropical Paradise (16 Mins Massage)', price: '$51', description: 'Relieve stress with a pleasant tropical citrus sensation, extensive foot treatment, and massages. Your choice of lavender wax OR hot stone massage included.' }, { name: 'Aroma Therapy (20 Mins Massage)', price: '$60', description: 'Pamper yourself with selective natural Aroma treatments and extensive foot massages. Your choice of lavender paraffin wax OR hot stone massage. Scents: Cucumber Dream, Citrus Sensation, Milk and Honey Rejuvenation, Lavender and Mint Relaxation, Organic Soothing Aloe Vera.' }, { name: 'Deluxe (24 Mins Massage)', price: '$69', description: 'Indulge in the most perfect, extensive pedicure treatment with BOTH paraffin wax and hot stone massage, using the highest quality natural ingredients for a luxurious experience.' }, { name: 'Wellness Healing CBD (24 Mins Massage)', price: '$73', description: 'A one-of-a-kind pedicure therapy with high-quality CBD extract infused with selective herbal ingredients to enhance your wellness. Includes lavender paraffin wax and hot stone massages.' }, ] },
-          { category: 'Kids 12 & Under', note: 'Add Gel/Shellac Polish for $15', layout: 'grid', items: [ { name: 'Classic Manicure', price: '$12' }, { name: 'Classic Pedicure', price: '$24' }, { name: 'Hand Polish Change', price: '$8' }, { name: 'Toe Polish Change', price: '$10' }, ] },
-          { category: 'Additional Services', layout: 'grid', items: [ { name: 'Nail Repair (Varies w/ design)', price: '$5+' }, { name: 'NAIL ENHANCEMENT REMOVAL SERVICE ONLY', price: '$15' }, { name: 'Nail Enhancement Removal (WITH SIMILAR OR FULL $33+UP SERVICE)', price: '$7+' }, { name: 'Shellac Gel Polish Change', price: '$30' }, { name: 'Regular Hand Polish Change', price: '$12' }, { name: 'Regular Toe Polish Change', price: '$13' }, { name: 'Basic French / American French Tip', price: '$5+' }, { name: 'Add Lavender Parafin Wax or Hot Stones', price: '$9' }, { name: 'Add Shellac / Gel to Service', price: '$20' }, { name: 'Extra Massages', price: '$1 / Min' }, ] },
-          { category: 'Waxing', layout: 'grid', items: [ { name: 'Eyebrows', price: '$12' }, { name: 'Wholeface', price: '$45' }, { name: 'Chin', price: '$10' }, { name: 'Half Arm', price: '$35' }, { name: 'Lip', price: '$10' }, { name: 'Half Leg', price: '$40' }, { name: 'Underarms', price: '$25' }, { name: 'Sideburns', price: '$18' }, { name: 'Full Arm', price: '$45' }, { name: 'Chest', price: '$45' }, { name: 'Full Leg', price: '$55' }, { name: 'Bikini', price: '$45' }, { name: 'Back', price: '$50' }, { name: 'Brazillian', price: '$55' }, ] },
-      ];
+  const servicesData = [
+  { 
+    category: 'Nail Enhancements', // [cite: 7]
+    note: '***Additional pricing for longer nails, shape and specials design requests***', // [cite: 8]
+    items: [ 
+      { name: 'Acrylic with Regular Polish', price: 'Full Set $40+ / Fill $35+' }, // [cite: 9]
+      { name: 'Acrylic with Gel', price: 'Full Set $58+ / Fill $50+' }, // [cite: 9]
+      { name: 'Pink & White French', price: 'Full Set $58+ / Pink Fill Only $47+' }, // [cite: 9]
+      { name: 'Color Powder', price: 'Full Set $48+' }, // [cite: 9]
+      { name: 'Color Powder Refill Same Color', price: '$39+' }, // [cite: 9]
+      { name: 'Color Powder Refill Change Color', price: '$44+' }, // [cite: 9]
+      { name: 'Gel Builder (Basic Nude Colors)', price: 'Full Set $56+ / Fill $47+' }, // [cite: 9]
+      { name: 'Gel Builder w/Gel Colors', price: 'Full Set $65+ / Fill $55+' }, // [cite: 9]
+      { name: 'Gel X', price: 'Full Set $65+' }, // [cite: 9]
+    ], 
+  },
+  { 
+    category: 'Enhancement Add-Ons', 
+    layout: 'grid', 
+    items: [ 
+      { name: 'Length', price: '$5+' }, // [cite: 9]
+      { name: 'Shape (Stiletto/Almond/Coffin/Round, etc...)', price: '$5+' }, // [cite: 9]
+      { name: 'Ombre Design', price: '$15' }, // [cite: 9]
+      { name: 'Chrome Design', price: '$20' }, // [cite: 9]
+      { name: 'Cateyes Design', price: '$15+' }, // [cite: 9]
+      { name: 'Marble Design', price: '$5+' }, // [cite: 9]
+    ] 
+  },
+  { 
+    category: 'Dipping Powder', // [cite: 10]
+    items: [ 
+      { name: 'Dipping Powder w/cuticle push back & hot towel', price: '$52' }, // [cite: 11]
+      { name: 'Dipping French w/cuticle push back & hot towel', price: '$57' }, // [cite: 11]
+    ], 
+  },
+  { 
+    category: 'Gel Manicure', // [cite: 12]
+    items: [ 
+      { name: 'Shellac / Gel Manicure w/Cuticle Grooming & Massage', price: '$44' }, // [cite: 13]
+      { name: 'Shellac/Gel French w/Cuticle Grooming & Massage', price: '$49' }, // [cite: 13]
+      { name: 'Shellac Gel Polish Change', price: '$30' }, // [cite: 13]
+    ], 
+  },
+  { 
+    category: 'Manicures', // [cite: 21]
+    note: 'ADD GEL POLISH TO ANY MANICURES $20', // [cite: 21]
+    items: [ 
+      { name: 'Classic', price: '$24 *5 MINS MASSAGE*', description: 'Express manicure treatments such as nail trimming and cuticle care, hot towel, light massage, with the application of your preferred regular nail polish' }, // [cite: 22]
+      { name: 'Signature Green Tea', price: '$34 *8 MINS MASSAGE*', description: 'Includes all the elements of a Classic Manicure, adding a hydrating mask for the arms to rejuvenate the skin including choice of a lavender paraffin wax or hot stone massage' }, // [cite: 23, 24, 25]
+      { name: 'Aroma Therapy', price: '$42 *12 MINS MASSAGE*', description: 'Our unique Organic Aroma manicure treatments, along with comprehensive massages for the hands, arms, neck, and shoulders with choices of a lavender paraffin wax or hot stone massage' }, // [cite: 26, 27, 28]
+      { name: 'Deluxe', price: '$48 *14 MINS MASSAGE*', description: 'Indulge in the luxurious treatment features organic ingredients and meticulous care designed to invigorate your skin, soothe your muscles, and promote healthier nail growth with combination of BOTH lavender paraffin wax and hot stone massages relaxation for your hands, arms, neck, and shoulders. Scents: Cooling Cucumber, Citrus Vitamin C, Milk and Honey Pampering, Lavender and Mint Relaxation, Organic Healing Aloe Vera' }, // [cite: 29, 30, 31, 32, 33, 34]
+    ] 
+  },
+  { 
+    category: 'Pedicures', // [cite: 35]
+    note: 'ADD GEL POLISH TO ANY PEDICURES $20', // [cite: 35]
+    items: [ 
+      { name: 'Classic', price: '$35 *8 MINS MASSAGE*', description: 'Express pedicure treatments such as nail trimming and shaping, callus removal, cuticle care, the exfoliation of dead skin, hot towel followed by a relaxing leg and foot massage, with the application of your preferred nail polish' }, // [cite: 36]
+      { name: 'Signature Green Tea', price: '$45 *12 MINS MASSAGE*', description: 'Includes all the elements of a Classic Pedicure, adding a hydrating mask for the legs to rejuvenate the skin including choice of a lavender paraffin wax or hot stone massage' }, // [cite: 37]
+      { name: 'Citrus Paradise', price: '$53 *16 MINS MASSAGE*', description: 'Our delightful citrus treatment, designed to alleviate stress, comprehensive and revitalizing massages that enhance both muscle and skin health. You can choose between a lavender wax treatment or a hot stone massage' }, // [cite: 38, 39, 40, 41]
+      { name: 'Aroma Therapy', price: '$62 *20 MINS MASSAGE*', description: 'Exclusive natural Aroma treatments, which feature a luxurious foot massage along with your choice of a lavender paraffin wax or a hot stone massage. Allow yourself to unwind as we showcase our techniques designed to your experience' }, // [cite: 42, 43, 44]
+      { name: 'Deluxe', price: '$70 *24 MINS MASSAGE*', description: 'Our deluxe pedicure utilizes all natural ingredients, ensuring a luxurious treatment that caters to your needs. If you seek the ultimate in pampering, this extensive pedicure is the perfect choice that combines BOTH benefits of lavender paraffin wax with the relaxation of hot stone massage. Scents: Cooling Cucumber, Citrus Vitamin C, Milk and Honey Pampering, Lavender and Mint Relaxation, Organic Healing Aloe Vera' }, // [cite: 45, 46, 47, 48, 49, 50]
+      { name: 'Hemp Extract Therapy', price: '$75 *24 MINS MASSAGE*', description: 'Investing in your wellness is a vital step towards personal well-being. Experience our HEMP pedicure therapy with selected the finest quality hemp extract, and premium herbal ingredients to elevate your wellness journey. This treatment also includes BOTH lavender paraffin wax and hot stone massage' }, // [cite: 51, 52, 53, 54, 55]
+    ] 
+  },
+  { 
+    category: 'Kids 12 & Under', // [cite: 56]
+    note: 'ADD GEL POLISH TO ANY KID MANI or PEDI $15', // [cite: 57]
+    layout: 'grid', 
+    items: [ 
+      { name: 'Kid Manicure', price: '$13' }, // [cite: 58]
+      { name: 'Kid Pedicure', price: '$25' }, // [cite: 58]
+      { name: 'Kid Toe or Hand Polish Change', price: '$10' }, // [cite: 59]
+      { name: 'Kid Gel Polish Change Only', price: '$20' }, // [cite: 59, 61]
+    ] 
+  },
+  { 
+    category: 'Additional Services', // [cite: 14]
+    layout: 'grid', 
+    items: [ 
+      { name: 'Nail Repair (varies with length/shape/designs)', price: '$6+' }, // [cite: 15]
+      { name: 'NAIL ENHANCEMENT REMOVAL SERVICE ONLY', price: '$15' }, // [cite: 15]
+      { name: 'Nail Enhancement Removal (with another service)', price: '$7+' }, // [cite: 15]
+      { name: 'Regular Polish - Hand Polish Change', price: '$13' }, // [cite: 15]
+      { name: 'Regular Polish - Toe Polish Change', price: '$15' }, // [cite: 15]
+      { name: 'Basic French / American French Tip', price: '$5' }, // [cite: 15]
+      { name: 'Add On Lavender Parafin Wax or Hot Stones', price: '$10' }, // [cite: 15]
+      { name: 'Extra Massages', price: '$1/PER MIN' }, // [cite: 15]
+      { name: 'Cuticle Trim (ONLY)', price: '$12' }, // [cite: 15]
+    ] 
+  },
+  { 
+    category: 'Waxing', // [cite: 17]
+    layout: 'grid', 
+    items: [ 
+      { name: 'Eyebrows', price: '$13' }, // [cite: 16]
+      { name: 'Wholeface', price: '$46+' }, // [cite: 16]
+      { name: 'Chin', price: '$11' }, // [cite: 16]
+      { name: 'Half Arm', price: '$37' }, // [cite: 16]
+      { name: 'Lip', price: '$11' }, // [cite: 16]
+      { name: 'Half Leg', price: '$43' }, // [cite: 16]
+      { name: 'Underarms', price: '$27+' }, // [cite: 16]
+      { name: 'Sideburns', price: '$18' }, // [cite: 16]
+      { name: 'Full Arm', price: '$48' }, // [cite: 16]
+      { name: 'Chest', price: '$50+' }, // [cite: 16]
+      { name: 'Full Leg', price: '$60+' }, // [cite: 16]
+      { name: 'Bikini', price: '$47+' }, // [cite: 16]
+      { name: 'Back', price: '$52+' }, // [cite: 16]
+      { name: 'Brazillian', price: '$60+' }, // [cite: 16]
+    ] 
+  },
+];
       const Services = () => {
           const [isMenuVisible, setIsMenuVisible] = useState(false);
           const [isPromotionVisible, setIsPromotionVisible] = useState(false);
