@@ -5,30 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Deluxe Nails & Spa Aliana</title>
 
-    <!-- Preload critical images to prevent flicker and improve LCP -->
-    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1519011985187-444d62641929?q=80&w=1920&h=1080&auto=format&fit=crop">
-    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1522338140262-f46f5913618a?q=80&w=1920&auto=format&fit=crop">
-    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=800&auto=format&fit=crop">
+    <link rel="preload" as="image" href="images/hero-background.jpg">
+    <link rel="preload" as="image" href="images/site-background.jpg">
+    <link rel="preload" as="image" href="images/promotion.jpg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
-      /* Base styles and complex effects not achievable with Tailwind utilities alone */
       html { scroll-behavior: smooth; }
       body {
-        /* 
-          INSTRUCTION: To set your website background, upload your image to the 
-          `public/images` folder and name it 'site-background.jpg'.
-          The site will automatically pick it up.
-        */
-        background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('https://images.unsplash.com/photo-1522338140262-f46f5913618a?q=80&w=1920&auto=format&fit=crop');
-        background-size: cover; /* Cover the entire viewport */
-        background-position: center center; /* Center the image */
-        background-repeat: no-repeat; /* Do not repeat the image */
-        background-attachment: fixed; /* Keep the image fixed during scroll */
-        background-color: #FBF3E6; /* Light gold fallback color (gold-100) if image fails */
+        background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('images/site-background.jpg');
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-color: #FBF3E6;
         overflow-x: hidden;
       }
       .fade-in-on-scroll {
@@ -42,44 +35,40 @@
         transform: translateY(0);
       }
       
-      /* Utility to hide scrollbar but keep it functional */
       .hide-scrollbar::-webkit-scrollbar { display: none; }
       .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-      /* Animation pause utility */
       .pause {
         animation-play-state: paused;
       }
       
-      /* Golden Glow Button Effect */
       @keyframes golden-glow {
         0%, 100% { 
           box-shadow: 0 0 4px rgba(217, 172, 100, 0.5), 0 0 8px rgba(217, 172, 100, 0.4);
-          border-color: #D9AC64; /* gold-500 */
+          border-color: #D9AC64;
         }
         50% { 
           box-shadow: 0 0 8px rgba(228, 193, 134, 0.6), 0 0 16px rgba(228, 193, 134, 0.5);
-          border-color: #E4C186; /* gold-400 */
+          border-color: #E4C186;
         }
       }
       .btn-golden-glow {
         background-color: white;
-        color: #78592C; /* gold-800 */
-        border: 1px solid #C6934A; /* gold-600 */
+        color: #78592C;
+        border: 1px solid #C6934A;
         animation: golden-glow 4s ease-in-out infinite;
         transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
       }
       .btn-golden-glow:hover {
         animation-play-state: paused;
         transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(159, 118, 59, 0.25); /* gold-700 */
+        box-shadow: 0 6px 12px rgba(159, 118, 59, 0.25);
       }
 
-      /* Button Fill Animation */
       .btn-fill-gold {
         position: relative;
         overflow: hidden;
-        z-index: 1; /* Establishes a stacking context */
+        z-index: 1;
         transition: color 0.4s ease-in-out;
         display: inline-block;
       }
@@ -90,26 +79,24 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: #D9AC64; /* gold-500 */
+        background-color: #D9AC64;
         transform: translateX(-100%);
         transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        z-index: -1; /* Place it behind the content */
+        z-index: -1;
       }
       .btn-fill-gold:hover::before {
         transform: translateX(0);
       }
       .btn-fill-gold:hover {
-        color: white; /* Change text color to contrast with gold fill */
+        color: white;
       }
-      /* Modifier for dark buttons to fill with a light color */
       .btn-fill-gold.fill-light::before {
-        background-color: #EED6AB; /* gold-300 */
+        background-color: #EED6AB;
       }
       .btn-fill-gold.fill-light:hover {
-        color: #503C1D; /* gold-900 */
+        color: #503C1D;
       }
 
-      /* Liquid Glass Effect */
       .liquid-glass-bg {
         position: relative;
         z-index: 1;
@@ -121,28 +108,21 @@
         left: 0;
         right: 0;
         bottom: 0;
-        /* Low Blur Radius, as requested */
         backdrop-filter: blur(5px);
         -webkit-backdrop-filter: blur(5px);
-        /* Apply the SVG filter */
         filter: url(#liquid-glass-filter);
         z-index: -1;
-        /* This is required to make the ::before element respect the parent's border-radius */
         border-radius: inherit;
-        /* HINT: This promotes the element to its own compositing layer, fixing a common rendering bug in Safari where backdrop-filter and SVG filters don't play well together. */
         transform: translateZ(0);
       }
       
-      /* Custom utilities from Tailwind plugin */
       .text-shadow-subtle { text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
       .text-shadow-strong { text-shadow: 2px 2px 8px rgba(0,0,0,0.5); }
       .will-change-transform { will-change: transform; }
 
     </style>
-    <!-- FIX: Use Tailwind CDN for styling in a no-build environment -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      // Configure Tailwind CDN with custom theme settings
       tailwind.config = {
         theme: {
           extend: {
@@ -187,9 +167,7 @@
         },
       }
     </script>
-    <!-- Add Babel Standalone for in-browser TSX/JSX transpilation -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Load React and ReactDOM via stable UMD builds to prevent script errors -->
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script type="importmap">
@@ -202,28 +180,21 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
   <body>
     <svg style="display: none">
-      <!-- Filter for a strong, wavy "liquid glass" effect -->
       <filter id="liquid-glass-filter">
-        <!-- Lower frequency for larger, more fluid waves -->
         <feTurbulence type="fractalNoise" baseFrequency="0.015 0.025" numOctaves="2" seed="2" result="noise">
-           <animate attributeName="baseFrequency" dur="30s" values="0.015 0.025;0.02 0.03;0.015 0.025" repeatCount="indefinite"></animate>
+          <animate attributeName="baseFrequency" dur="30s" values="0.015 0.025;0.02 0.03;0.015 0.025" repeatCount="indefinite"></animate>
         </feTurbulence>
-        <!-- Increased scale for a much stronger, more distorted effect -->
         <feDisplacementMap in="SourceGraphic" in2="noise" scale="50" xChannelSelector="R" yChannelSelector="G" />
       </filter>
     </svg>
     <div id="root"></div>
     <div id="modal-root"></div>
-    <!-- All application code is inlined into this single script block. -->
     <script type="text/babel">
-      // === React/DOM are loaded from UMD scripts, available as globals ===
       const { useState, useRef, useEffect, useCallback, useLayoutEffect, Children, cloneElement, isValidElement } = React;
 
-      // === Inlined: components/icons.tsx ===
       const InstagramIcon = ({ className }) => (
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
               <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
@@ -274,7 +245,6 @@
           </svg>
       );
 
-      // === Inlined: components/PromotionModal.tsx ===
       const PromotionModal = ({ isOpen, onClose }) => {
           const modalRoot = document.getElementById('modal-root');
           useEffect(() => {
@@ -288,7 +258,7 @@
               }
               return () => {
                   window.removeEventListener('keydown', handleKeyDown);
-              };
+              }
           }, [isOpen, onClose]);
           if (!isOpen || !modalRoot) {
               return null;
@@ -303,14 +273,13 @@
                       onClick={onClose}
                       className="absolute top-4 right-4 text-white text-5xl font-light leading-none z-[210] hover:text-gold-300 transition-colors"
                       aria-label="Close promotion view"
-                  >&times;</button>
+                  >×</button>
                   <div className="relative animate-scale-in z-[205]" onClick={e => e.stopPropagation()}>
                       <h2 id="promotion-modal-title" className="sr-only">Current Promotion</h2>
                       <img
-                          src="https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=800&auto=format&fit=crop"
-                          alt="Current promotion flyer. To update, replace the image in the public/images folder."
+                          src="images/promotion.jpg"
+                          alt="Current promotion flyer."
                           className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
-                          referrerPolicy="no-referrer"
                           onError={(e) => {
                               e.currentTarget.onerror = null;
                               e.currentTarget.src = "https://placehold.co/600x800/9F763B/FBF3E6?text=No+Current+Promotions";
@@ -322,7 +291,6 @@
           );
       };
       
-      // === Inlined: components/MediaCarousel.tsx ===
       const MediaCarousel = ({ items }) => {
           const [currentIndex, setCurrentIndex] = useState(0);
           const [isTransitioning, setIsTransitioning] = useState(false);
@@ -416,7 +384,6 @@
                                       alt={item.alt}
                                       className="w-full h-full object-cover"
                                       loading={index === 0 ? 'eager' : 'lazy'}
-                                      referrerPolicy="no-referrer"
                                       onError={(e) => {
                                           e.currentTarget.onerror = null;
                                           e.currentTarget.src = `https://placehold.co/600x400/9F763B/FBF3E6?text=Image+Not+Found`;
@@ -478,7 +445,6 @@
           );
       };
 
-      // === Inlined: components/FadeInSection.tsx ===
       const FadeInSection = ({ children, variant = 'vertical' }) => {
           const [isVisible, setVisible] = useState(false);
           const domRef = useRef(null);
@@ -511,7 +477,6 @@
           );
       };
       
-      // === Inlined: components/HorizontalScrollContainer.tsx ===
       const HorizontalScrollSection = ({ children, id, isActive }) => {
           return (
               <section 
@@ -523,12 +488,13 @@
                       <div 
                           className={`w-full flex-grow pt-24 pb-12 px-2 md:px-4 hide-scrollbar overflow-y-auto overscroll-y-contain ${!isActive ? 'pointer-events-none' : ''}`}
                       >
-                           {children}
+                         {children}
                       </div>
                   </div>
               </section>
           );
       };
+
       const HorizontalScrollContainer = ({ children }) => {
           const scrollContainerRef = useRef(null);
           const stickyContentRef = useRef(null);
@@ -608,14 +574,13 @@
           );
       };
       
-      // === Inlined: components/Hero.tsx ===
       const Hero = () => {
           const heroRef = useRef(null);
           const [opacity, setOpacity] = useState(1);
           useLayoutEffect(() => {
               const setHeroHeight = () => {
                   if (heroRef.current) {
-                      const headerHeight = 80; // Height of the sticky header
+                      const headerHeight = 80;
                       heroRef.current.style.height = `${window.innerHeight - headerHeight}px`;
                       window.dispatchEvent(new CustomEvent('layoutUpdated'));
                   }
@@ -638,7 +603,7 @@
           }, []);
           return (
               <section ref={heroRef} id="home" className="relative min-h-[500px] flex items-center justify-center text-center text-white">
-                  <div className="absolute top-0 left-0 w-full h-full bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1519011985187-444d62641929?q=80&w=1920&h=1080&auto=format&fit=crop')" }}></div>
+                  <div className="absolute top-0 left-0 w-full h-full bg-cover bg-center" style={{ backgroundImage: "url('images/hero-background.jpg')" }}></div>
                   <div className="absolute top-0 left-0 w-full h-full bg-gold-900/40"></div>
                   <div 
                       className="relative z-10 p-8 max-w-3xl bg-black/20 rounded-2xl border border-white/20 shadow-xl liquid-glass-bg"
@@ -660,7 +625,6 @@
           );
       };
       
-      // === Inlined: components/Header.tsx ===
       const Header = () => {
           const [isOpen, setIsOpen] = useState(false);
           const navLinks = [
@@ -770,18 +734,119 @@
           );
       };
       
-      // === Inlined: components/Services.tsx ===
       const servicesData = [
-          { category: 'Nail Enhancements', note: '***Additional pricing for longer nails, shape and specials design requests***', items: [ { name: 'Acrylic with Regular Polish', price: 'Full Set $40+ / Fill $35+' }, { name: 'Acrylic with Gel', price: 'Full Set $58+ / Fill $50+' }, { name: 'Pink & White French', price: 'Full Set $58+' }, { name: 'Pink Fill Only', price: '$47+' }, { name: 'Color Powder', price: 'Full Set $48+' }, { name: 'Color Powder Refill Same Color', price: '$39+' }, { name: 'Color Powder Refill Change Color', price: '$44+' }, { name: 'Gel Builder (Basic Nude Colors)', price: 'Full Set $56+ / Fill $47+' }, { name: 'Gel Builder w/Gel Colors', price: 'Full Set $65+ / Fill $55+' }, { name: 'Gel X', price: 'Full Set $65+' }, ], },
-          { category: 'Enhancement Add-Ons', layout: 'grid', items: [ { name: 'Length', price: '$5+' }, { name: 'Shape (Stiletto/Almond/Coffin/Round, etc...)', price: '$5+' }, { name: 'Ombre Design', price: '$15' }, { name: 'Chrome Design', price: '$20' }, { name: 'Cateyes Design', price: '$15+' }, { name: 'Marble Design', price: '$5+' }, ] },
-          { category: 'Dipping Powder', items: [ { name: 'Dipping Powder w/cuticle push back & hot towel', price: '$52' }, { name: 'Dipping French w/cuticle push back & hot towel', price: '$57' }, ], },
-          { category: 'Gel Manicure', items: [ { name: 'Shellac / Gel Manicure w/Cuticle Grooming & Massage', price: '$44' }, { name: 'Shellac / Gel French w/Cuticle Grooming & Massage', price: '$49' }, { name: 'Shellac Gel Polish Change', price: '$30' }, ], },
-          { category: 'Manicures', note: 'Add Gel Polish to any Manicures $20', items: [ { name: 'Classic (5 Mins Massage)', price: '$24', description: 'Express manicure treatments such as nail trimming and cuticle care, hot towel, light massage, with the application of your preferred regular nail polish.' }, { name: 'Signature Green Tea (8 Mins Massage)', price: '$34', description: 'Includes all the elements of a Classic Manicure, adding a hydrating mask for the arms to rejuvenate the skin including choice of a lavender paraffin wax or hot stone massage.' }, { name: 'Aroma Therapy (12 Mins Massage)', price: '$42', description: 'Our unique Organic Aroma manicure treatments, along with comprehensive massages for the hands, arms, neck, and shoulders with choices of a lavender paraffin wax or hot stone massage. Scents: Cooling Cucumber, Citrus Vitamin C, Milk and Honey Pampering, Lavender and Mint Relaxation, Organic Healing Aloe Vera.' }, { name: 'Deluxe (14 Mins Massage)', price: '$48', description: 'Indulge in the luxurious treatment features organic ingredients and meticulous care designed to invigorate your skin, soothe your muscles, and promote healthier nail growth with combination of BOTH lavender paraffin wax and hot stone massages relaxation for your hands, arms, neck, and shoulders.' }, ] },
-          { category: 'Pedicures', note: 'Add Gel Polish to any Pedicures $20', items: [ { name: 'Classic (8 Mins Massage)', price: '$35', description: 'Express pedicure treatments such as nail trimming and shaping, callus removal, cuticle care, the exfoliation of dead skin, hot towel followed by a relaxing leg and foot massage, with the application of your preferred nail polish.' }, { name: 'Signature Green Tea (12 Mins Massage)', price: '$45', description: 'Includes all the elements of a Classic Pedicure, adding a hydrating mask for the legs to rejuvenate the skin including choice of a lavender paraffin wax or hot stone massage.' }, { name: 'Citrus Paradise (16 Mins Massage)', price: '$53', description: 'Our delightful citrus treatment, designed to alleviate stress, comprehensive and revitalizing massages that enhance both muscle and skin health. You can choose between a lavender wax treatment or a hot stone massage.' }, { name: 'Aroma Therapy (20 Mins Massage)', price: '$62', description: 'Exclusive natural Aroma treatments, which feature a luxurious foot massage along with your choice of a lavender paraffin wax or a hot stone massage. Allow yourself to unwind as we showcase our techniques designed to your experience. Scents: Cooling Cucumber, Citrus Vitamin C, Milk and Honey Pampering, Lavender and Mint Relaxation, Organic Healing Aloe Vera.' }, { name: 'Deluxe (24 Mins Massage)', price: '$70', description: 'Our deluxe pedicure utilizes all natural ingredients, ensuring a luxurious treatment that caters to your needs. If you seek the ultimate in pampering, this extensive pedicure is the perfect choice that combines BOTH benefits of lavender paraffin wax with the relaxation of hot stone massage.' }, { name: 'Hemp Extract Therapy (24 Mins Massage)', price: '$75', description: 'Investing in your wellness is a vital step towards personal well-being. Experience our HEMP pedicure therapy with selected the finest quality hemp extract, and premium herbal ingredients to elevate your wellness journey. This treatment also includes BOTH lavender paraffin wax and hot stone massage.' }, ] },
-          { category: 'Kids 12 & Under', note: 'Add Gel Polish to any Kid Mani or Pedi $15', layout: 'grid', items: [ { name: 'Kid Manicure', price: '$13' }, { name: 'Kid Pedicure', price: '$25' }, { name: 'Kid Toe or Hand Polish Change', price: '$10' }, { name: 'Kid Gel Polish Change Only', price: '$20' }, ] },
-          { category: 'Additional Services', layout: 'grid', items: [ { name: 'Nail Repair (varies with length/shape/designs)', price: '$6+' }, { name: 'Nail Enhancement Removal Service Only', price: '$15' }, { name: 'Nail Enhancement Removal (with another service)', price: '$7+' }, { name: 'Regular Polish - Hand Polish Change', price: '$13' }, { name: 'Regular Polish - Toe Polish Change', price: '$15' }, { name: 'Basic French / American French Tip', price: '$5' }, { name: 'Add on Lavender Parafin Wax or Hot Stones', price: '$10' }, { name: 'Extra Massages', price: '$1 / Per Min' }, { name: 'Cuticle Trim (Only)', price: '$12' }, ] },
-          { category: 'Waxing', layout: 'grid', items: [ { name: 'Eyebrows', price: '$13' }, { name: 'Chin', price: '$11' }, { name: 'Lip', price: '$11' }, { name: 'Sideburns', price: '$18' }, { name: 'Wholeface', price: '$46+' }, { name: 'Underarms', price: '$27+' }, { name: 'Full Arm', price: '$48+' }, { name: 'Half Arm', price: '$37+' }, { name: 'Half Leg', price: '$43+' }, { name: 'Full Leg', price: '$52+' }, { name: 'Back', price: '$60+' }, { name: 'Chest', price: '$50+' }, { name: 'Bikini', price: '$47+' }, { name: 'Brazillian', price: '$60+' }, ] },
+        { 
+          category: 'Nail Enhancements', 
+          note: '***Additional pricing for longer nails, shape and specials design requests***', 
+          items: [ 
+            { name: 'Acrylic with Regular Polish', price: 'Full Set $40+ / Fill $35+' }, 
+            { name: 'Acrylic with Gel', price: 'Full Set $58+ / Fill $50+' }, 
+            { name: 'Pink & White French', price: 'Full Set $58+ / Pink Fill Only $47+' }, 
+            { name: 'Color Powder', price: 'Full Set $48+' }, 
+            { name: 'Color Powder Refill Same Color', price: '$39+' }, 
+            { name: 'Color Powder Refill Change Color', price: '$44+' }, 
+            { name: 'Gel Builder (Basic Nude Colors)', price: 'Full Set $56+ / Fill $47+' }, 
+            { name: 'Gel Builder w/Gel Colors', price: 'Full Set $65+ / Fill $55+' }, 
+            { name: 'Gel X', price: 'Full Set $65+' }, 
+          ], 
+        },
+        { 
+          category: 'Enhancement Add-Ons', 
+          layout: 'grid', 
+          items: [ 
+            { name: 'Length', price: '$5+' }, 
+            { name: 'Shape (Stiletto/Almond/Coffin/Round, etc...)', price: '$5+' }, 
+            { name: 'Ombre Design', price: '$15' }, 
+            { name: 'Chrome Design', price: '$20' }, 
+            { name: 'Cateyes Design', price: '$15+' }, 
+            { name: 'Marble Design', price: '$5+' }, 
+          ] 
+        },
+        { 
+          category: 'Dipping Powder', 
+          items: [ 
+            { name: 'Dipping Powder w/cuticle push back & hot towel', price: '$52' }, 
+            { name: 'Dipping French w/cuticle push back & hot towel', price: '$57' }, 
+          ], 
+        },
+        { 
+          category: 'Gel Manicure', 
+          items: [ 
+            { name: 'Shellac / Gel Manicure w/Cuticle Grooming & Massage', price: '$44' }, 
+            { name: 'Shellac/Gel French w/Cuticle Grooming & Massage', price: '$49' }, 
+            { name: 'Shellac Gel Polish Change', price: '$30' }, 
+          ], 
+        },
+        { 
+          category: 'Manicures', 
+          note: 'ADD GEL POLISH TO ANY MANICURES $20', 
+          items: [ 
+            { name: 'Classic', price: '$24 *5 MINS MASSAGE*', description: 'Express manicure treatments such as nail trimming and cuticle care, hot towel, light massage, with the application of your preferred regular nail polish' }, 
+            { name: 'Signature Green Tea', price: '$34 *8 MINS MASSAGE*', description: 'Includes all the elements of a Classic Manicure, adding a hydrating mask for the arms to rejuvenate the skin including choice of a lavender paraffin wax or hot stone massage' }, 
+            { name: 'Aroma Therapy', price: '$42 *12 MINS MASSAGE*', description: 'Our unique Organic Aroma manicure treatments, along with comprehensive massages for the hands, arms, neck, and shoulders with choices of a lavender paraffin wax or hot stone massage' }, 
+            { name: 'Deluxe', price: '$48 *14 MINS MASSAGE*', description: 'Indulge in the luxurious treatment features organic ingredients and meticulous care designed to invigorate your skin, soothe your muscles, and promote healthier nail growth with combination of BOTH lavender paraffin wax and hot stone massages relaxation for your hands, arms, neck, and shoulders. Scents: Cooling Cucumber, Citrus Vitamin C, Milk and Honey Pampering, Lavender and Mint Relaxation, Organic Healing Aloe Vera' }, 
+          ] 
+        },
+        { 
+          category: 'Pedicures', 
+          note: 'ADD GEL POLISH TO ANY PEDICURES $20', 
+          items: [ 
+            { name: 'Classic', price: '$35 *8 MINS MASSAGE*', description: 'Express pedicure treatments such as nail trimming and shaping, callus removal, cuticle care, the exfoliation of dead skin, hot towel followed by a relaxing leg and foot massage, with the application of your preferred nail polish' }, 
+            { name: 'Signature Green Tea', price: '$45 *12 MINS MASSAGE*', description: 'Includes all the elements of a Classic Pedicure, adding a hydrating mask for the legs to rejuvenate the skin including choice of a lavender paraffin wax or hot stone massage' }, 
+            { name: 'Citrus Paradise', price: '$53 *16 MINS MASSAGE*', description: 'Our delightful citrus treatment, designed to alleviate stress, comprehensive and revitalizing massages that enhance both muscle and skin health. You can choose between a lavender wax treatment or a hot stone massage' }, 
+            { name: 'Aroma Therapy', price: '$62 *20 MINS MASSAGE*', description: 'Exclusive natural Aroma treatments, which feature a luxurious foot massage along with your choice of a lavender paraffin wax or a hot stone massage. Allow yourself to unwind as we showcase our techniques designed to your experience' }, 
+            { name: 'Deluxe', price: '$70 *24 MINS MASSAGE*', description: 'Our deluxe pedicure utilizes all natural ingredients, ensuring a luxurious treatment that caters to your needs. If you seek the ultimate in pampering, this extensive pedicure is the perfect choice that combines BOTH benefits of lavender paraffin wax with the relaxation of hot stone massage. Scents: Cooling Cucumber, Citrus Vitamin C, Milk and Honey Pampering, Lavender and Mint Relaxation, Organic Healing Aloe Vera' }, 
+            { name: 'Hemp Extract Therapy', price: '$75 *24 MINS MASSAGE*', description: 'Investing in your wellness is a vital step towards personal well-being. Experience our HEMP pedicure therapy with selected the finest quality hemp extract, and premium herbal ingredients to elevate your wellness journey. This treatment also includes BOTH lavender paraffin wax and hot stone massage' }, 
+          ] 
+        },
+        { 
+          category: 'Kids 12 & Under', 
+          note: 'ADD GEL POLISH TO ANY KID MANI or PEDI $15', 
+          layout: 'grid', 
+          items: [ 
+            { name: 'Kid Manicure', price: '$13' }, 
+            { name: 'Kid Pedicure', price: '$25' }, 
+            { name: 'Kid Toe or Hand Polish Change', price: '$10' }, 
+            { name: 'Kid Gel Polish Change Only', price: '$20' }, 
+          ] 
+        },
+        { 
+          category: 'Additional Services', 
+          layout: 'grid', 
+          items: [ 
+            { name: 'Nail Repair (varies with length/shape/designs)', price: '$6+' }, 
+            { name: 'NAIL ENHANCEMENT REMOVAL SERVICE ONLY', price: '$15' }, 
+            { name: 'Nail Enhancement Removal (with another service)', price: '$7+' }, 
+            { name: 'Regular Polish - Hand Polish Change', price: '$13' }, 
+            { name: 'Regular Polish - Toe Polish Change', price: '$15' }, 
+            { name: 'Basic French / American French Tip', price: '$5' }, 
+            { name: 'Add On Lavender Parafin Wax or Hot Stones', price: '$10' }, 
+            { name: 'Extra Massages', price: '$1/PER MIN' }, 
+            { name: 'Cuticle Trim (ONLY)', price: '$12' }, 
+          ] 
+        },
+        { 
+          category: 'Waxing', 
+          layout: 'grid', 
+          items: [ 
+            { name: 'Eyebrows', price: '$13' }, 
+            { name: 'Wholeface', price: '$46+' }, 
+            { name: 'Chin', price: '$11' }, 
+            { name: 'Half Arm', price: '$37' }, 
+            { name: 'Lip', price: '$11' }, 
+            { name: 'Half Leg', price: '$43' }, 
+            { name: 'Underarms', price: '$27+' }, 
+            { name: 'Sideburns', price: '$18' }, 
+            { name: 'Full Arm', price: '$48' }, 
+            { name: 'Chest', price: '$50+' }, 
+            { name: 'Full Leg', price: '$60+' }, 
+            { name: 'Bikini', price: '$47+' }, 
+            { name: 'Back', price: '$52+' }, 
+            { name: 'Brazillian', price: '$60+' }, 
+          ] 
+        },
       ];
+      
       const Services = () => {
           const [isMenuVisible, setIsMenuVisible] = useState(false);
           const [isPromotionVisible, setIsPromotionVisible] = useState(false);
@@ -810,7 +875,7 @@
                   >
                       <header className="p-6 border-b border-gold-600/30 flex justify-between items-center flex-shrink-0">
                           <h2 id="services-heading" className="text-2xl font-serif font-bold text-gold-200">Our Services</h2>
-                          <button onClick={() => setIsMenuVisible(false)} className="text-4xl font-light leading-none text-gray-400 hover:text-white transition-colors" aria-label="Close services menu">&times;</button>
+                          <button onClick={() => setIsMenuVisible(false)} className="text-4xl font-light leading-none text-gray-400 hover:text-white transition-colors" aria-label="Close services menu">×</button>
                       </header>
                       <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar flex-grow">
                           {servicesData.map((category) => (
@@ -866,17 +931,7 @@
           );
       };
 
-      // === Inlined: components/Gallery.tsx ===
-      const images = [ 
-          'https://images.unsplash.com/photo-1604654894611-6973b376cbde?q=80&w=600&auto=format&fit=crop',
-          'https://images.unsplash.com/photo-1599426184804-5ec8f540bd0a?q=80&w=600&auto=format&fit=crop',
-          'https://images.unsplash.com/photo-1632345031435-072740ef8201?q=80&w=600&auto=format&fit=crop',
-          'https://images.unsplash.com/photo-1516274626895-055a992156c8?q=80&w=600&auto=format&fit=crop',
-          'https://images.unsplash.com/photo-1493106819501-66d381c446a5?q=80&w=600&auto=format&fit=crop',
-          'https://images.unsplash.com/photo-1522337094846-8a818192ed13?q=80&w=600&auto=format&fit=crop',
-          'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?q=80&w=600&auto=format&fit=crop',
-          'https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?q=80&w=600&auto=format&fit=crop',
-      ];
+      const images = [ 'gallery/nail-1.jpeg', 'gallery/nail-2.jpeg', 'gallery/nail-3.jpeg', 'gallery/nail-4.jpeg', 'gallery/nail-5.jpeg', 'gallery/nail-6.jpeg', 'gallery/nail-7.jpeg', 'gallery/nail-8.jpeg', ];
       const numColumns = 3;
       const columns = Array.from({ length: numColumns }, () => []);
       images.forEach((image, index) => { columns[index % numColumns].push(image); });
@@ -900,7 +955,6 @@
                       alt={`Nail art example ${imageNumber}`}
                       className="w-full h-full object-cover"
                       loading="lazy"
-                      referrerPolicy="no-referrer"
                       onError={handleError}
                   />
               </div>
@@ -946,7 +1000,6 @@
               document.body.style.overflow = originalOverflow;
               window.removeEventListener('keydown', handleKeyDown);
           };
-          // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [selectedImageIndex]);
         const selectedImageSrc = selectedImageIndex !== null ? images[selectedImageIndex] : null;
         const selectedImageAlt = selectedImageIndex !== null ? `Enlarged nail art example ${selectedImageIndex + 1}` : '';
@@ -984,7 +1037,7 @@
                       onClick={closeModal}
                       className="absolute top-4 right-4 text-white text-5xl font-light leading-none z-[210] hover:text-gold-300 transition-colors"
                       aria-label="Close image view"
-                  >&times;</button>
+                  >×</button>
                    <div className="relative w-full h-full flex items-center justify-center" onClick={e => e.stopPropagation()}>
                       <button
                           onClick={goToPrevious}
@@ -999,7 +1052,6 @@
                               src={selectedImageSrc}
                               alt={selectedImageAlt}
                               className="max-w-[80vw] sm:max-w-[70vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
-                              referrerPolicy="no-referrer"
                           />
                       </div>
                       <button
@@ -1017,15 +1069,10 @@
         );
       };
       
-      // === Inlined: components/About.tsx ===
-      /*
-        INSTRUCTION: Your videos should be placed in the `public/media` folder.
-        The paths below point to `media/store-video-1.mp4` and `media/store-video-2.mp4`.
-      */
       const mediaItems = [
-          { type: 'image', src: 'https://images.unsplash.com/photo-1519415510236-8559b19854a8?q=80&w=1200&auto=format&fit=crop', alt: 'A clean and inviting spa treatment area.' },
-          { type: 'image', src: 'https://images.unsplash.com/photo-1560750588-73207b1ef5b8?q=80&w=1200&auto=format&fit=crop', alt: 'A photo showcasing the elegant interior of Deluxe Nails & Spa Aliana.' },
-          { type: 'image', src: 'https://images.unsplash.com/photo-1516238840914-94dfc0c873ae?q=80&w=1200&auto=format&fit=crop', alt: 'Another view of the beautiful and relaxing spa ambiance.' },
+          { type: 'video', src: 'media/store-video-1.mp4', alt: 'A promotional video of the spa experience.' },
+          { type: 'image', src: 'images/spa-interior.jpg', alt: 'A photo showcasing the elegant interior of Deluxe Nails & Spa Aliana.' },
+          { type: 'video', src: 'media/store-video-2.mp4', alt: 'Another view of the beautiful and relaxing spa ambiance.' },
       ];
       const coreValues = [
           "An Aliana-based, women-owned and operated establishment catering to a diverse, international clientele.",
@@ -1092,7 +1139,6 @@
           );
       };
 
-      // === Inlined: components/Contact.tsx ===
       const Contact = () => {
           const address = "10335 W Grand Pkwy S STE 120, Richmond, TX 77407";
           const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
@@ -1146,7 +1192,6 @@
           );
       };
       
-      // === Inlined: components/Footer.tsx ===
       const Footer = () => {
           return (
               <footer className="bg-black/20 text-white border-t border-white/20 liquid-glass-bg">
@@ -1183,14 +1228,13 @@
                           </div>
                       </div>
                       <div className="mt-8 border-t border-gray-700 pt-8 text-center text-white/70 text-sm font-sans">
-                          <p>&copy; {new Date().getFullYear()} Deluxe Nails & Spa Aliana. All Rights Reserved.</p>
+                          <p>© {new Date().getFullYear()} Deluxe Nails & Spa Aliana. All Rights Reserved.</p>
                       </div>
                   </div>
               </footer>
           );
       };
 
-      // === Inlined: App.tsx ===
       function App() {
         return (
           <div className="font-sans text-gray-800">
@@ -1228,7 +1272,6 @@
         );
       }
 
-      // === Application Entry Point ===
       const rootElement = document.getElementById('root');
       if (!rootElement) {
         throw new Error("Could not find root element to mount to");
@@ -1239,8 +1282,6 @@
           <App />
         </React.StrictMode>
       );
-
     </script>
-  <script type="module" src="/index.tsx"></script>
-</body>
+  </body>
 </html>
