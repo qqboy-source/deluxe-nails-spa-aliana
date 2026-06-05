@@ -7,7 +7,6 @@
 
     <link rel="preload" as="image" href="images/hero-background.jpg">
     <link rel="preload" as="image" href="images/site-background.jpg">
-    <link rel="preload" as="image" href="images/promotion.jpg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,20 +33,20 @@
         opacity: 1;
         transform: translateY(0);
       }
-      
+
       .hide-scrollbar::-webkit-scrollbar { display: none; }
       .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
       .pause {
         animation-play-state: paused;
       }
-      
+
       @keyframes golden-glow {
-        0%, 100% { 
+        0%, 100% {
           box-shadow: 0 0 4px rgba(217, 172, 100, 0.5), 0 0 8px rgba(217, 172, 100, 0.4);
           border-color: #D9AC64;
         }
-        50% { 
+        50% {
           box-shadow: 0 0 8px rgba(228, 193, 134, 0.6), 0 0 16px rgba(228, 193, 134, 0.5);
           border-color: #E4C186;
         }
@@ -115,7 +114,7 @@
         border-radius: inherit;
         transform: translateZ(0);
       }
-      
+
       .text-shadow-subtle { text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
       .text-shadow-strong { text-shadow: 2px 2px 8px rgba(0,0,0,0.5); }
       .will-change-transform { will-change: transform; }
@@ -245,52 +244,6 @@
           </svg>
       );
 
-      const PromotionModal = ({ isOpen, onClose }) => {
-          const modalRoot = document.getElementById('modal-root');
-          useEffect(() => {
-              const handleKeyDown = (e) => {
-                  if (e.key === 'Escape') {
-                      onClose();
-                  }
-              };
-              if (isOpen) {
-                  window.addEventListener('keydown', handleKeyDown);
-              }
-              return () => {
-                  window.removeEventListener('keydown', handleKeyDown);
-              }
-          }, [isOpen, onClose]);
-          if (!isOpen || !modalRoot) {
-              return null;
-          }
-          return ReactDOM.createPortal(
-              <div 
-                  className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex justify-center items-center animate-fade-in p-4" 
-                  onClick={onClose}
-                  role="dialog" aria-modal="true" aria-labelledby="promotion-modal-title"
-              >
-                  <button
-                      onClick={onClose}
-                      className="absolute top-4 right-4 text-white text-5xl font-light leading-none z-[210] hover:text-gold-300 transition-colors"
-                      aria-label="Close promotion view"
-                  >×</button>
-                  <div className="relative animate-scale-in z-[205]" onClick={e => e.stopPropagation()}>
-                      <h2 id="promotion-modal-title" className="sr-only">Current Promotion</h2>
-                      <img
-                          src="images/promotion.jpg"
-                          alt="Current promotion flyer."
-                          className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
-                          onError={(e) => {
-                              e.currentTarget.onerror = null;
-                              e.currentTarget.src = "https://placehold.co/600x800/9F763B/FBF3E6?text=No+Current+Promotions";
-                          }}
-                      />
-                  </div>
-              </div>,
-              modalRoot
-          );
-      };
-      
       const MediaCarousel = ({ items }) => {
           const [currentIndex, setCurrentIndex] = useState(0);
           const [isTransitioning, setIsTransitioning] = useState(false);
@@ -362,7 +315,7 @@
               touchEndX.current = 0;
           };
           return (
-              <div 
+              <div
                   ref={carouselRef}
                   className="relative w-full h-full overflow-hidden rounded-lg group"
                   onTouchStart={handleTouchStart}
@@ -452,7 +405,7 @@
               const observerOptions = {
                   threshold: 0.1,
                   rootMargin: variant === 'horizontal'
-                      ? '0px -25% 0px -25%' 
+                      ? '0px -25% 0px -25%'
                       : '0px 0px -10% 0px'
               };
               const observer = new IntersectionObserver(entries => {
@@ -476,16 +429,16 @@
               </div>
           );
       };
-      
+
       const HorizontalScrollSection = ({ children, id, isActive }) => {
           return (
-              <section 
-                  id={id} 
+              <section
+                  id={id}
                   className="horizontal-scroll-section-item w-screen h-screen flex-shrink-0 flex justify-center items-center p-4 sm:p-6 lg:p-8"
                   aria-hidden={!isActive}
               >
                   <div className="w-full h-full max-w-7xl mx-auto flex flex-col rounded-xl">
-                      <div 
+                      <div
                           className={`w-full flex-grow pt-24 pb-12 px-2 md:px-4 hide-scrollbar overflow-y-auto overscroll-y-contain ${!isActive ? 'pointer-events-none' : ''}`}
                       >
                          {children}
@@ -519,14 +472,14 @@
                   dimensionsRef.current.sectionWidth = sectionWidth;
                   dimensionsRef.current.maxTranslateX = (numSections - 1) * sectionWidth;
                   const containerHeight = dimensionsRef.current.maxTranslateX + window.innerHeight;
-                  
+
                   requestAnimationFrame(() => {
                     const currentHeight = parseFloat(scrollContainer.style.height) || 0;
                     if (Math.abs(currentHeight - containerHeight) > 1) {
                         scrollContainer.style.height = `${containerHeight}px`;
                     }
                   });
-                  
+
                   updateTransform();
               };
               const updateTransform = () => {
@@ -556,8 +509,8 @@
               };
           }, [numSections]);
           return (
-              <div 
-                  ref={scrollContainerRef} 
+              <div
+                  ref={scrollContainerRef}
                   data-testid="horizontal-scroll-container"
               >
                   <div className="sticky top-0 h-screen overflow-hidden">
@@ -573,7 +526,7 @@
               </div>
           );
       };
-      
+
       const Hero = () => {
           const heroRef = useRef(null);
           const [opacity, setOpacity] = useState(1);
@@ -605,7 +558,7 @@
               <section ref={heroRef} id="home" className="relative min-h-[500px] flex items-center justify-center text-center text-white">
                   <div className="absolute top-0 left-0 w-full h-full bg-cover bg-center" style={{ backgroundImage: "url('images/hero-background.jpg')" }}></div>
                   <div className="absolute top-0 left-0 w-full h-full bg-gold-900/40"></div>
-                  <div 
+                  <div
                       className="relative z-10 p-8 max-w-3xl bg-black/20 rounded-2xl border border-white/20 shadow-xl liquid-glass-bg"
                       style={{ opacity: opacity, transition: 'opacity 0.1s linear', willChange: 'opacity' }}
                   >
@@ -624,7 +577,7 @@
               </section>
           );
       };
-      
+
       const Header = () => {
           const [isOpen, setIsOpen] = useState(false);
           const navLinks = [
@@ -684,9 +637,9 @@
                           <nav className="hidden md:flex items-center">
                               <div className="ml-10 flex items-baseline space-x-4">
                                   {navLinks.map(link => (
-                                      <a 
-                                          key={link.name} 
-                                          href={link.href} 
+                                      <a
+                                          key={link.name}
+                                          href={link.href}
                                           onClick={(e) => handleNavClick(e, link.href)}
                                           className="text-gray-800 hover:text-gold-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300"
                                       >
@@ -715,9 +668,9 @@
                       <div className="md:hidden">
                           <div className="px-2 pt-2 pb-4 space-y-1 sm:px-3">
                               {navLinks.map(link => (
-                                  <a 
-                                      key={link.name} 
-                                      href={link.href} 
+                                  <a
+                                      key={link.name}
+                                      href={link.href}
                                       onClick={(e) => handleNavClick(e, link.href)}
                                       className="text-gray-800 hover:text-gold-700 block px-3 py-2 rounded-md text-base font-medium transition-colors duration-300"
                                   >
@@ -733,144 +686,143 @@
               </header>
           );
       };
-      
+
       const servicesData = [
-        { 
-          category: 'Nail Enhancements', 
-          note: '***Additional pricing for longer nails, shape and specials design requests***', 
-          items: [ 
-            { name: 'Acrylic with Regular Polish', price: 'Full Set $40+ / Fill $35+' }, 
-            { name: 'Acrylic with Gel', price: 'Full Set $58+ / Fill $50+' }, 
-            { name: 'Pink & White French', price: 'Full Set $58+ / Pink Fill Only $47+' }, 
-            { name: 'Color Powder', price: 'Full Set $48+' }, 
-            { name: 'Color Powder Refill Same Color', price: '$39+' }, 
-            { name: 'Color Powder Refill Change Color', price: '$44+' }, 
-            { name: 'Gel Builder (Basic Nude Colors)', price: 'Full Set $56+ / Fill $47+' }, 
-            { name: 'Gel Builder w/Gel Colors', price: 'Full Set $65+ / Fill $55+' }, 
-            { name: 'Gel X', price: 'Full Set $65+' }, 
-          ], 
+        {
+          category: 'Nail Enhancements',
+          note: '***Additional pricing for longer nails, shape and specials design requests***',
+          items: [
+            { name: 'Acrylic with Regular Polish', price: 'Full Set $40+ / Fill $35+' },
+            { name: 'Acrylic with Gel', price: 'Full Set $58+ / Fill $50+' },
+            { name: 'Pink & White French', price: 'Full Set $58+ / Pink Fill Only $47+' },
+            { name: 'Color Powder', price: 'Full Set $48+' },
+            { name: 'Color Powder Refill Same Color', price: '$39+' },
+            { name: 'Color Powder Refill Change Color', price: '$44+' },
+            { name: 'Gel Builder (Basic Nude Colors)', price: 'Full Set $56+ / Fill $47+' },
+            { name: 'Gel Builder w/Gel Colors', price: 'Full Set $65+ / Fill $55+' },
+            { name: 'Gel X', price: 'Full Set $65+' },
+          ],
         },
-        { 
-          category: 'Enhancement Add-Ons', 
-          layout: 'grid', 
-          items: [ 
-            { name: 'Length', price: '$5+' }, 
-            { name: 'Shape (Stiletto/Almond/Coffin/Round, etc...)', price: '$5+' }, 
-            { name: 'Ombre Design', price: '$15' }, 
-            { name: 'Chrome Design', price: '$20' }, 
-            { name: 'Cateyes Design', price: '$15+' }, 
-            { name: 'Marble Design', price: '$5+' }, 
-          ] 
+        {
+          category: 'Enhancement Add-Ons',
+          layout: 'grid',
+          items: [
+            { name: 'Length', price: '$5+' },
+            { name: 'Shape (Stiletto/Almond/Coffin/Round, etc...)', price: '$5+' },
+            { name: 'Ombre Design', price: '$15' },
+            { name: 'Chrome Design', price: '$20' },
+            { name: 'Cateyes Design', price: '$15+' },
+            { name: 'Marble Design', price: '$5+' },
+          ]
         },
-        { 
-          category: 'Dipping Powder', 
-          items: [ 
-            { name: 'Dipping Powder w/cuticle push back & hot towel', price: '$52' }, 
-            { name: 'Dipping French w/cuticle push back & hot towel', price: '$57' }, 
-          ], 
+        {
+          category: 'Dipping Powder',
+          items: [
+            { name: 'Dipping Powder w/cuticle push back & hot towel', price: '$52' },
+            { name: 'Dipping French w/cuticle push back & hot towel', price: '$57' },
+          ],
         },
-        { 
-          category: 'Gel Manicure', 
-          items: [ 
-            { name: 'Shellac / Gel Manicure w/Cuticle Grooming & Massage', price: '$44' }, 
-            { name: 'Shellac/Gel French w/Cuticle Grooming & Massage', price: '$49' }, 
-            { name: 'Shellac Gel Polish Change', price: '$30' }, 
-          ], 
+        {
+          category: 'Gel Manicure',
+          items: [
+            { name: 'Shellac / Gel Manicure w/Cuticle Grooming & Massage', price: '$44' },
+            { name: 'Shellac/Gel French w/Cuticle Grooming & Massage', price: '$49' },
+            { name: 'Shellac Gel Polish Change', price: '$30' },
+          ],
         },
-        { 
-          category: 'Manicures', 
-          note: 'ADD GEL POLISH TO ANY MANICURES $20', 
-          items: [ 
-            { name: 'Classic', price: '$24 *5 MINS MASSAGE*', description: 'Express manicure treatments such as nail trimming and cuticle care, hot towel, light massage, with the application of your preferred regular nail polish' }, 
-            { name: 'Signature Green Tea', price: '$34 *8 MINS MASSAGE*', description: 'Includes all the elements of a Classic Manicure, adding a hydrating mask for the arms to rejuvenate the skin including choice of a lavender paraffin wax or hot stone massage' }, 
-            { name: 'Aroma Therapy', price: '$42 *12 MINS MASSAGE*', description: 'Our unique Organic Aroma manicure treatments, along with comprehensive massages for the hands, arms, neck, and shoulders with choices of a lavender paraffin wax or hot stone massage' }, 
-            { name: 'Deluxe', price: '$48 *14 MINS MASSAGE*', description: 'Indulge in the luxurious treatment features organic ingredients and meticulous care designed to invigorate your skin, soothe your muscles, and promote healthier nail growth with combination of BOTH lavender paraffin wax and hot stone massages relaxation for your hands, arms, neck, and shoulders. Scents: Cooling Cucumber, Citrus Vitamin C, Milk and Honey Pampering, Lavender and Mint Relaxation, Organic Healing Aloe Vera' }, 
-          ] 
+        {
+          category: 'Manicures',
+          note: 'ADD GEL POLISH TO ANY MANICURES $20',
+          items: [
+            { name: 'Classic', price: '$24 *5 MINS MASSAGE*', description: 'Express manicure treatments such as nail trimming and cuticle care, hot towel, light massage, with the application of your preferred regular nail polish' },
+            { name: 'Signature Green Tea', price: '$34 *8 MINS MASSAGE*', description: 'Includes all the elements of a Classic Manicure, adding a hydrating mask for the arms to rejuvenate the skin including choice of a lavender paraffin wax or hot stone massage' },
+            { name: 'Aroma Therapy', price: '$42 *12 MINS MASSAGE*', description: 'Our unique Organic Aroma manicure treatments, along with comprehensive massages for the hands, arms, neck, and shoulders with choices of a lavender paraffin wax or hot stone massage' },
+            { name: 'Deluxe', price: '$48 *14 MINS MASSAGE*', description: 'Indulge in the luxurious treatment features organic ingredients and meticulous care designed to invigorate your skin, soothe your muscles, and promote healthier nail growth with combination of BOTH lavender paraffin wax and hot stone massages relaxation for your hands, arms, neck, and shoulders. Scents: Cooling Cucumber, Citrus Vitamin C, Milk and Honey Pampering, Lavender and Mint Relaxation, Organic Healing Aloe Vera' },
+          ]
         },
-        { 
-          category: 'Pedicures', 
-          note: 'ADD GEL POLISH TO ANY PEDICURES $20', 
-          items: [ 
-            { name: 'Classic', price: '$35 *8 MINS MASSAGE*', description: 'Express pedicure treatments such as nail trimming and shaping, callus removal, cuticle care, the exfoliation of dead skin, hot towel followed by a relaxing leg and foot massage, with the application of your preferred nail polish' }, 
-            { name: 'Signature Green Tea', price: '$45 *12 MINS MASSAGE*', description: 'Includes all the elements of a Classic Pedicure, adding a hydrating mask for the legs to rejuvenate the skin including choice of a lavender paraffin wax or hot stone massage' }, 
-            { name: 'Citrus Paradise', price: '$53 *16 MINS MASSAGE*', description: 'Our delightful citrus treatment, designed to alleviate stress, comprehensive and revitalizing massages that enhance both muscle and skin health. You can choose between a lavender wax treatment or a hot stone massage' }, 
-            { name: 'Aroma Therapy', price: '$62 *20 MINS MASSAGE*', description: 'Exclusive natural Aroma treatments, which feature a luxurious foot massage along with your choice of a lavender paraffin wax or a hot stone massage. Allow yourself to unwind as we showcase our techniques designed to your experience' }, 
-            { name: 'Deluxe', price: '$70 *24 MINS MASSAGE*', description: 'Our deluxe pedicure utilizes all natural ingredients, ensuring a luxurious treatment that caters to your needs. If you seek the ultimate in pampering, this extensive pedicure is the perfect choice that combines BOTH benefits of lavender paraffin wax with the relaxation of hot stone massage. Scents: Cooling Cucumber, Citrus Vitamin C, Milk and Honey Pampering, Lavender and Mint Relaxation, Organic Healing Aloe Vera' }, 
-            { name: 'Hemp Extract Therapy', price: '$75 *24 MINS MASSAGE*', description: 'Investing in your wellness is a vital step towards personal well-being. Experience our HEMP pedicure therapy with selected the finest quality hemp extract, and premium herbal ingredients to elevate your wellness journey. This treatment also includes BOTH lavender paraffin wax and hot stone massage' }, 
-          ] 
+        {
+          category: 'Pedicures',
+          note: 'ADD GEL POLISH TO ANY PEDICURES $20',
+          items: [
+            { name: 'Classic', price: '$35 *8 MINS MASSAGE*', description: 'Express pedicure treatments such as nail trimming and shaping, callus removal, cuticle care, the exfoliation of dead skin, hot towel followed by a relaxing leg and foot massage, with the application of your preferred nail polish' },
+            { name: 'Signature Green Tea', price: '$45 *12 MINS MASSAGE*', description: 'Includes all the elements of a Classic Pedicure, adding a hydrating mask for the legs to rejuvenate the skin including choice of a lavender paraffin wax or hot stone massage' },
+            { name: 'Citrus Paradise', price: '$53 *16 MINS MASSAGE*', description: 'Our delightful citrus treatment, designed to alleviate stress, comprehensive and revitalizing massages that enhance both muscle and skin health. You can choose between a lavender wax treatment or a hot stone massage' },
+            { name: 'Aroma Therapy', price: '$62 *20 MINS MASSAGE*', description: 'Exclusive natural Aroma treatments, which feature a luxurious foot massage along with your choice of a lavender paraffin wax or a hot stone massage. Allow yourself to unwind as we showcase our techniques designed to your experience' },
+            { name: 'Deluxe', price: '$70 *24 MINS MASSAGE*', description: 'Our deluxe pedicure utilizes all natural ingredients, ensuring a luxurious treatment that caters to your needs. If you seek the ultimate in pampering, this extensive pedicure is the perfect choice that combines BOTH benefits of lavender paraffin wax with the relaxation of hot stone massage. Scents: Cooling Cucumber, Citrus Vitamin C, Milk and Honey Pampering, Lavender and Mint Relaxation, Organic Healing Aloe Vera' },
+            { name: 'Hemp Extract Therapy', price: '$75 *24 MINS MASSAGE*', description: 'Investing in your wellness is a vital step towards personal well-being. Experience our HEMP pedicure therapy with selected the finest quality hemp extract, and premium herbal ingredients to elevate your wellness journey. This treatment also includes BOTH lavender paraffin wax and hot stone massage' },
+          ]
         },
-        { 
-          category: 'Kids 12 & Under', 
-          note: 'ADD GEL POLISH TO ANY KID MANI or PEDI $15', 
-          layout: 'grid', 
-          items: [ 
-            { name: 'Kid Manicure', price: '$13' }, 
-            { name: 'Kid Pedicure', price: '$25' }, 
-            { name: 'Kid Toe or Hand Polish Change', price: '$10' }, 
-            { name: 'Kid Gel Polish Change Only', price: '$20' }, 
-          ] 
+        {
+          category: 'Kids 12 & Under',
+          note: 'ADD GEL POLISH TO ANY KID MANI or PEDI $15',
+          layout: 'grid',
+          items: [
+            { name: 'Kid Manicure', price: '$13' },
+            { name: 'Kid Pedicure', price: '$25' },
+            { name: 'Kid Toe or Hand Polish Change', price: '$10' },
+            { name: 'Kid Gel Polish Change Only', price: '$20' },
+          ]
         },
-        { 
-          category: 'Additional Services', 
-          layout: 'grid', 
-          items: [ 
-            { name: 'Nail Repair (varies with length/shape/designs)', price: '$6+' }, 
-            { name: 'NAIL ENHANCEMENT REMOVAL SERVICE ONLY', price: '$15' }, 
-            { name: 'Nail Enhancement Removal (with another service)', price: '$7+' }, 
-            { name: 'Regular Polish - Hand Polish Change', price: '$13' }, 
-            { name: 'Regular Polish - Toe Polish Change', price: '$15' }, 
-            { name: 'Basic French / American French Tip', price: '$5' }, 
-            { name: 'Add On Lavender Parafin Wax or Hot Stones', price: '$10' }, 
-            { name: 'Extra Massages', price: '$1/PER MIN' }, 
-            { name: 'Cuticle Trim (ONLY)', price: '$12' }, 
-          ] 
+        {
+          category: 'Additional Services',
+          layout: 'grid',
+          items: [
+            { name: 'Nail Repair (varies with length/shape/designs)', price: '$6+' },
+            { name: 'NAIL ENHANCEMENT REMOVAL SERVICE ONLY', price: '$15' },
+            { name: 'Nail Enhancement Removal (with another service)', price: '$7+' },
+            { name: 'Regular Polish - Hand Polish Change', price: '$13' },
+            { name: 'Regular Polish - Toe Polish Change', price: '$15' },
+            { name: 'Basic French / American French Tip', price: '$5' },
+            { name: 'Add On Lavender Parafin Wax or Hot Stones', price: '$10' },
+            { name: 'Extra Massages', price: '$1/PER MIN' },
+            { name: 'Cuticle Trim (ONLY)', price: '$12' },
+          ]
         },
-        { 
-          category: 'Waxing', 
-          layout: 'grid', 
-          items: [ 
-            { name: 'Eyebrows', price: '$13' }, 
-            { name: 'Wholeface', price: '$46+' }, 
-            { name: 'Chin', price: '$11' }, 
-            { name: 'Half Arm', price: '$37' }, 
-            { name: 'Lip', price: '$11' }, 
-            { name: 'Half Leg', price: '$43' }, 
-            { name: 'Underarms', price: '$27+' }, 
-            { name: 'Sideburns', price: '$18' }, 
-            { name: 'Full Arm', price: '$48' }, 
-            { name: 'Chest', price: '$50+' }, 
-            { name: 'Full Leg', price: '$60+' }, 
-            { name: 'Bikini', price: '$47+' }, 
-            { name: 'Back', price: '$52+' }, 
-            { name: 'Brazillian', price: '$60+' }, 
-          ] 
+        {
+          category: 'Waxing',
+          layout: 'grid',
+          items: [
+            { name: 'Eyebrows', price: '$13' },
+            { name: 'Wholeface', price: '$46+' },
+            { name: 'Chin', price: '$11' },
+            { name: 'Half Arm', price: '$37' },
+            { name: 'Lip', price: '$11' },
+            { name: 'Half Leg', price: '$43' },
+            { name: 'Underarms', price: '$27+' },
+            { name: 'Sideburns', price: '$18' },
+            { name: 'Full Arm', price: '$48' },
+            { name: 'Chest', price: '$50+' },
+            { name: 'Full Leg', price: '$60+' },
+            { name: 'Bikini', price: '$47+' },
+            { name: 'Back', price: '$52+' },
+            { name: 'Brazillian', price: '$60+' },
+          ]
         },
       ];
-      
+
       const Services = () => {
           const [isMenuVisible, setIsMenuVisible] = useState(false);
-          const [isPromotionVisible, setIsPromotionVisible] = useState(false);
           const [modalContainer, setModalContainer] = useState(null);
           useEffect(() => {
               setModalContainer(document.getElementById('modal-root'));
           }, []);
           useEffect(() => {
               const originalOverflow = document.body.style.overflow;
-              if (isMenuVisible || isPromotionVisible) {
+              if (isMenuVisible) {
                   document.body.style.overflow = 'hidden';
               } else {
                   document.body.style.overflow = originalOverflow;
               }
               return () => { document.body.style.overflow = originalOverflow; };
-          }, [isMenuVisible, isPromotionVisible]);
+          }, [isMenuVisible]);
           const menuModal = (
-              <div 
-                  className="fixed inset-0 bg-black/60 liquid-glass-bg z-[100] flex justify-center items-center animate-fade-in" 
+              <div
+                  className="fixed inset-0 bg-black/60 liquid-glass-bg z-[100] flex justify-center items-center animate-fade-in"
                   onClick={() => setIsMenuVisible(false)}
                   role="dialog" aria-modal="true" aria-labelledby="services-heading"
               >
-                  <div 
-                      className="bg-gradient-to-br from-gray-900 to-black border border-gold-700/30 w-full max-w-4xl h-[90vh] rounded-lg shadow-2xl m-4 flex flex-col animate-scale-in" 
+                  <div
+                      className="bg-gradient-to-br from-gray-900 to-black border border-gold-700/30 w-full max-w-4xl h-[90vh] rounded-lg shadow-2xl m-4 flex flex-col animate-scale-in"
                       onClick={e => e.stopPropagation()}
                   >
                       <header className="p-6 border-b border-gold-600/30 flex justify-between items-center flex-shrink-0">
@@ -919,14 +871,9 @@
                               aria-haspopup="dialog" aria-expanded={isMenuVisible}>
                               View Full Menu
                           </button>
-                          <button onClick={() => setIsPromotionVisible(true)} className="font-bold py-3 px-8 rounded-lg text-lg btn-golden-glow btn-fill-gold"
-                              aria-haspopup="dialog" aria-expanded={isPromotionVisible}>
-                              Promotions
-                          </button>
                       </div>
                   </div>
                   {isMenuVisible && modalContainer && ReactDOM.createPortal(menuModal, modalContainer)}
-                  <PromotionModal isOpen={isPromotionVisible} onClose={() => setIsPromotionVisible(false)} />
               </>
           );
       };
@@ -1068,7 +1015,7 @@
           </>
         );
       };
-      
+
       const mediaItems = [
           { type: 'video', src: 'media/store-video-1.mp4', alt: 'A promotional video of the spa experience.' },
           { type: 'image', src: 'images/spa-interior.jpg', alt: 'A photo showcasing the elegant interior of Deluxe Nails & Spa Aliana.' },
@@ -1076,7 +1023,7 @@
       ];
       const coreValues = [
           "An Aliana-based, women-owned and operated establishment catering to a diverse, international clientele.",
-          "Each reservation is customized to fit each individual’s personal experience.",
+          "Each reservation is customized to fit each individual's personal experience.",
           "Our skilled staff are always up-to-date with the latest trends and hygienic practices, while applying innovative design techniques.",
           "To be an inspiration to our guests, operating with pride, integrity, and respect as an honest leader in the nail and spa industry.",
           "We strive to set the highest standards of beauty with our extraordinary products, exceptional service, and dedication to your well-being."
@@ -1107,14 +1054,14 @@
                   <div className={`w-full lg:w-[45%] transition-all duration-500 ease-in-out ${boxClasses}`}>
                        <h3 className={`text-4xl md:text-5xl font-serif font-bold text-center transition-colors duration-500 ${titleClasses}`}>Our Values & Vision</h3>
                       <div className="mt-4 text-center">
-                          <button 
-                              onClick={() => setIsExpanded(!isExpanded)} 
+                          <button
+                              onClick={() => setIsExpanded(!isExpanded)}
                               className={`flex items-center mx-auto font-semibold transition-colors duration-500 ${buttonTextClasses} ${buttonHoverClass}`}
                               aria-expanded={isExpanded}
                           >
                               <span>{isExpanded ? 'Show Less' : 'Show More'}</span>
-                              {isExpanded 
-                                  ? <ArrowUpIcon className="w-5 h-5 ml-2" /> 
+                              {isExpanded
+                                  ? <ArrowUpIcon className="w-5 h-5 ml-2" />
                                   : <ArrowDownIcon className="w-5 h-5 ml-2" />
                               }
                           </button>
@@ -1191,7 +1138,7 @@
               </section>
           );
       };
-      
+
       const Footer = () => {
           return (
               <footer className="bg-black/20 text-white border-t border-white/20 liquid-glass-bg">
