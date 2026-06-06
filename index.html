@@ -285,9 +285,7 @@
                   timerId = window.setTimeout(goToNext, 5000);
               }
               return () => {
-                  if (timerId) {
-                      clearTimeout(timerId);
-                  }
+                  if (timerId) clearTimeout(timerId);
               };
           }, [currentIndex, isHovered, items, goToNext]);
           useEffect(() => {
@@ -312,18 +310,11 @@
               setIsTransitioning(true);
               setCurrentIndex(index);
           };
-          const handleTouchStart = (e) => {
-              touchStartX.current = e.targetTouches[0].clientX;
-          };
-          const handleTouchMove = (e) => {
-              touchEndX.current = e.targetTouches[0].clientX;
-          };
+          const handleTouchStart = (e) => { touchStartX.current = e.targetTouches[0].clientX; };
+          const handleTouchMove = (e) => { touchEndX.current = e.targetTouches[0].clientX; };
           const handleTouchEnd = () => {
-              if (touchStartX.current - touchEndX.current > 75) {
-                  goToNext();
-              } else if (touchStartX.current - touchEndX.current < -75) {
-                  goToPrevious();
-              }
+              if (touchStartX.current - touchEndX.current > 75) goToNext();
+              else if (touchStartX.current - touchEndX.current < -75) goToPrevious();
               touchStartX.current = 0;
               touchEndX.current = 0;
           };
@@ -417,24 +408,14 @@
           useEffect(() => {
               const observerOptions = {
                   threshold: 0.1,
-                  rootMargin: variant === 'horizontal'
-                      ? '0px -25% 0px -25%'
-                      : '0px 0px -10% 0px'
+                  rootMargin: variant === 'horizontal' ? '0px -25% 0px -25%' : '0px 0px -10% 0px'
               };
               const observer = new IntersectionObserver(entries => {
-                  entries.forEach(entry => {
-                      setVisible(entry.isIntersecting);
-                  });
+                  entries.forEach(entry => { setVisible(entry.isIntersecting); });
               }, observerOptions);
               const currentRef = domRef.current;
-              if (currentRef) {
-                  observer.observe(currentRef);
-              }
-              return () => {
-                  if (currentRef) {
-                      observer.unobserve(currentRef);
-                  }
-              };
+              if (currentRef) observer.observe(currentRef);
+              return () => { if (currentRef) observer.unobserve(currentRef); };
           }, [variant]);
           return (
               <div ref={domRef} className={`fade-in-on-scroll ${isVisible ? 'is-visible' : ''}`}>
@@ -443,34 +424,26 @@
           );
       };
 
-      const HorizontalScrollSection = ({ children, id, isActive }) => {
-          return (
-              <section
-                  id={id}
-                  className="horizontal-scroll-section-item w-screen h-screen flex-shrink-0 flex justify-center items-center p-4 sm:p-6 lg:p-8"
-                  aria-hidden={!isActive}
-              >
-                  <div className="w-full h-full max-w-7xl mx-auto flex flex-col rounded-xl">
-                      <div
-                          className={`w-full flex-grow pt-24 pb-12 px-2 md:px-4 hide-scrollbar overflow-y-auto overscroll-y-contain ${!isActive ? 'pointer-events-none' : ''}`}
-                      >
-                         {children}
-                      </div>
+      const HorizontalScrollSection = ({ children, id, isActive }) => (
+          <section
+              id={id}
+              className="horizontal-scroll-section-item w-screen h-screen flex-shrink-0 flex justify-center items-center p-4 sm:p-6 lg:p-8"
+              aria-hidden={!isActive}
+          >
+              <div className="w-full h-full max-w-7xl mx-auto flex flex-col rounded-xl">
+                  <div className={`w-full flex-grow pt-24 pb-12 px-2 md:px-4 hide-scrollbar overflow-y-auto overscroll-y-contain ${!isActive ? 'pointer-events-none' : ''}`}>
+                     {children}
                   </div>
-              </section>
-          );
-      };
+              </div>
+          </section>
+      );
 
       const HorizontalScrollContainer = ({ children }) => {
           const scrollContainerRef = useRef(null);
           const stickyContentRef = useRef(null);
           const [activeIndex, setActiveIndex] = useState(0);
           const numSections = Children.count(children);
-          const dimensionsRef = useRef({
-              containerTop: 0,
-              sectionWidth: 0,
-              maxTranslateX: 0,
-          });
+          const dimensionsRef = useRef({ containerTop: 0, sectionWidth: 0, maxTranslateX: 0 });
           useLayoutEffect(() => {
               const scrollContainer = scrollContainerRef.current;
               const stickyContent = stickyContentRef.current;
@@ -485,14 +458,10 @@
                   dimensionsRef.current.sectionWidth = sectionWidth;
                   dimensionsRef.current.maxTranslateX = (numSections - 1) * sectionWidth;
                   const containerHeight = dimensionsRef.current.maxTranslateX + window.innerHeight;
-
                   requestAnimationFrame(() => {
-                    const currentHeight = parseFloat(scrollContainer.style.height) || 0;
-                    if (Math.abs(currentHeight - containerHeight) > 1) {
-                        scrollContainer.style.height = `${containerHeight}px`;
-                    }
+                      const currentHeight = parseFloat(scrollContainer.style.height) || 0;
+                      if (Math.abs(currentHeight - containerHeight) > 1) scrollContainer.style.height = `${containerHeight}px`;
                   });
-
                   updateTransform();
               };
               const updateTransform = () => {
@@ -522,16 +491,11 @@
               };
           }, [numSections]);
           return (
-              <div
-                  ref={scrollContainerRef}
-                  data-testid="horizontal-scroll-container"
-              >
+              <div ref={scrollContainerRef} data-testid="horizontal-scroll-container">
                   <div className="sticky top-0 h-screen overflow-hidden">
                       <div ref={stickyContentRef} className="flex flex-nowrap h-full will-change-transform">
                           {Children.map(children, (child, index) => {
-                              if (isValidElement(child)) {
-                                  return cloneElement(child, { isActive: index === activeIndex });
-                              }
+                              if (isValidElement(child)) return cloneElement(child, { isActive: index === activeIndex });
                               return child;
                           })}
                       </div>
@@ -546,23 +510,17 @@
           useLayoutEffect(() => {
               const setHeroHeight = () => {
                   if (heroRef.current) {
-                      const headerHeight = 80;
-                      heroRef.current.style.height = `${window.innerHeight - headerHeight}px`;
+                      heroRef.current.style.height = `${window.innerHeight - 80}px`;
                       window.dispatchEvent(new CustomEvent('layoutUpdated'));
                   }
               };
               const timeoutId = setTimeout(setHeroHeight, 150);
               window.addEventListener('resize', setHeroHeight);
-              return () => {
-                  window.removeEventListener('resize', setHeroHeight);
-                  clearTimeout(timeoutId);
-              };
+              return () => { window.removeEventListener('resize', setHeroHeight); clearTimeout(timeoutId); };
           }, []);
           useEffect(() => {
               const handleScroll = () => {
-                  const fadeOutDistance = 400;
-                  const newOpacity = Math.max(0, 1 - window.scrollY / fadeOutDistance);
-                  setOpacity(newOpacity);
+                  setOpacity(Math.max(0, 1 - window.scrollY / 400));
               };
               window.addEventListener('scroll', handleScroll, { passive: true });
               return () => window.removeEventListener('scroll', handleScroll);
@@ -603,15 +561,10 @@
           ];
           const handleNavClick = (event, href) => {
               event.preventDefault();
-              if (isOpen) {
-                  setIsOpen(false);
-              }
+              if (isOpen) setIsOpen(false);
               setTimeout(() => {
                   const targetId = href.substring(1);
-                  if (targetId === 'home') {
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                      return;
-                  }
+                  if (targetId === 'home') { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
                   const targetElement = document.getElementById(targetId);
                   if (!targetElement) return;
                   const horizontalContainer = document.querySelector('[data-testid="horizontal-scroll-container"]');
@@ -621,20 +574,12 @@
                       const sectionIndex = horizontalSections.findIndex(section => section.id === targetId);
                       if (sectionIndex !== -1) {
                           const sectionWidth = horizontalSections[0]?.getBoundingClientRect().width || window.innerWidth;
-                          const targetScrollY = containerTop + (sectionIndex * sectionWidth);
-                          window.scrollTo({
-                              top: targetScrollY,
-                              behavior: 'smooth',
-                          });
+                          window.scrollTo({ top: containerTop + (sectionIndex * sectionWidth), behavior: 'smooth' });
                       }
                   } else {
                       const header = document.querySelector('header');
                       const headerHeight = header ? header.offsetHeight : 80;
-                      const elementTop = targetElement.getBoundingClientRect().top + window.scrollY;
-                      window.scrollTo({
-                          top: elementTop - headerHeight,
-                          behavior: 'smooth',
-                      });
+                      window.scrollTo({ top: targetElement.getBoundingClientRect().top + window.scrollY - headerHeight, behavior: 'smooth' });
                   }
               }, 100);
           };
@@ -650,12 +595,8 @@
                           <nav className="hidden md:flex items-center">
                               <div className="ml-10 flex items-baseline space-x-4">
                                   {navLinks.map(link => (
-                                      <a
-                                          key={link.name}
-                                          href={link.href}
-                                          onClick={(e) => handleNavClick(e, link.href)}
-                                          className="text-gray-800 hover:text-gold-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300"
-                                      >
+                                      <a key={link.name} href={link.href} onClick={(e) => handleNavClick(e, link.href)}
+                                          className="text-gray-800 hover:text-gold-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300">
                                           {link.name}
                                       </a>
                                   ))}
@@ -681,12 +622,8 @@
                       <div className="md:hidden">
                           <div className="px-2 pt-2 pb-4 space-y-1 sm:px-3">
                               {navLinks.map(link => (
-                                  <a
-                                      key={link.name}
-                                      href={link.href}
-                                      onClick={(e) => handleNavClick(e, link.href)}
-                                      className="text-gray-800 hover:text-gold-700 block px-3 py-2 rounded-md text-base font-medium transition-colors duration-300"
-                                  >
+                                  <a key={link.name} href={link.href} onClick={(e) => handleNavClick(e, link.href)}
+                                      className="text-gray-800 hover:text-gold-700 block px-3 py-2 rounded-md text-base font-medium transition-colors duration-300">
                                       {link.name}
                                   </a>
                               ))}
@@ -701,143 +638,32 @@
       };
 
       const servicesData = [
-        {
-          category: 'Nail Enhancements',
-          note: '***Additional pricing for longer nails, shape and specials design requests***',
-          items: [
-            { name: 'Acrylic with Regular Polish', price: 'Full Set $40+ / Fill $35+' },
-            { name: 'Acrylic with Gel', price: 'Full Set $58+ / Fill $50+' },
-            { name: 'Pink & White French', price: 'Full Set $58+ / Pink Fill Only $47+' },
-            { name: 'Color Powder', price: 'Full Set $48+' },
-            { name: 'Color Powder Refill Same Color', price: '$39+' },
-            { name: 'Color Powder Refill Change Color', price: '$44+' },
-            { name: 'Gel Builder (Basic Nude Colors)', price: 'Full Set $56+ / Fill $47+' },
-            { name: 'Gel Builder w/Gel Colors', price: 'Full Set $65+ / Fill $55+' },
-            { name: 'Gel X', price: 'Full Set $65+' },
-          ],
-        },
-        {
-          category: 'Enhancement Add-Ons',
-          layout: 'grid',
-          items: [
-            { name: 'Length', price: '$5+' },
-            { name: 'Shape (Stiletto/Almond/Coffin/Round, etc...)', price: '$5+' },
-            { name: 'Ombre Design', price: '$15' },
-            { name: 'Chrome Design', price: '$20' },
-            { name: 'Cateyes Design', price: '$15+' },
-            { name: 'Marble Design', price: '$5+' },
-          ]
-        },
-        {
-          category: 'Dipping Powder',
-          items: [
-            { name: 'Dipping Powder w/cuticle push back & hot towel', price: '$52' },
-            { name: 'Dipping French w/cuticle push back & hot towel', price: '$57' },
-          ],
-        },
-        {
-          category: 'Gel Manicure',
-          items: [
-            { name: 'Shellac / Gel Manicure w/Cuticle Grooming & Massage', price: '$44' },
-            { name: 'Shellac/Gel French w/Cuticle Grooming & Massage', price: '$49' },
-            { name: 'Shellac Gel Polish Change', price: '$30' },
-          ],
-        },
-        {
-          category: 'Manicures',
-          note: 'ADD GEL POLISH TO ANY MANICURES $20',
-          items: [
-            { name: 'Classic', price: '$24 *5 MINS MASSAGE*', description: 'Express manicure treatments such as nail trimming and cuticle care, hot towel, light massage, with the application of your preferred regular nail polish' },
-            { name: 'Signature Green Tea', price: '$34 *8 MINS MASSAGE*', description: 'Includes all the elements of a Classic Manicure, adding a hydrating mask for the arms to rejuvenate the skin including choice of a lavender paraffin wax or hot stone massage' },
-            { name: 'Aroma Therapy', price: '$42 *12 MINS MASSAGE*', description: 'Our unique Organic Aroma manicure treatments, along with comprehensive massages for the hands, arms, neck, and shoulders with choices of a lavender paraffin wax or hot stone massage' },
-            { name: 'Deluxe', price: '$48 *14 MINS MASSAGE*', description: 'Indulge in the luxurious treatment features organic ingredients and meticulous care designed to invigorate your skin, soothe your muscles, and promote healthier nail growth with combination of BOTH lavender paraffin wax and hot stone massages relaxation for your hands, arms, neck, and shoulders. Scents: Cooling Cucumber, Citrus Vitamin C, Milk and Honey Pampering, Lavender and Mint Relaxation, Organic Healing Aloe Vera' },
-          ]
-        },
-        {
-          category: 'Pedicures',
-          note: 'ADD GEL POLISH TO ANY PEDICURES $20',
-          items: [
-            { name: 'Classic', price: '$35 *8 MINS MASSAGE*', description: 'Express pedicure treatments such as nail trimming and shaping, callus removal, cuticle care, the exfoliation of dead skin, hot towel followed by a relaxing leg and foot massage, with the application of your preferred nail polish' },
-            { name: 'Signature Green Tea', price: '$45 *12 MINS MASSAGE*', description: 'Includes all the elements of a Classic Pedicure, adding a hydrating mask for the legs to rejuvenate the skin including choice of a lavender paraffin wax or hot stone massage' },
-            { name: 'Citrus Paradise', price: '$53 *16 MINS MASSAGE*', description: 'Our delightful citrus treatment, designed to alleviate stress, comprehensive and revitalizing massages that enhance both muscle and skin health. You can choose between a lavender wax treatment or a hot stone massage' },
-            { name: 'Aroma Therapy', price: '$62 *20 MINS MASSAGE*', description: 'Exclusive natural Aroma treatments, which feature a luxurious foot massage along with your choice of a lavender paraffin wax or a hot stone massage. Allow yourself to unwind as we showcase our techniques designed to your experience' },
-            { name: 'Deluxe', price: '$70 *24 MINS MASSAGE*', description: 'Our deluxe pedicure utilizes all natural ingredients, ensuring a luxurious treatment that caters to your needs. If you seek the ultimate in pampering, this extensive pedicure is the perfect choice that combines BOTH benefits of lavender paraffin wax with the relaxation of hot stone massage. Scents: Cooling Cucumber, Citrus Vitamin C, Milk and Honey Pampering, Lavender and Mint Relaxation, Organic Healing Aloe Vera' },
-            { name: 'Hemp Extract Therapy', price: '$75 *24 MINS MASSAGE*', description: 'Investing in your wellness is a vital step towards personal well-being. Experience our HEMP pedicure therapy with selected the finest quality hemp extract, and premium herbal ingredients to elevate your wellness journey. This treatment also includes BOTH lavender paraffin wax and hot stone massage' },
-          ]
-        },
-        {
-          category: 'Kids 12 & Under',
-          note: 'ADD GEL POLISH TO ANY KID MANI or PEDI $15',
-          layout: 'grid',
-          items: [
-            { name: 'Kid Manicure', price: '$13' },
-            { name: 'Kid Pedicure', price: '$25' },
-            { name: 'Kid Toe or Hand Polish Change', price: '$10' },
-            { name: 'Kid Gel Polish Change Only', price: '$20' },
-          ]
-        },
-        {
-          category: 'Additional Services',
-          layout: 'grid',
-          items: [
-            { name: 'Nail Repair (varies with length/shape/designs)', price: '$6+' },
-            { name: 'NAIL ENHANCEMENT REMOVAL SERVICE ONLY', price: '$15' },
-            { name: 'Nail Enhancement Removal (with another service)', price: '$7+' },
-            { name: 'Regular Polish - Hand Polish Change', price: '$13' },
-            { name: 'Regular Polish - Toe Polish Change', price: '$15' },
-            { name: 'Basic French / American French Tip', price: '$5' },
-            { name: 'Add On Lavender Parafin Wax or Hot Stones', price: '$10' },
-            { name: 'Extra Massages', price: '$1/PER MIN' },
-            { name: 'Cuticle Trim (ONLY)', price: '$12' },
-          ]
-        },
-        {
-          category: 'Waxing',
-          layout: 'grid',
-          items: [
-            { name: 'Eyebrows', price: '$13' },
-            { name: 'Wholeface', price: '$46+' },
-            { name: 'Chin', price: '$11' },
-            { name: 'Half Arm', price: '$37' },
-            { name: 'Lip', price: '$11' },
-            { name: 'Half Leg', price: '$43' },
-            { name: 'Underarms', price: '$27+' },
-            { name: 'Sideburns', price: '$18' },
-            { name: 'Full Arm', price: '$48' },
-            { name: 'Chest', price: '$50+' },
-            { name: 'Full Leg', price: '$60+' },
-            { name: 'Bikini', price: '$47+' },
-            { name: 'Back', price: '$52+' },
-            { name: 'Brazillian', price: '$60+' },
-          ]
-        },
+        { category: 'Nail Enhancements', note: '***Additional pricing for longer nails, shape and specials design requests***', items: [ { name: 'Acrylic with Regular Polish', price: 'Full Set $40+ / Fill $35+' }, { name: 'Acrylic with Gel', price: 'Full Set $58+ / Fill $50+' }, { name: 'Pink & White French', price: 'Full Set $58+ / Pink Fill Only $47+' }, { name: 'Color Powder', price: 'Full Set $48+' }, { name: 'Color Powder Refill Same Color', price: '$39+' }, { name: 'Color Powder Refill Change Color', price: '$44+' }, { name: 'Gel Builder (Basic Nude Colors)', price: 'Full Set $56+ / Fill $47+' }, { name: 'Gel Builder w/Gel Colors', price: 'Full Set $65+ / Fill $55+' }, { name: 'Gel X', price: 'Full Set $65+' } ] },
+        { category: 'Enhancement Add-Ons', layout: 'grid', items: [ { name: 'Length', price: '$5+' }, { name: 'Shape (Stiletto/Almond/Coffin/Round, etc...)', price: '$5+' }, { name: 'Ombre Design', price: '$15' }, { name: 'Chrome Design', price: '$20' }, { name: 'Cateyes Design', price: '$15+' }, { name: 'Marble Design', price: '$5+' } ] },
+        { category: 'Dipping Powder', items: [ { name: 'Dipping Powder w/cuticle push back & hot towel', price: '$52' }, { name: 'Dipping French w/cuticle push back & hot towel', price: '$57' } ] },
+        { category: 'Gel Manicure', items: [ { name: 'Shellac / Gel Manicure w/Cuticle Grooming & Massage', price: '$44' }, { name: 'Shellac/Gel French w/Cuticle Grooming & Massage', price: '$49' }, { name: 'Shellac Gel Polish Change', price: '$30' } ] },
+        { category: 'Manicures', note: 'ADD GEL POLISH TO ANY MANICURES $20', items: [ { name: 'Classic', price: '$24 *5 MINS MASSAGE*', description: 'Express manicure treatments such as nail trimming and cuticle care, hot towel, light massage, with the application of your preferred regular nail polish' }, { name: 'Signature Green Tea', price: '$34 *8 MINS MASSAGE*', description: 'Includes all the elements of a Classic Manicure, adding a hydrating mask for the arms to rejuvenate the skin including choice of a lavender paraffin wax or hot stone massage' }, { name: 'Aroma Therapy', price: '$42 *12 MINS MASSAGE*', description: 'Our unique Organic Aroma manicure treatments, along with comprehensive massages for the hands, arms, neck, and shoulders with choices of a lavender paraffin wax or hot stone massage' }, { name: 'Deluxe', price: '$48 *14 MINS MASSAGE*', description: 'Indulge in the luxurious treatment features organic ingredients and meticulous care designed to invigorate your skin, soothe your muscles, and promote healthier nail growth with combination of BOTH lavender paraffin wax and hot stone massages relaxation for your hands, arms, neck, and shoulders. Scents: Cooling Cucumber, Citrus Vitamin C, Milk and Honey Pampering, Lavender and Mint Relaxation, Organic Healing Aloe Vera' } ] },
+        { category: 'Pedicures', note: 'ADD GEL POLISH TO ANY PEDICURES $20', items: [ { name: 'Classic', price: '$35 *8 MINS MASSAGE*', description: 'Express pedicure treatments such as nail trimming and shaping, callus removal, cuticle care, the exfoliation of dead skin, hot towel followed by a relaxing leg and foot massage, with the application of your preferred nail polish' }, { name: 'Signature Green Tea', price: '$45 *12 MINS MASSAGE*', description: 'Includes all the elements of a Classic Pedicure, adding a hydrating mask for the legs to rejuvenate the skin including choice of a lavender paraffin wax or hot stone massage' }, { name: 'Citrus Paradise', price: '$53 *16 MINS MASSAGE*', description: 'Our delightful citrus treatment, designed to alleviate stress, comprehensive and revitalizing massages that enhance both muscle and skin health. You can choose between a lavender wax treatment or a hot stone massage' }, { name: 'Aroma Therapy', price: '$62 *20 MINS MASSAGE*', description: 'Exclusive natural Aroma treatments, which feature a luxurious foot massage along with your choice of a lavender paraffin wax or a hot stone massage. Allow yourself to unwind as we showcase our techniques designed to your experience' }, { name: 'Deluxe', price: '$70 *24 MINS MASSAGE*', description: 'Our deluxe pedicure utilizes all natural ingredients, ensuring a luxurious treatment that caters to your needs. If you seek the ultimate in pampering, this extensive pedicure is the perfect choice that combines BOTH benefits of lavender paraffin wax with the relaxation of hot stone massage. Scents: Cooling Cucumber, Citrus Vitamin C, Milk and Honey Pampering, Lavender and Mint Relaxation, Organic Healing Aloe Vera' }, { name: 'Hemp Extract Therapy', price: '$75 *24 MINS MASSAGE*', description: 'Investing in your wellness is a vital step towards personal well-being. Experience our HEMP pedicure therapy with selected the finest quality hemp extract, and premium herbal ingredients to elevate your wellness journey. This treatment also includes BOTH lavender paraffin wax and hot stone massage' } ] },
+        { category: 'Kids 12 & Under', note: 'ADD GEL POLISH TO ANY KID MANI or PEDI $15', layout: 'grid', items: [ { name: 'Kid Manicure', price: '$13' }, { name: 'Kid Pedicure', price: '$25' }, { name: 'Kid Toe or Hand Polish Change', price: '$10' }, { name: 'Kid Gel Polish Change Only', price: '$20' } ] },
+        { category: 'Additional Services', layout: 'grid', items: [ { name: 'Nail Repair (varies with length/shape/designs)', price: '$6+' }, { name: 'NAIL ENHANCEMENT REMOVAL SERVICE ONLY', price: '$15' }, { name: 'Nail Enhancement Removal (with another service)', price: '$7+' }, { name: 'Regular Polish - Hand Polish Change', price: '$13' }, { name: 'Regular Polish - Toe Polish Change', price: '$15' }, { name: 'Basic French / American French Tip', price: '$5' }, { name: 'Add On Lavender Parafin Wax or Hot Stones', price: '$10' }, { name: 'Extra Massages', price: '$1/PER MIN' }, { name: 'Cuticle Trim (ONLY)', price: '$12' } ] },
+        { category: 'Waxing', layout: 'grid', items: [ { name: 'Eyebrows', price: '$13' }, { name: 'Wholeface', price: '$46+' }, { name: 'Chin', price: '$11' }, { name: 'Half Arm', price: '$37' }, { name: 'Lip', price: '$11' }, { name: 'Half Leg', price: '$43' }, { name: 'Underarms', price: '$27+' }, { name: 'Sideburns', price: '$18' }, { name: 'Full Arm', price: '$48' }, { name: 'Chest', price: '$50+' }, { name: 'Full Leg', price: '$60+' }, { name: 'Bikini', price: '$47+' }, { name: 'Back', price: '$52+' }, { name: 'Brazillian', price: '$60+' } ] },
       ];
 
       const Services = () => {
           const [isMenuVisible, setIsMenuVisible] = useState(false);
           const [modalContainer, setModalContainer] = useState(null);
-          useEffect(() => {
-              setModalContainer(document.getElementById('modal-root'));
-          }, []);
+          useEffect(() => { setModalContainer(document.getElementById('modal-root')); }, []);
           useEffect(() => {
               const originalOverflow = document.body.style.overflow;
-              if (isMenuVisible) {
-                  document.body.style.overflow = 'hidden';
-              } else {
-                  document.body.style.overflow = originalOverflow;
-              }
+              if (isMenuVisible) document.body.style.overflow = 'hidden';
+              else document.body.style.overflow = originalOverflow;
               return () => { document.body.style.overflow = originalOverflow; };
           }, [isMenuVisible]);
           const menuModal = (
-              <div
-                  className="fixed inset-0 bg-black/60 liquid-glass-bg z-[100] flex justify-center items-center animate-fade-in"
-                  onClick={() => setIsMenuVisible(false)}
-                  role="dialog" aria-modal="true" aria-labelledby="services-heading"
-              >
-                  <div
-                      className="bg-gradient-to-br from-gray-900 to-black border border-gold-700/30 w-full max-w-4xl h-[90vh] rounded-lg shadow-2xl m-4 flex flex-col animate-scale-in"
-                      onClick={e => e.stopPropagation()}
-                  >
+              <div className="fixed inset-0 bg-black/60 liquid-glass-bg z-[100] flex justify-center items-center animate-fade-in"
+                  onClick={() => setIsMenuVisible(false)} role="dialog" aria-modal="true" aria-labelledby="services-heading">
+                  <div className="bg-gradient-to-br from-gray-900 to-black border border-gold-700/30 w-full max-w-4xl h-[90vh] rounded-lg shadow-2xl m-4 flex flex-col animate-scale-in"
+                      onClick={e => e.stopPropagation()}>
                       <header className="p-6 border-b border-gold-600/30 flex justify-between items-center flex-shrink-0">
                           <h2 id="services-heading" className="text-2xl font-serif font-bold text-gold-200">Our Services</h2>
                           <button onClick={() => setIsMenuVisible(false)} className="text-4xl font-light leading-none text-gray-400 hover:text-white transition-colors" aria-label="Close services menu">×</button>
@@ -862,9 +688,7 @@
                           ))}
                       </div>
                       <footer className="p-4 border-t border-gold-600/30 text-center flex-shrink-0">
-                           <a href="tel:2817620878" className="inline-block bg-gold-600 text-white font-bold py-2 px-6 rounded-lg text-base shadow-lg hover:bg-gold-500 transition-colors">
-                              Book Now
-                          </a>
+                          <a href="tel:2817620878" className="inline-block bg-gold-600 text-white font-bold py-2 px-6 rounded-lg text-base shadow-lg hover:bg-gold-500 transition-colors">Book Now</a>
                       </footer>
                   </div>
               </div>
@@ -873,9 +697,7 @@
               <>
                   <div className="lg:text-center">
                       <h2 className="text-4xl md:text-5xl font-serif font-bold text-gold-800 mb-3 text-shadow-subtle">Our Menu</h2>
-                      <p className="text-xl md:text-2xl text-gold-600 font-medium tracking-wide uppercase">
-                          Indulge in Our Services
-                      </p>
+                      <p className="text-xl md:text-2xl text-gold-600 font-medium tracking-wide uppercase">Indulge in Our Services</p>
                       <p className="mt-6 max-w-2xl text-xl text-gray-700 lg:mx-auto font-sans">
                           Explore our wide range of services designed to make you look and feel your best. Click below to view our full service menu.
                       </p>
@@ -891,142 +713,82 @@
           );
       };
 
-      const images = [ '/gallery/nail-1.jpeg', '/gallery/nail-2.jpeg', '/gallery/nail-3.jpeg', '/gallery/nail-4.jpeg', '/gallery/nail-5.jpeg', '/gallery/nail-6.jpeg', '/gallery/nail-7.jpeg', '/gallery/nail-8.jpeg', ];
+      const images = [ '/gallery/nail-1.jpeg', '/gallery/nail-2.jpeg', '/gallery/nail-3.jpeg', '/gallery/nail-4.jpeg', '/gallery/nail-5.jpeg', '/gallery/nail-6.jpeg', '/gallery/nail-7.jpeg', '/gallery/nail-8.jpeg' ];
       const numColumns = 3;
       const columns = Array.from({ length: numColumns }, () => []);
       images.forEach((image, index) => { columns[index % numColumns].push(image); });
+
       const GalleryImage = ({ src, onImageClick }) => {
           const [imageSrc, setImageSrc] = useState(src);
           const imageNumber = src.split('-')[1]?.split('.')[0] || 'design';
-          const handleError = () => {
-              setImageSrc(`https://placehold.co/400x500/c6934a/FBF3E6?text=Image+Not+Found`);
-          };
           return (
-              <div
-                  className="w-full h-auto rounded-lg shadow-lg overflow-hidden mb-4 cursor-pointer border-2 border-transparent hover:border-gold-400 transition-all duration-300 bg-gold-100"
-                  onClick={() => onImageClick(src)}
-                  onKeyDown={(e) => e.key === 'Enter' && onImageClick(src)}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`View larger image for nail design ${imageNumber}`}
-              >
-                  <img
-                      src={imageSrc}
-                      alt={`Nail art example ${imageNumber}`}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                      onError={handleError}
-                  />
+              <div className="w-full h-auto rounded-lg shadow-lg overflow-hidden mb-4 cursor-pointer border-2 border-transparent hover:border-gold-400 transition-all duration-300 bg-gold-100"
+                  onClick={() => onImageClick(src)} onKeyDown={(e) => e.key === 'Enter' && onImageClick(src)}
+                  role="button" tabIndex={0} aria-label={`View larger image for nail design ${imageNumber}`}>
+                  <img src={imageSrc} alt={`Nail art example ${imageNumber}`} className="w-full h-full object-cover" loading="lazy"
+                      onError={() => setImageSrc(`https://placehold.co/400x500/c6934a/FBF3E6?text=Image+Not+Found`)} />
               </div>
           );
       };
+
       const Gallery = () => {
-        const [selectedImageIndex, setSelectedImageIndex] = useState(null);
-        const [modalContainer, setModalContainer] = useState(null);
-        useEffect(() => {
-          setModalContainer(document.getElementById('modal-root'));
-        }, []);
-        const openModal = (src) => {
-          const index = images.indexOf(src);
-          if (index !== -1) {
-            setSelectedImageIndex(index);
-          }
-        };
-        const closeModal = () => setSelectedImageIndex(null);
-        const goToNext = (e) => {
-          e?.stopPropagation();
-          if (selectedImageIndex === null || images.length === 0) return;
-          setSelectedImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-        };
-        const goToPrevious = (e) => {
-          e?.stopPropagation();
-          if (selectedImageIndex === null || images.length === 0) return;
-          setSelectedImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
-        };
-        useEffect(() => {
-          const originalOverflow = document.body.style.overflow;
-          const handleKeyDown = (e) => {
-            if (e.key === 'Escape') closeModal();
-            if (e.key === 'ArrowRight') goToNext();
-            if (e.key === 'ArrowLeft') goToPrevious();
-          };
-          if (selectedImageIndex !== null) {
-              document.body.style.overflow = 'hidden';
-              window.addEventListener('keydown', handleKeyDown);
-          } else {
-              document.body.style.overflow = originalOverflow;
-          }
-          return () => {
-              document.body.style.overflow = originalOverflow;
-              window.removeEventListener('keydown', handleKeyDown);
-          };
-        }, [selectedImageIndex]);
-        const selectedImageSrc = selectedImageIndex !== null ? images[selectedImageIndex] : null;
-        const selectedImageAlt = selectedImageIndex !== null ? `Enlarged nail art example ${selectedImageIndex + 1}` : '';
-        return (
-          <>
-            <div className="text-center">
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-gold-800 mb-3 text-shadow-subtle">Our Work</h2>
-              <p className="text-xl md:text-2xl text-gold-600 font-medium tracking-wide uppercase">
-                A Glimpse of Perfection
-              </p>
-            </div>
-            <div className="mt-12 w-full max-w-4xl mx-auto h-[60vh] max-h-[500px] flex gap-4" aria-label="Image gallery with animated columns">
-              {columns.map((columnImages, colIndex) => (
-                  <div key={colIndex} className="w-1/3 h-full overflow-hidden group" role="presentation">
-                      <div
-                        className={`w-full flex flex-col group-hover:pause will-change-transform ${
-                          colIndex === 1 ? 'animate-scroll-down' : 'animate-scroll-up'
-                        } ${selectedImageSrc ? 'pause' : ''}`}
-                      >
-                          {columnImages.map((src, imgIndex) => <GalleryImage key={`${src}-${imgIndex}`} src={src} onImageClick={openModal} />)}
-                          {columnImages.map((src, imgIndex) => <GalleryImage key={`${src}-${imgIndex}-clone`} src={src} onImageClick={openModal} />)}
-                      </div>
+          const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+          const [modalContainer, setModalContainer] = useState(null);
+          useEffect(() => { setModalContainer(document.getElementById('modal-root')); }, []);
+          const openModal = (src) => { const index = images.indexOf(src); if (index !== -1) setSelectedImageIndex(index); };
+          const closeModal = () => setSelectedImageIndex(null);
+          const goToNext = (e) => { e?.stopPropagation(); if (selectedImageIndex === null) return; setSelectedImageIndex((prev) => (prev + 1) % images.length); };
+          const goToPrevious = (e) => { e?.stopPropagation(); if (selectedImageIndex === null) return; setSelectedImageIndex((prev) => (prev - 1 + images.length) % images.length); };
+          useEffect(() => {
+              const originalOverflow = document.body.style.overflow;
+              const handleKeyDown = (e) => {
+                  if (e.key === 'Escape') closeModal();
+                  if (e.key === 'ArrowRight') goToNext();
+                  if (e.key === 'ArrowLeft') goToPrevious();
+              };
+              if (selectedImageIndex !== null) { document.body.style.overflow = 'hidden'; window.addEventListener('keydown', handleKeyDown); }
+              else document.body.style.overflow = originalOverflow;
+              return () => { document.body.style.overflow = originalOverflow; window.removeEventListener('keydown', handleKeyDown); };
+          }, [selectedImageIndex]);
+          const selectedImageSrc = selectedImageIndex !== null ? images[selectedImageIndex] : null;
+          const selectedImageAlt = selectedImageIndex !== null ? `Enlarged nail art example ${selectedImageIndex + 1}` : '';
+          return (
+              <>
+                  <div className="text-center">
+                      <h2 className="text-4xl md:text-5xl font-serif font-bold text-gold-800 mb-3 text-shadow-subtle">Our Work</h2>
+                      <p className="text-xl md:text-2xl text-gold-600 font-medium tracking-wide uppercase">A Glimpse of Perfection</p>
                   </div>
-              ))}
-            </div>
-            {selectedImageSrc && modalContainer && ReactDOM.createPortal(
-              <div
-                className="fixed inset-0 bg-black/70 liquid-glass-bg z-[200] flex justify-center items-center animate-fade-in p-4"
-                onClick={closeModal}
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="gallery-modal-title"
-              >
-                  <button
-                      onClick={closeModal}
-                      className="absolute top-4 right-4 text-white text-5xl font-light leading-none z-[210] hover:text-gold-300 transition-colors"
-                      aria-label="Close image view"
-                  >×</button>
-                   <div className="relative w-full h-full flex items-center justify-center" onClick={e => e.stopPropagation()}>
-                      <button
-                          onClick={goToPrevious}
-                          className="absolute left-0 sm:left-4 top-1/2 -translate-y-1/2 z-[210] bg-black/40 text-white p-2 rounded-full hover:bg-black/60 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black/50 focus:ring-gold-400"
-                          aria-label="Previous image"
-                      >
-                          <LeftArrowIcon className="w-6 h-6 sm:w-8 sm:h-8" />
-                      </button>
-                      <div className="relative animate-scale-in z-[205]">
-                          <h2 id="gallery-modal-title" className="sr-only">{selectedImageAlt}</h2>
-                          <img
-                              src={selectedImageSrc}
-                              alt={selectedImageAlt}
-                              className="max-w-[80vw] sm:max-w-[70vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
-                          />
-                      </div>
-                      <button
-                          onClick={goToNext}
-                          className="absolute right-0 sm:right-4 top-1/2 -translate-y-1/2 z-[210] bg-black/40 text-white p-2 rounded-full hover:bg-black/60 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black/50 focus:ring-gold-400"
-                          aria-label="Next image"
-                      >
-                          <RightArrowIcon className="w-6 h-6 sm:w-8 sm:h-8" />
-                      </button>
+                  <div className="mt-12 w-full max-w-4xl mx-auto h-[60vh] max-h-[500px] flex gap-4" aria-label="Image gallery with animated columns">
+                      {columns.map((columnImages, colIndex) => (
+                          <div key={colIndex} className="w-1/3 h-full overflow-hidden group" role="presentation">
+                              <div className={`w-full flex flex-col group-hover:pause will-change-transform ${colIndex === 1 ? 'animate-scroll-down' : 'animate-scroll-up'} ${selectedImageSrc ? 'pause' : ''}`}>
+                                  {columnImages.map((src, imgIndex) => <GalleryImage key={`${src}-${imgIndex}`} src={src} onImageClick={openModal} />)}
+                                  {columnImages.map((src, imgIndex) => <GalleryImage key={`${src}-${imgIndex}-clone`} src={src} onImageClick={openModal} />)}
+                              </div>
+                          </div>
+                      ))}
                   </div>
-              </div>,
-              modalContainer
-            )}
-          </>
-        );
+                  {selectedImageSrc && modalContainer && ReactDOM.createPortal(
+                      <div className="fixed inset-0 bg-black/70 liquid-glass-bg z-[200] flex justify-center items-center animate-fade-in p-4"
+                          onClick={closeModal} role="dialog" aria-modal="true" aria-labelledby="gallery-modal-title">
+                          <button onClick={closeModal} className="absolute top-4 right-4 text-white text-5xl font-light leading-none z-[210] hover:text-gold-300 transition-colors" aria-label="Close image view">×</button>
+                          <div className="relative w-full h-full flex items-center justify-center" onClick={e => e.stopPropagation()}>
+                              <button onClick={goToPrevious} className="absolute left-0 sm:left-4 top-1/2 -translate-y-1/2 z-[210] bg-black/40 text-white p-2 rounded-full hover:bg-black/60 transition-colors" aria-label="Previous image">
+                                  <LeftArrowIcon className="w-6 h-6 sm:w-8 sm:h-8" />
+                              </button>
+                              <div className="relative animate-scale-in z-[205]">
+                                  <h2 id="gallery-modal-title" className="sr-only">{selectedImageAlt}</h2>
+                                  <img src={selectedImageSrc} alt={selectedImageAlt} className="max-w-[80vw] sm:max-w-[70vw] max-h-[90vh] object-contain rounded-lg shadow-2xl" />
+                              </div>
+                              <button onClick={goToNext} className="absolute right-0 sm:right-4 top-1/2 -translate-y-1/2 z-[210] bg-black/40 text-white p-2 rounded-full hover:bg-black/60 transition-colors" aria-label="Next image">
+                                  <RightArrowIcon className="w-6 h-6 sm:w-8 sm:h-8" />
+                              </button>
+                          </div>
+                      </div>,
+                      modalContainer
+                  )}
+              </>
+          );
       };
 
       const mediaItems = [
@@ -1034,6 +796,7 @@
           { type: 'image', src: '/images/spa-interior.jpg', alt: 'A photo showcasing the elegant interior of Deluxe Nails & Spa Aliana.' },
           { type: 'video', src: 'media/store-video-2.mp4', alt: 'Another view of the beautiful and relaxing spa ambiance.' },
       ];
+
       const coreValues = [
           "An Aliana-based, women-owned and operated establishment catering to a diverse, international clientele.",
           "Each reservation is customized to fit each individual's personal experience.",
@@ -1041,49 +804,40 @@
           "To be an inspiration to our guests, operating with pride, integrity, and respect as an honest leader in the nail and spa industry.",
           "We strive to set the highest standards of beauty with our extraordinary products, exceptional service, and dedication to your well-being."
       ];
-      const About = () => {
-          return (
-              <div className="text-center flex flex-col items-center">
-                  <h2 className="text-4xl md:text-5xl font-serif font-bold text-gold-800 mb-3 text-shadow-subtle">About Us</h2>
-                  <p className="text-xl md:text-2xl text-gold-600 font-medium tracking-wide uppercase">
-                      Your Sanctuary of Beauty & Relaxation
-                  </p>
-                  <p className="mt-6 max-w-2xl text-xl text-gray-700 mx-auto font-sans">
-                      At Deluxe Nails & Spa Aliana, we believe that self-care is a priority, not a luxury. Our mission is to provide an unparalleled spa experience, where you can unwind, rejuvenate, and leave feeling more beautiful and confident than ever.
-                  </p>
-              </div>
-          );
-      };
+
+      const About = () => (
+          <div className="text-center flex flex-col items-center">
+              <h2 className="text-4xl md:text-5xl font-serif font-bold text-gold-800 mb-3 text-shadow-subtle">About Us</h2>
+              <p className="text-xl md:text-2xl text-gold-600 font-medium tracking-wide uppercase">Your Sanctuary of Beauty & Relaxation</p>
+              <p className="mt-6 max-w-2xl text-xl text-gray-700 mx-auto font-sans">
+                  At Deluxe Nails & Spa Aliana, we believe that self-care is a priority, not a luxury. Our mission is to provide an unparalleled spa experience, where you can unwind, rejuvenate, and leave feeling more beautiful and confident than ever.
+              </p>
+          </div>
+      );
+
       const OurVision = () => {
           const [isExpanded, setIsExpanded] = useState(false);
-          const boxClasses = isExpanded
-              ? 'bg-black/30 liquid-glass-bg rounded-2xl p-6 md:p-10 border border-white/20 shadow-xl'
-              : 'p-6 md:p-10';
+          const boxClasses = isExpanded ? 'bg-black/30 liquid-glass-bg rounded-2xl p-6 md:p-10 border border-white/20 shadow-xl' : 'p-6 md:p-10';
           const titleClasses = isExpanded ? 'text-gold-300' : 'text-gold-700';
           const buttonTextClasses = isExpanded ? 'text-gray-200' : 'text-black';
           const buttonHoverClass = isExpanded ? 'hover:text-white' : 'hover:text-gray-600';
           return (
               <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
                   <div className={`w-full lg:w-[45%] transition-all duration-500 ease-in-out ${boxClasses}`}>
-                       <h3 className={`text-4xl md:text-5xl font-serif font-bold text-center transition-colors duration-500 ${titleClasses}`}>Our Values & Vision</h3>
+                      <h3 className={`text-4xl md:text-5xl font-serif font-bold text-center transition-colors duration-500 ${titleClasses}`}>Our Values & Vision</h3>
                       <div className="mt-4 text-center">
-                          <button
-                              onClick={() => setIsExpanded(!isExpanded)}
+                          <button onClick={() => setIsExpanded(!isExpanded)}
                               className={`flex items-center mx-auto font-semibold transition-colors duration-500 ${buttonTextClasses} ${buttonHoverClass}`}
-                              aria-expanded={isExpanded}
-                          >
+                              aria-expanded={isExpanded}>
                               <span>{isExpanded ? 'Show Less' : 'Show More'}</span>
-                              {isExpanded
-                                  ? <ArrowUpIcon className="w-5 h-5 ml-2" />
-                                  : <ArrowDownIcon className="w-5 h-5 ml-2" />
-                              }
+                              {isExpanded ? <ArrowUpIcon className="w-5 h-5 ml-2" /> : <ArrowDownIcon className="w-5 h-5 ml-2" />}
                           </button>
                       </div>
                       <div className={`grid transition-all duration-500 ease-in-out mt-4 ${isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
                           <div className="overflow-hidden">
                               <ul className="space-y-5 font-sans text-gray-200 text-sm md:text-base">
                                   {coreValues.map((value, index) => (
-                                       <li key={index} className="flex items-start">
+                                      <li key={index} className="flex items-start">
                                           <span className="text-gold-500 font-bold mr-3 mt-1">◆</span>
                                           <span>{value}</span>
                                       </li>
@@ -1112,9 +866,7 @@
                   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                       <div className="lg:text-center">
                           <h2 className="text-4xl md:text-5xl font-serif font-bold text-gold-800 mb-3 text-shadow-subtle">Contact Us</h2>
-                          <p className="text-xl md:text-2xl text-gold-600 font-medium tracking-wide uppercase">
-                              Visit Us or Get in Touch
-                          </p>
+                          <p className="text-xl md:text-2xl text-gold-600 font-medium tracking-wide uppercase">Visit Us or Get in Touch</p>
                           <p className="mt-6 max-w-2xl text-xl text-gray-700 lg:mx-auto font-sans">
                               We're excited to welcome you to our spa. Find us at the address below or give us a call to book your next appointment.
                           </p>
@@ -1128,127 +880,93 @@
                                   <h3 className="mt-4 text-xl font-serif font-semibold text-white">{title}</h3>
                                   <div className="mt-2 text-gray-200 font-sans flex-grow flex items-center justify-center">{content}</div>
                                   {link && linkText && (
-                                      <a href={link} target="_blank" rel="noopener noreferrer" className="mt-3 inline-block text-gold-400 font-semibold hover:text-gold-300 transition-colors">
-                                          {linkText}
-                                      </a>
+                                      <a href={link} target="_blank" rel="noopener noreferrer" className="mt-3 inline-block text-gold-400 font-semibold hover:text-gold-300 transition-colors">{linkText}</a>
                                   )}
                               </div>
                           ))}
                       </div>
-                       <div className="mt-16 rounded-lg overflow-hidden shadow-xl h-96 border border-white/20">
+                      <div className="mt-16 rounded-lg overflow-hidden shadow-xl h-96 border border-white/20">
                           <iframe
                               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3467.4361545620846!2d-95.69899432367462!3d29.64964913702047!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8640e10e4a13348b%3A0x6e26b1758c0c0048!2sDeluxe%20Nails%20%26%20Spa%20Aliana!5e0!3m2!1sen!2sus!4v1718826742511!5m2!1sen!2sus"
-                              width="100%"
-                              height="100%"
-                              style={{ border: 0 }}
-                              allowFullScreen={true}
-                              loading="lazy"
-                              referrerPolicy="no-referrer-when-downgrade"
-                              title="Google Maps Location of Deluxe Nails & Spa Aliana"
-                          ></iframe>
+                              width="100%" height="100%" style={{ border: 0 }} allowFullScreen={true} loading="lazy"
+                              referrerPolicy="no-referrer-when-downgrade" title="Google Maps Location of Deluxe Nails & Spa Aliana">
+                          </iframe>
                       </div>
                   </div>
               </section>
           );
       };
 
-      const Footer = () => {
-          return (
-              <footer className="bg-black/20 text-white border-t border-white/20 liquid-glass-bg">
-                  <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
-                          <div>
-                              <h3 className="text-2xl font-serif font-bold text-gold-300">Deluxe Nails & Spa Aliana</h3>
-                              <p className="mt-2 text-white/90 font-sans text-sm">
-                                 10335 West Grand Pkwy S STE 120<br/>
-                                 Richmond, TX 77407
-                              </p>
-                          </div>
-                           <div className="md:text-center">
-                              <h3 className="text-xl font-serif font-semibold text-gold-300">Amenities & Information</h3>
-                              <p className="mt-4 text-white/90 font-sans text-sm uppercase">
-                                 Complimentary refreshments & cocktails are provided
-                              </p>
-                               <p className="mt-3 text-white/80 font-sans text-xs tracking-wider uppercase">
-                                 RSVP  |  WALK-IN WELCOME  |  GIFT CARDS AVAILABLE  |  EVENT HOSTING
-                              </p>
-                          </div>
-                          <div className="md:text-right">
-                              <h3 className="text-xl font-serif font-semibold text-gold-300">Follow Us</h3>
-                              <div className="mt-4 flex justify-center md:justify-end space-x-6">
-                                  <a href="https://www.instagram.com/deluxenails_alianatx/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold-300 transition-colors transform hover:scale-110">
-                                      <span className="sr-only">Instagram</span>
-                                      <InstagramIcon className="w-7 h-7" />
-                                  </a>
-                                   <a href="https://www.tiktok.com/@deluxenailsspaaliana?" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold-300 transition-colors transform hover:scale-110">
-                                      <span className="sr-only">TikTok</span>
-                                      <TikTokIcon className="w-7 h-7" />
-                                  </a>
-                              </div>
-                          </div>
+      const Footer = () => (
+          <footer className="bg-black/20 text-white border-t border-white/20 liquid-glass-bg">
+              <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+                      <div>
+                          <h3 className="text-2xl font-serif font-bold text-gold-300">Deluxe Nails & Spa Aliana</h3>
+                          <p className="mt-2 text-white/90 font-sans text-sm">10335 West Grand Pkwy S STE 120<br/>Richmond, TX 77407</p>
                       </div>
-                      <div className="mt-8 border-t border-gray-700 pt-8 text-center text-white/70 text-sm font-sans">
-                          <p>© {new Date().getFullYear()} Deluxe Nails & Spa Aliana. All Rights Reserved.</p>
+                      <div className="md:text-center">
+                          <h3 className="text-xl font-serif font-semibold text-gold-300">Amenities & Information</h3>
+                          <p className="mt-4 text-white/90 font-sans text-sm uppercase">Complimentary refreshments & cocktails are provided</p>
+                          <p className="mt-3 text-white/80 font-sans text-xs tracking-wider uppercase">RSVP  |  WALK-IN WELCOME  |  GIFT CARDS AVAILABLE  |  EVENT HOSTING</p>
+                      </div>
+                      <div className="md:text-right">
+                          <h3 className="text-xl font-serif font-semibold text-gold-300">Follow Us</h3>
+                          <div className="mt-4 flex justify-center md:justify-end space-x-6">
+                              <a href="https://www.instagram.com/deluxenails_alianatx/" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold-300 transition-colors transform hover:scale-110">
+                                  <span className="sr-only">Instagram</span><InstagramIcon className="w-7 h-7" />
+                              </a>
+                              <a href="https://www.tiktok.com/@deluxenailsspaaliana?" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gold-300 transition-colors transform hover:scale-110">
+                                  <span className="sr-only">TikTok</span><TikTokIcon className="w-7 h-7" />
+                              </a>
+                          </div>
                       </div>
                   </div>
-              </footer>
-          );
-      };
+                  <div className="mt-8 border-t border-gray-700 pt-8 text-center text-white/70 text-sm font-sans">
+                      <p>© {new Date().getFullYear()} Deluxe Nails & Spa Aliana. All Rights Reserved.</p>
+                  </div>
+              </div>
+          </footer>
+      );
 
       function App() {
-        useEffect(() => {
-          const loader = document.getElementById('page-loader');
-          if (loader) {
-            loader.classList.add('fade-out');
-            setTimeout(() => loader.remove(), 400);
-          }
-        }, []);
-        return (
-          <div className="font-sans text-gray-800">
-            <Header />
-            <main>
-              <Hero />
-              <HorizontalScrollContainer>
-                  <HorizontalScrollSection id="about">
-                      <FadeInSection variant="horizontal">
-                          <About />
-                      </FadeInSection>
-                  </HorizontalScrollSection>
-                  <HorizontalScrollSection id="vision">
-                      <FadeInSection variant="horizontal">
-                          <OurVision />
-                      </FadeInSection>
-                  </HorizontalScrollSection>
-                  <HorizontalScrollSection id="services">
-                      <FadeInSection variant="horizontal">
-                          <Services />
-                      </FadeInSection>
-                  </HorizontalScrollSection>
-                  <HorizontalScrollSection id="gallery">
-                      <FadeInSection variant="horizontal">
-                          <Gallery />
-                      </FadeInSection>
-                  </HorizontalScrollSection>
-              </HorizontalScrollContainer>
-              <FadeInSection>
-                <Contact />
-              </FadeInSection>
-            </main>
-            <Footer />
-          </div>
-        );
+          useEffect(() => {
+              const loader = document.getElementById('page-loader');
+              if (loader) {
+                  loader.classList.add('fade-out');
+                  setTimeout(() => loader.remove(), 400);
+              }
+          }, []);
+          return (
+              <div className="font-sans text-gray-800">
+                  <Header />
+                  <main>
+                      <Hero />
+                      <HorizontalScrollContainer>
+                          <HorizontalScrollSection id="about">
+                              <FadeInSection variant="horizontal"><About /></FadeInSection>
+                          </HorizontalScrollSection>
+                          <HorizontalScrollSection id="vision">
+                              <FadeInSection variant="horizontal"><OurVision /></FadeInSection>
+                          </HorizontalScrollSection>
+                          <HorizontalScrollSection id="services">
+                              <FadeInSection variant="horizontal"><Services /></FadeInSection>
+                          </HorizontalScrollSection>
+                          <HorizontalScrollSection id="gallery">
+                              <FadeInSection variant="horizontal"><Gallery /></FadeInSection>
+                          </HorizontalScrollSection>
+                      </HorizontalScrollContainer>
+                      <FadeInSection><Contact /></FadeInSection>
+                  </main>
+                  <Footer />
+              </div>
+          );
       }
 
       const rootElement = document.getElementById('root');
-      if (!rootElement) {
-        throw new Error("Could not find root element to mount to");
-      }
+      if (!rootElement) throw new Error("Could not find root element to mount to");
       const root = ReactDOM.createRoot(rootElement);
-      root.render(
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>
-      );
+      root.render(<React.StrictMode><App /></React.StrictMode>);
     </script>
   </body>
 </html>
