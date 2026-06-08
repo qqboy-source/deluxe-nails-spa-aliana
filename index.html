@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.34.0/dist/tabler-icons.min.css">
 
     <style>
       html { scroll-behavior: smooth; }
@@ -431,7 +432,7 @@
               aria-hidden={!isActive}
           >
               <div className="w-full h-full max-w-7xl mx-auto flex flex-col rounded-xl">
-                  <div className={`w-full flex-grow pt-24 pb-12 px-2 md:px-4 hide-scrollbar overflow-y-auto lg:overflow-y-hidden ${!isActive ? 'pointer-events-none' : ''}`}>
+                  <div className={`w-full flex-grow pt-20 pb-8 px-2 md:px-4 hide-scrollbar overflow-y-auto lg:overflow-y-hidden ${!isActive ? 'pointer-events-none' : ''}`}>
                      {children}
                   </div>
               </div>
@@ -696,15 +697,28 @@
           return (
               <>
                   <div className="lg:text-center">
-                      <h2 className="text-4xl md:text-5xl font-serif font-bold text-gold-800 mb-3 text-shadow-subtle">Our Menu</h2>
-                      <p className="text-xl md:text-2xl text-gold-600 font-medium tracking-wide uppercase">Indulge in Our Services</p>
-                      <p className="mt-6 max-w-2xl text-xl text-gray-700 lg:mx-auto font-sans">
-                          Explore our wide range of services designed to make you look and feel your best. Click below to view our full service menu.
-                      </p>
-                      <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-4">
+                      <h2 className="text-4xl md:text-5xl font-serif font-bold text-gold-800 mb-3 text-shadow-subtle">Our Treatments</h2>
+                      <p className="text-xl md:text-2xl text-gold-600 font-medium tracking-wide uppercase">Tailored to you, every time</p>
+                      <div className="mt-8 grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl lg:mx-auto">
+                          {[
+                              { icon: 'ti-hand-stop', name: 'Manicures', price: 'from $24' },
+                              { icon: 'ti-shoe', name: 'Pedicures', price: 'from $35' },
+                              { icon: 'ti-crown', name: 'Nail Enhancements', price: 'from $40' },
+                              { icon: 'ti-droplet-half-2', name: 'Gel & Dipping', price: 'from $44' },
+                              { icon: 'ti-flame', name: 'Waxing', price: 'from $11' },
+                              { icon: 'ti-baby-carriage', name: 'Kids Services', price: 'from $13' },
+                          ].map(({ icon, name, price }) => (
+                              <div key={name} className="bg-white/40 border border-gold-300/40 rounded-xl p-4 text-center hover:bg-white/60 transition-colors duration-200">
+                                  <i className={`ti ${icon} text-3xl text-gold-600`} aria-hidden="true"></i>
+                                  <p className="mt-2 font-semibold text-gold-800 font-sans text-sm md:text-base">{name}</p>
+                                  <p className="text-gold-600 text-xs md:text-sm mt-1">{price}</p>
+                              </div>
+                          ))}
+                      </div>
+                      <div className="mt-8 flex items-center justify-center">
                           <button onClick={() => setIsMenuVisible(true)} className="font-bold py-3 px-8 rounded-lg text-lg btn-golden-glow btn-fill-gold"
                               aria-haspopup="dialog" aria-expanded={isMenuVisible}>
-                              View Full Menu
+                              Explore All Treatments
                           </button>
                       </div>
                   </div>
@@ -806,12 +820,29 @@
       ];
 
       const About = () => (
-          <div className="text-center flex flex-col items-center">
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-gold-800 mb-3 text-shadow-subtle">About Us</h2>
-              <p className="text-xl md:text-2xl text-gold-600 font-medium tracking-wide uppercase">Your Sanctuary of Beauty & Relaxation</p>
-              <p className="mt-6 max-w-2xl text-xl text-gray-700 mx-auto font-sans">
-                  At Deluxe Nails & Spa Aliana, we believe that self-care is a priority, not a luxury. Our mission is to provide an unparalleled spa experience, where you can unwind, rejuvenate, and leave feeling more beautiful and confident than ever.
-              </p>
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
+              <div className="w-full lg:w-[55%]">
+                  <h2 className="text-4xl md:text-5xl font-serif font-bold text-gold-800 mb-3 text-shadow-subtle">About Us</h2>
+                  <p className="text-xl md:text-2xl text-gold-600 font-medium tracking-wide uppercase">More than a nail appointment</p>
+                  <blockquote className="mt-6 border-l-4 border-gold-500 pl-5 font-serif text-xl md:text-2xl italic text-gold-800">
+                      "We don't just do nails. We build relationships, one appointment at a time."
+                  </blockquote>
+                  <p className="mt-5 text-lg text-gray-700 font-sans leading-relaxed">
+                      Luxury isn't just what we do — it's how we make you feel. At Deluxe Nails & Spa Aliana, every visit is designed around you, creating an experience that feels personal, effortless, and uniquely yours.
+                  </p>
+                  <p className="mt-3 text-lg text-gray-700 font-sans leading-relaxed">
+                      Our team takes the time to get to know you, so every visit feels personal — not just professional.
+                  </p>
+                  <div className="mt-6 flex flex-wrap gap-2">
+                      <span className="px-3 py-1 rounded-full text-sm font-medium bg-gold-100 text-gold-800 border border-gold-300">Women-owned</span>
+                      <span className="px-3 py-1 rounded-full text-sm font-medium bg-gold-100 text-gold-800 border border-gold-300">Walk-ins welcome</span>
+                      <span className="px-3 py-1 rounded-full text-sm font-medium bg-gold-100 text-gold-800 border border-gold-300">Gift cards available</span>
+                      <span className="px-3 py-1 rounded-full text-sm font-medium bg-gold-100 text-gold-800 border border-gold-300">Complimentary drinks</span>
+                  </div>
+              </div>
+              <div className="w-full lg:w-[45%] aspect-[4/3] rounded-2xl overflow-hidden shadow-xl border border-white/20 flex-shrink-0">
+                  <img src="/images/spa-interior.jpg" alt="The elegant and welcoming interior of Deluxe Nails & Spa Aliana" className="w-full h-full object-cover" loading="lazy" />
+              </div>
           </div>
       );
 
