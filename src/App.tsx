@@ -23,12 +23,21 @@ export default function App() {
   }, [])
 
   useEffect(() => {
+    let scrollTimer: ReturnType<typeof setTimeout> | null = null
     const onScroll = () => {
       const total = document.documentElement.scrollHeight - window.innerHeight
       setScrollProgress(total > 0 ? (window.scrollY / total) * 100 : 0)
+      document.documentElement.classList.add('is-scrolling')
+      if (scrollTimer) clearTimeout(scrollTimer)
+      scrollTimer = setTimeout(() => {
+        document.documentElement.classList.remove('is-scrolling')
+      }, 1000)
     }
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      if (scrollTimer) clearTimeout(scrollTimer)
+    }
   }, [])
 
   return (

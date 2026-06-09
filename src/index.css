@@ -4,15 +4,22 @@
 
 html { scroll-behavior: smooth; }
 
-/* Golden scrollbar */
+/* Golden scrollbar — fades in on scroll, fades out when idle */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #FBF3E6; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #C6934A, #E4C186, #C6934A);
+  background: transparent;
   border-radius: 999px;
+  transition: background 0.5s ease;
 }
-::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #9F763B, #D9AC64, #9F763B); }
-* { scrollbar-width: thin; scrollbar-color: #C6934A #FBF3E6; }
+html.is-scrolling::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #C6934A, #E4C186, #C6934A);
+}
+html.is-scrolling::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #9F763B, #D9AC64, #9F763B);
+}
+* { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+html.is-scrolling { scrollbar-color: #C6934A transparent; }
 body {
   background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('/images/site-background.jpg');
   background-size: cover;
