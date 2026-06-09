@@ -109,6 +109,65 @@ body {
 .text-shadow-strong { text-shadow: 2px 2px 8px rgba(0,0,0,0.5); }
 .will-change-transform { will-change: transform; }
 
+/* Hero title shimmer */
+@keyframes shimmer-sweep {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.shimmer-text {
+  background: linear-gradient(90deg, #fff 0%, #fff 30%, #E4C186 42%, #FBF3E6 50%, #E4C186 58%, #fff 70%, #fff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-sweep 4s linear infinite;
+}
+
+/* Gallery image shine sweep on hover */
+.gallery-img-wrapper {
+  position: relative;
+}
+.gallery-img-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+  transform: skewX(-15deg);
+  transition: left 0s;
+  pointer-events: none;
+}
+.gallery-img-wrapper:hover::after {
+  left: 160%;
+  transition: left 0.65s ease-out;
+}
+
+/* Staggered service cards */
+@keyframes stagger-fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.stagger-card {
+  animation: stagger-fade-up 0.5s ease-out both;
+}
+
+/* Cursor sparkle trail */
+.cursor-sparkle {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  background: radial-gradient(circle, #E4C186, #C6934A);
+  transform: translate(-50%, -50%);
+  animation: sparkle-pop 0.75s ease-out forwards;
+}
+@keyframes sparkle-pop {
+  0%   { opacity: 0.85; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0;    transform: translate(calc(-50% + var(--tx, 0px)), calc(-50% + var(--ty, -20px))) scale(0.1); }
+}
+
 #page-loader {
   position: fixed;
   inset: 0;

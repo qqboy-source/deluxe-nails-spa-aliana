@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Header from './components/Header'
+import CursorSparkle from './components/CursorSparkle'
 import Hero from './components/Hero'
 import About from './components/About'
 import OurVision from './components/OurVision'
@@ -11,6 +12,8 @@ import FadeInSection from './components/FadeInSection'
 import { HorizontalScrollContainer, HorizontalScrollSection } from './components/HorizontalScroll'
 
 export default function App() {
+  const [scrollProgress, setScrollProgress] = useState(0)
+
   useEffect(() => {
     const loader = document.getElementById('page-loader')
     if (loader) {
@@ -19,8 +22,26 @@ export default function App() {
     }
   }, [])
 
+  useEffect(() => {
+    const onScroll = () => {
+      const total = document.documentElement.scrollHeight - window.innerHeight
+      setScrollProgress(total > 0 ? (window.scrollY / total) * 100 : 0)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   return (
     <div className="font-sans text-gray-800">
+      <CursorSparkle />
+      <div
+        className="fixed top-0 left-0 h-[3px] z-[9999] pointer-events-none"
+        style={{
+          width: `${scrollProgress}%`,
+          background: 'linear-gradient(90deg, #C6934A, #E4C186, #C6934A)',
+          transition: 'width 0.1s linear',
+        }}
+      />
       <Header />
       <main>
         <Hero />

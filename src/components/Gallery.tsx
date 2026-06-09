@@ -17,7 +17,7 @@ function GalleryImage({ src, onImageClick }: GalleryImageProps) {
   const imageNumber = src.split('-')[1]?.split('.')[0] || 'design'
   return (
     <div
-      className="w-full h-auto rounded-lg shadow-lg overflow-hidden mb-4 cursor-pointer border-2 border-transparent hover:border-gold-400 transition-all duration-300 bg-gold-100"
+      className="gallery-img-wrapper w-full h-auto rounded-lg shadow-lg overflow-hidden mb-4 cursor-pointer border-2 border-transparent hover:border-gold-400 transition-all duration-300 bg-gold-100"
       onClick={() => onImageClick(src)}
       onKeyDown={(e) => e.key === 'Enter' && onImageClick(src)}
       role="button"

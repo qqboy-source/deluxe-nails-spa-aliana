@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { servicesData } from '../data/services'
+import MagneticWrapper from './MagneticWrapper'
 
 export default function Services() {
   const [isMenuVisible, setIsMenuVisible] = useState(false)
@@ -70,8 +71,12 @@ export default function Services() {
             { icon: 'ti-droplet-half-2', name: 'Gel & Dipping', price: 'from $44' },
             { icon: 'ti-flame', name: 'Waxing', price: 'from $11' },
             { icon: 'ti-baby-carriage', name: 'Kids Services', price: 'from $13' },
-          ].map(({ icon, name, price }) => (
-            <div key={name} className="bg-white/40 border border-gold-300/40 rounded-xl p-4 text-center hover:bg-white/60 transition-colors duration-200">
+          ].map(({ icon, name, price }, index) => (
+            <div
+              key={name}
+              className="bg-white/40 border border-gold-300/40 rounded-xl p-4 text-center hover:bg-white/60 transition-colors duration-200 stagger-card"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
               <i className={`ti ${icon} text-3xl text-gold-600`} aria-hidden="true"></i>
               <p className="mt-2 font-semibold text-gold-800 font-sans text-sm md:text-base">{name}</p>
               <p className="text-gold-600 text-xs md:text-sm mt-1">{price}</p>
@@ -79,14 +84,16 @@ export default function Services() {
           ))}
         </div>
         <div className="mt-8 flex items-center justify-center">
-          <button
-            onClick={() => setIsMenuVisible(true)}
-            className="font-bold py-3 px-8 rounded-lg text-lg btn-golden-glow btn-fill-gold"
-            aria-haspopup="dialog"
-            aria-expanded={isMenuVisible}
-          >
-            Explore All Treatments
-          </button>
+          <MagneticWrapper>
+            <button
+              onClick={() => setIsMenuVisible(true)}
+              className="font-bold py-3 px-8 rounded-lg text-lg btn-golden-glow btn-fill-gold"
+              aria-haspopup="dialog"
+              aria-expanded={isMenuVisible}
+            >
+              Explore All Treatments
+            </button>
+          </MagneticWrapper>
         </div>
       </div>
       {isMenuVisible && modalContainer && ReactDOM.createPortal(menuModal, modalContainer)}
