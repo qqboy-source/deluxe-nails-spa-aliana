@@ -8,6 +8,9 @@ export const mediaItems: MediaItem[] = [
   { type: 'video', src: '/media/store-video-1.mp4', alt: 'A promotional video of the spa experience.' },
   { type: 'image', src: '/images/spa-interior.jpg', alt: 'A photo showcasing the elegant interior of Deluxe Nails & Spa Aliana.' },
   { type: 'video', src: '/media/store-video-2.mp4', alt: 'Another view of the beautiful and relaxing spa ambiance.' },
+  { type: 'video', src: '/media/store-video-3.mov', alt: 'A look inside Deluxe Nails & Spa Aliana.' },
+  { type: 'video', src: '/media/store-video-4.mov', alt: 'More of the Deluxe Nails & Spa Aliana experience.' },
+  { type: 'video', src: '/media/store-video-5.mov', alt: 'Deluxe Nails & Spa Aliana salon highlights.' },
 ]
 
 export const galleryImages: string[] = [
