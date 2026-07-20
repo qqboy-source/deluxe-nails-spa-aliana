@@ -9,9 +9,6 @@ import Gallery from './components/Gallery'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import FadeInSection from './components/FadeInSection'
-import WorldCupBanner from './components/WorldCupBanner'
-import Confetti from './components/Confetti'
-import RollingBall from './components/RollingBall'
 import { HorizontalScrollContainer, HorizontalScrollSection } from './components/HorizontalScroll'
 
 export default function App() {
@@ -46,8 +43,6 @@ export default function App() {
   return (
     <div className="font-sans text-gray-800">
       <CursorSparkle />
-      <Confetti />
-      <RollingBall />
       <div
         className="fixed top-0 left-0 h-[3px] z-[9999] pointer-events-none"
         style={{
@@ -56,7 +51,6 @@ export default function App() {
           transition: 'width 0.1s linear',
         }}
       />
-      <WorldCupBanner />
       <Header />
       <main>
         <Hero />
